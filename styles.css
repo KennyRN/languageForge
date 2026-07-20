@@ -1,0 +1,85 @@
+/* languageForge — inherits the vault theme; the culture card is the one signature element. */
+
+.languageforge-modal .lf-hint {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  margin: 0.25em 0 0.75em;
+}
+
+/* The one-breath line: the card's thesis, set as display text */
+.languageforge-modal .lf-onebreath {
+  font-family: var(--font-text);
+  font-size: 1.25em;
+  font-style: italic;
+  line-height: 1.5;
+  border-left: 3px solid var(--text-accent);
+  padding-left: 0.75em;
+  margin: 0.5em 0 1em;
+}
+
+/* Specimen grid: names presented like a type specimen sheet */
+.languageforge-modal .lf-specimens {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  margin-bottom: 0.75em;
+}
+.languageforge-modal .lf-specimen {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  padding: 10px 12px;
+  background: var(--background-secondary);
+}
+.languageforge-modal .lf-specimen-name {
+  font-family: var(--font-text);
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.languageforge-modal .lf-specimen-pron,
+.languageforge-modal .lf-chip-pron {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  letter-spacing: 0.04em;
+}
+.languageforge-modal .lf-specimen-cat {
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.languageforge-modal .lf-glossary { margin: 0.25em 0; }
+.languageforge-modal .lf-glossary-items {
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+}
+
+/* Generator batch chips */
+.languageforge-modal .lf-batch {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  margin: 0.5em 0;
+}
+.languageforge-modal .lf-name-chip {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.languageforge-modal .lf-name-chip:hover { background: var(--background-modifier-hover); }
+.languageforge-modal .lf-name-chip.is-starred {
+  border-color: var(--text-accent);
+  background: var(--background-secondary);
+}
+.languageforge-modal .lf-chip-name { font-weight: 600; }
+.languageforge-modal .lf-chip-gloss {
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+  font-style: italic;
+}
+.languageforge-modal .lf-disabled { opacity: 0.5; }
+.languageforge-modal details.lf-packs { margin: 0.5em 0; }
+.languageforge-modal details.lf-packs summary { cursor: pointer; color: var(--text-muted); }
