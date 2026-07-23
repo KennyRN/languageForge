@@ -1,5 +1,5 @@
-// Auto-generated from starter-packs-v2.json (gate-validated). Do not hand-edit element lists;
-// edit the JSON, re-run pack_validator.py, and regenerate.
+// Auto-generated from data/starter-packs-v2.json (gate-validated). Do not hand-edit element lists;
+// edit the JSON, re-run tools/pack_validator.py, and regenerate.
 
 export const PHONETIC_PACKS: Record<string, {start: string[]; middle: string[]; end: string[]}> = {
   "harsh": {
