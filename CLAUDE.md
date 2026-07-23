@@ -14,8 +14,10 @@ An Obsidian plugin (TypeScript, esbuild) that generates fantasy names and langua
 
 ## Where things live
 - /docs/reconciliation.md — how the current build diverged from the design; start here.
-  **Not yet in the repo** — was referenced before it existed; pending.
-- /docs/naming-system-framework.md — the master design. **Not yet in the repo** — pending.
+  Gives a precise, dependency-ordered gap list (Gap 1: drift-pack library, Gap 2: structure/
+  intensity split, Gap 3: contact graph, Gap 4: place strata, Gap 5: titles, Gap 6: spelling
+  toggle). Gap 1 must be fixed before Gaps 2–4 are buildable — follow its sequence.
+- /docs/naming-system-framework.md — the master design.
 - /docs/spec-*.md — feature specs (language page, name classes, meaningful names, traditions).
 - /docs/gate-refinements.md — accepted amendments to the Step 6 gates.
 - /data + /tools — validated data and its validators: starter-packs-v2.json (phonetic
