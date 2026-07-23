@@ -26,25 +26,40 @@ An Obsidian plugin (TypeScript, esbuild) that generates fantasy names and langua
   /tools validator. Run `npm run validate` to check all four.
 
 ## Current status (read before assuming a spec is implemented)
-- **Gap 1 (drift-pack library) and Gap 2 (structure/intensity split) are done.**
-  `deriveCulture`/`mergeCultures` now take `driftPackIds` and apply `DRIFT_PACKS` (ported
-  from `drift-packs.json`) as ordered rule packs, not the old unordered `SOUND_CHANGE_RULES`.
-  `Culture.driftMode` (`family`/`family-contact`) formalizes what `deriveCulture`/
-  `mergeCultures` already did; `ageCulture` is the new Level-1 "single language, aged"
-  operation (`AgeCultureModal`, command `age-culture`) — a read-only preview, no lineage
-  node created, never mutates a culture's stably-minted `roots`/`elements`.
-- **Gaps 3–6 remain open**, per `reconciliation.md`'s own sequencing: directed contact graph
-  (`mergeCultures` is still symmetric, labeled `family-contact` as an interim implementation),
-  place sub-types with per-type drift depth, `title` as a `Category`, and the etymological/
-  phonetic spelling toggle.
-- `SEMANTIC_PACKS` in `data.ts` still stores concepts as plain strings, not the tagged
-  `{concept, tags}` shape `concept-packs.json` uses. `contentPolicy`/root-policy resolution
-  is not wired into generation yet.
-- `naming-traditions.json`'s patterns are not wired into name generation yet.
-- All data files (`starter-packs-v2.json`, `concept-packs.json`, `drift-packs.json`,
-  `naming-traditions.json`) validate clean via `npm run validate`. The new drift-pack rule
-  applier in `engine.ts` was cross-checked word-for-word against `tools/drift_validator.py`'s
-  demo output for all 7 packs — exact match.
+- **Gaps 1–4 are done.**
+  - Gap 1 (drift-pack library): `deriveCulture`/`mergeCultures` take `driftPackIds` and apply
+    `DRIFT_PACKS` (ported from `drift-packs.json`) as ordered rule packs, not the old
+    unordered `SOUND_CHANGE_RULES`.
+  - Gap 2 (structure/intensity split): `Culture.driftMode` (`family`/`family-contact`)
+    formalizes what `deriveCulture`/`mergeCultures` already did; `ageCulture` is the Level-1
+    "single language, aged" operation (`AgeCultureModal`, command `age-culture`) — read-only,
+    no lineage node, never mutates a culture's stably-minted `roots`/`elements`.
+  - Gap 3 (directed contact graph): `ContactEdge` (`donorId`→`borrowerId`, `contactType`,
+    `strength`, `domains`) lives in `plugin.data.contactEdges`. `previewContactEdge` biases
+    borrowing toward a domain's tags (via `CONTACT_DOMAIN_TAGS`), reshapes via the
+    `prestige_exonym` pack, filters through the borrower's `legalOnset`. Preview-only by
+    default; `acceptLoanedRoots` is the one explicit, user-consented mutation that saves
+    loanwords into a culture (`ContactEdgeModal`, command `create-contact-edge`).
+    `mergeCultures` stays symmetric, labeled `family-contact` as an interim implementation —
+    not the directional model.
+  - Gap 4 (place strata): `PlaceType` (`continent`/`kingdom`/`settlement`/`feature`) each has
+    a default `PLACE_TYPE_DRIFT_DEPTH`; `resolvePlaceSourceCulture` walks a culture's
+    `parentIds` chain that many hops (oldest/least-drifted parent at each fork) so a
+    `feature` can draw on an ancestral tongue. Wired into `GenerateModal`'s place-type
+    dropdown; substrate loanwords accepted via Gap 3 become ordinary roots, so they're
+    automatically eligible once an ancestor is resolved — the two gaps compose with no
+    extra glue code.
+  - This required migrating `SEMANTIC_PACKS` (`data.ts`) from plain concept strings to the
+    tagged `{concept, tags}` shape `concept-packs.json` already had — `Root` now carries
+    `tags: string[]` and an optional `loanOrigin`. `contentPolicy`/root-policy resolution for
+    naming-traditions.json is still not wired into generation (a separate, larger gap).
+- **Gaps 5–6 remain open**: `title` as a `Category`, and the etymological/phonetic spelling
+  toggle. `naming-traditions.json`'s patterns are still not wired into name generation.
+- All data files validate clean via `npm run validate`. The drift-pack rule applier was
+  cross-checked word-for-word against `tools/drift_validator.py`'s demo output (exact match);
+  the Gap 3/4 engine functions were exercised via a standalone esbuild-compiled harness
+  (3-generation ancestor walk, domain-biased borrowing, loanword-accept idempotency) — all
+  passed.
 - Not yet manually smoke-tested inside Obsidian itself (would require driving the user's
   real desktop install via Electron automation with no dedicated test vault — flagged rather
   than attempted unprompted). `npx tsc --noEmit` and the esbuild bundle both succeed.

@@ -257,321 +257,339 @@ var SEMANTIC_PACKS = {
   "core": {
     "additive": false,
     "concepts": [
-      "strong",
-      "wise",
-      "noble",
-      "fair",
-      "bright",
-      "swift",
-      "brave",
-      "true",
-      "free",
-      "high",
-      "old",
-      "young",
-      "great",
-      "fierce",
-      "gentle",
-      "proud",
-      "bold",
-      "pure",
-      "dark",
-      "light",
-      "man",
-      "woman",
-      "child",
-      "son",
-      "daughter",
-      "born-of",
-      "kin",
-      "elder",
-      "chief",
-      "lord",
-      "lady",
-      "guardian",
-      "gift",
-      "hope",
-      "joy",
-      "fortune",
-      "blessed",
-      "beloved",
-      "honoured",
-      "far-seeing",
-      "stone",
-      "river",
-      "hill",
-      "star",
-      "sun",
-      "moon",
-      "sky",
-      "flame",
-      "wind",
-      "dawn",
-      "wolf",
-      "hawk",
-      "bear",
-      "stag",
-      "raven",
-      "lion",
-      "serpent",
-      "eagle",
-      "horse",
-      "hound",
-      "iron",
-      "gold",
-      "silver",
-      "oak",
-      "ash",
-      "thorn",
-      "shield",
-      "spear",
-      "crown",
-      "oath"
+      { "concept": "strong", "tags": ["strength", "virtue"] },
+      { "concept": "wise", "tags": ["wisdom", "virtue"] },
+      { "concept": "noble", "tags": ["rank", "virtue"] },
+      { "concept": "fair", "tags": ["beauty", "virtue"] },
+      { "concept": "bright", "tags": ["light", "virtue"] },
+      { "concept": "swift", "tags": ["virtue"] },
+      { "concept": "brave", "tags": ["courage", "virtue"] },
+      { "concept": "true", "tags": ["virtue"] },
+      { "concept": "free", "tags": ["virtue"] },
+      { "concept": "high", "tags": ["rank"] },
+      { "concept": "old", "tags": ["age"] },
+      { "concept": "young", "tags": ["age"] },
+      { "concept": "great", "tags": ["virtue", "rank"] },
+      { "concept": "fierce", "tags": ["courage", "war"] },
+      { "concept": "gentle", "tags": ["virtue"] },
+      { "concept": "proud", "tags": ["virtue"] },
+      { "concept": "bold", "tags": ["courage", "virtue"] },
+      { "concept": "pure", "tags": ["virtue", "sacred"] },
+      { "concept": "dark", "tags": ["dark"] },
+      { "concept": "light", "tags": ["light"] },
+      { "concept": "man", "tags": ["kin"] },
+      { "concept": "woman", "tags": ["kin"] },
+      { "concept": "child", "tags": ["kin"] },
+      { "concept": "son", "tags": ["kin"] },
+      { "concept": "daughter", "tags": ["kin"] },
+      { "concept": "born-of", "tags": ["kin"] },
+      { "concept": "kin", "tags": ["kin"] },
+      { "concept": "elder", "tags": ["kin", "rank", "age"] },
+      { "concept": "chief", "tags": ["rank"] },
+      { "concept": "lord", "tags": ["rank"] },
+      { "concept": "lady", "tags": ["rank"] },
+      { "concept": "guardian", "tags": ["rank", "war"] },
+      { "concept": "gift", "tags": ["fortune"] },
+      { "concept": "hope", "tags": ["joy", "virtue"] },
+      { "concept": "joy", "tags": ["joy"] },
+      { "concept": "fortune", "tags": ["fortune"] },
+      { "concept": "blessed", "tags": ["sacred", "fortune"] },
+      { "concept": "beloved", "tags": ["kin", "virtue"] },
+      { "concept": "honoured", "tags": ["rank", "virtue"] },
+      { "concept": "far-seeing", "tags": ["wisdom"] },
+      { "concept": "stone", "tags": ["stone", "earth"] },
+      { "concept": "river", "tags": ["river", "water"] },
+      { "concept": "hill", "tags": ["earth", "mountain", "place"] },
+      { "concept": "star", "tags": ["celestial"] },
+      { "concept": "sun", "tags": ["celestial", "light"] },
+      { "concept": "moon", "tags": ["celestial"] },
+      { "concept": "sky", "tags": ["sky"] },
+      { "concept": "flame", "tags": ["fire"] },
+      { "concept": "wind", "tags": ["weather", "sky"] },
+      { "concept": "dawn", "tags": ["light", "celestial"] },
+      { "concept": "wolf", "tags": ["beast", "wild"] },
+      { "concept": "hawk", "tags": ["bird", "wild"] },
+      { "concept": "bear", "tags": ["beast", "wild", "strength"] },
+      { "concept": "stag", "tags": ["beast", "wild"] },
+      { "concept": "raven", "tags": ["bird", "wild", "dark"] },
+      { "concept": "lion", "tags": ["beast", "strength"] },
+      { "concept": "serpent", "tags": ["serpent", "wild"] },
+      { "concept": "eagle", "tags": ["bird", "wild"] },
+      { "concept": "horse", "tags": ["beast"] },
+      { "concept": "hound", "tags": ["beast"] },
+      { "concept": "iron", "tags": ["metal", "war"] },
+      { "concept": "gold", "tags": ["metal", "wealth"] },
+      { "concept": "silver", "tags": ["metal", "wealth"] },
+      { "concept": "oak", "tags": ["tree", "flora"] },
+      { "concept": "ash-tree", "tags": ["tree", "flora"] },
+      { "concept": "thorn", "tags": ["flora", "wild"] },
+      { "concept": "shield", "tags": ["weapon", "war"] },
+      { "concept": "spear", "tags": ["weapon", "war"] },
+      { "concept": "crown", "tags": ["rank"] },
+      { "concept": "oath", "tags": ["sacred", "virtue"] },
+      { "concept": "beauty", "tags": ["beauty"] },
+      { "concept": "grace", "tags": ["beauty", "virtue"] },
+      { "concept": "waterfall", "tags": ["water", "river", "place"] },
+      { "concept": "bird", "tags": ["bird"] },
+      { "concept": "blossom", "tags": ["flower", "flora"] },
+      { "concept": "rose", "tags": ["flower", "flora"] },
+      { "concept": "song", "tags": ["sound"] },
+      { "concept": "mist", "tags": ["weather", "water"] },
+      { "concept": "glory", "tags": ["virtue", "rank"] },
+      { "concept": "lily", "tags": ["flower", "flora"] },
+      { "concept": "iris", "tags": ["flower", "flora"] },
+      { "concept": "violet", "tags": ["flower", "flora"] },
+      { "concept": "petal", "tags": ["flower", "flora"] },
+      { "concept": "bloom", "tags": ["flower", "flora"] },
+      { "concept": "heather", "tags": ["flower", "flora", "herb"] },
+      { "concept": "jasmine", "tags": ["flower", "flora"] },
+      { "concept": "home", "tags": ["home", "hearth"] },
+      { "concept": "cradle", "tags": ["kin", "hearth", "home"] }
     ]
   },
   "warrior": {
     "additive": true,
     "concepts": [
-      "sword",
-      "blade",
-      "axe",
-      "spear",
-      "shield",
-      "war",
-      "battle",
-      "valour",
-      "victory",
-      "conquest",
-      "blood",
-      "fury",
-      "wrath",
-      "iron",
-      "steel",
-      "banner",
-      "fortress",
-      "strike",
-      "wound",
-      "vengeance",
-      "guard",
-      "warband",
-      "champion",
-      "scar",
-      "siege",
-      "rally",
-      "onslaught",
-      "bane",
-      "unbroken",
-      "deathless"
+      { "concept": "sword", "tags": ["weapon", "war"] },
+      { "concept": "blade", "tags": ["weapon", "war"] },
+      { "concept": "axe", "tags": ["weapon", "war"] },
+      { "concept": "spear", "tags": ["weapon", "war"] },
+      { "concept": "shield", "tags": ["weapon", "war"] },
+      { "concept": "war", "tags": ["war"] },
+      { "concept": "battle", "tags": ["war"] },
+      { "concept": "valour", "tags": ["courage", "war", "virtue"] },
+      { "concept": "victory", "tags": ["war", "fortune"] },
+      { "concept": "conquest", "tags": ["war"] },
+      { "concept": "blood", "tags": ["war", "death"] },
+      { "concept": "fury", "tags": ["war"] },
+      { "concept": "wrath", "tags": ["war"] },
+      { "concept": "iron", "tags": ["metal", "war"] },
+      { "concept": "steel", "tags": ["metal", "war"] },
+      { "concept": "banner", "tags": ["war", "rank"] },
+      { "concept": "fortress", "tags": ["war", "settlement", "place"] },
+      { "concept": "strike", "tags": ["war"] },
+      { "concept": "wound", "tags": ["war", "death"] },
+      { "concept": "vengeance", "tags": ["war", "death"] },
+      { "concept": "guard", "tags": ["war", "rank"] },
+      { "concept": "warband", "tags": ["war", "kin"] },
+      { "concept": "champion", "tags": ["war", "rank"] },
+      { "concept": "scar", "tags": ["war"] },
+      { "concept": "siege", "tags": ["war"] },
+      { "concept": "rally", "tags": ["war"] },
+      { "concept": "onslaught", "tags": ["war"] },
+      { "concept": "bane", "tags": ["war", "death"] },
+      { "concept": "unbroken", "tags": ["war", "virtue"] },
+      { "concept": "deathless", "tags": ["death", "war"] }
     ]
   },
   "seafaring": {
     "additive": true,
     "concepts": [
-      "sea",
-      "wave",
-      "tide",
-      "salt",
-      "storm",
-      "harbour",
-      "sail",
-      "ship",
-      "deep",
-      "current",
-      "foam",
-      "anchor",
-      "horizon",
-      "island",
-      "shore",
-      "fathom",
-      "gull",
-      "brine",
-      "reef",
-      "squall",
-      "voyage",
-      "mast",
-      "keel",
-      "drowned",
-      "far-shore",
-      "seaborne",
-      "spray",
-      "leviathan",
-      "beacon",
-      "helm"
+      { "concept": "sea", "tags": ["sea", "water"] },
+      { "concept": "wave", "tags": ["sea", "water"] },
+      { "concept": "tide", "tags": ["sea", "water"] },
+      { "concept": "salt", "tags": ["sea"] },
+      { "concept": "storm", "tags": ["weather", "sea"] },
+      { "concept": "harbour", "tags": ["sea", "settlement", "place"] },
+      { "concept": "sail", "tags": ["sea", "craft"] },
+      { "concept": "ship", "tags": ["sea", "craft"] },
+      { "concept": "deep", "tags": ["sea"] },
+      { "concept": "current", "tags": ["sea", "water"] },
+      { "concept": "foam", "tags": ["sea", "water"] },
+      { "concept": "anchor", "tags": ["sea", "craft"] },
+      { "concept": "horizon", "tags": ["sea", "sky", "place"] },
+      { "concept": "island", "tags": ["sea", "place"] },
+      { "concept": "shore", "tags": ["sea", "place"] },
+      { "concept": "fathom", "tags": ["sea"] },
+      { "concept": "gull", "tags": ["bird", "sea"] },
+      { "concept": "brine", "tags": ["sea", "water"] },
+      { "concept": "reef", "tags": ["sea", "stone"] },
+      { "concept": "squall", "tags": ["weather", "sea"] },
+      { "concept": "voyage", "tags": ["sea"] },
+      { "concept": "mast", "tags": ["sea", "craft"] },
+      { "concept": "keel", "tags": ["sea", "craft"] },
+      { "concept": "drowned", "tags": ["sea", "death"] },
+      { "concept": "far-shore", "tags": ["sea", "place"] },
+      { "concept": "seaborne", "tags": ["sea"] },
+      { "concept": "spray", "tags": ["sea", "water"] },
+      { "concept": "leviathan", "tags": ["fish", "sea", "serpent"] },
+      { "concept": "beacon", "tags": ["sea", "light", "craft"] },
+      { "concept": "helm", "tags": ["sea", "craft"] }
     ]
   },
   "mountain": {
     "additive": true,
     "concepts": [
-      "peak",
-      "granite",
-      "cliff",
-      "snow",
-      "ore",
-      "ridge",
-      "cavern",
-      "echo",
-      "avalanche",
-      "summit",
-      "delve",
-      "deep-road",
-      "frost",
-      "eagle",
-      "chasm",
-      "boulder",
-      "scree",
-      "glacier",
-      "hold",
-      "highborn"
+      { "concept": "peak", "tags": ["mountain", "place"] },
+      { "concept": "granite", "tags": ["stone", "mountain"] },
+      { "concept": "cliff", "tags": ["mountain", "stone", "place"] },
+      { "concept": "snow", "tags": ["ice", "weather"] },
+      { "concept": "ore", "tags": ["metal", "stone"] },
+      { "concept": "ridge", "tags": ["mountain", "place"] },
+      { "concept": "cavern", "tags": ["earth", "place"] },
+      { "concept": "echo", "tags": ["sound"] },
+      { "concept": "avalanche", "tags": ["mountain", "ice", "weather"] },
+      { "concept": "summit", "tags": ["mountain", "place"] },
+      { "concept": "delve", "tags": ["earth", "craft"] },
+      { "concept": "deep-road", "tags": ["earth", "craft", "place"] },
+      { "concept": "frost", "tags": ["ice", "weather"] },
+      { "concept": "eagle", "tags": ["bird", "wild"] },
+      { "concept": "chasm", "tags": ["earth", "place"] },
+      { "concept": "boulder", "tags": ["stone"] },
+      { "concept": "scree", "tags": ["stone", "mountain"] },
+      { "concept": "glacier", "tags": ["ice", "mountain"] },
+      { "concept": "hold", "tags": ["settlement", "place", "war"] },
+      { "concept": "highborn", "tags": ["rank", "mountain"] }
     ]
   },
   "forest": {
     "additive": true,
     "concepts": [
-      "leaf",
-      "root",
-      "thorn",
-      "oak",
-      "moss",
-      "grove",
-      "green",
-      "hunt",
-      "shadow",
-      "antler",
-      "briar",
-      "hollow",
-      "fern",
-      "boar",
-      "vine",
-      "wildwood",
-      "trail",
-      "quiet",
-      "undergrowth",
-      "evergreen"
+      { "concept": "leaf", "tags": ["flora", "tree"] },
+      { "concept": "root", "tags": ["flora", "tree", "earth"] },
+      { "concept": "thorn", "tags": ["flora", "wild"] },
+      { "concept": "oak", "tags": ["tree", "flora"] },
+      { "concept": "moss", "tags": ["flora", "herb"] },
+      { "concept": "grove", "tags": ["tree", "forest", "place"] },
+      { "concept": "green", "tags": ["flora", "forest"] },
+      { "concept": "hunt", "tags": ["wild", "war"] },
+      { "concept": "shadow", "tags": ["dark"] },
+      { "concept": "antler", "tags": ["beast", "wild"] },
+      { "concept": "briar", "tags": ["flora", "wild"] },
+      { "concept": "hollow", "tags": ["forest", "place"] },
+      { "concept": "fern", "tags": ["herb", "flora"] },
+      { "concept": "boar", "tags": ["beast", "wild"] },
+      { "concept": "vine", "tags": ["flora"] },
+      { "concept": "wildwood", "tags": ["forest", "wild", "tree"] },
+      { "concept": "trail", "tags": ["wild", "place"] },
+      { "concept": "quiet", "tags": ["virtue"] },
+      { "concept": "undergrowth", "tags": ["flora", "forest"] },
+      { "concept": "evergreen", "tags": ["tree", "flora"] }
     ]
   },
   "arcane": {
     "additive": true,
     "concepts": [
-      "rune",
-      "veil",
-      "spell",
-      "spirit",
-      "dream",
-      "ward",
-      "ether",
-      "glyph",
-      "star",
-      "moon",
-      "hollow",
-      "whisper",
-      "sigil",
-      "aether",
-      "unseen",
-      "threshold",
-      "binding",
-      "far-mind",
-      "twilight",
-      "wyrd"
+      { "concept": "rune", "tags": ["magic", "craft"] },
+      { "concept": "veil", "tags": ["magic", "dark"] },
+      { "concept": "spell", "tags": ["magic"] },
+      { "concept": "spirit", "tags": ["spirit", "magic"] },
+      { "concept": "dream", "tags": ["magic", "spirit"] },
+      { "concept": "ward", "tags": ["magic", "war"] },
+      { "concept": "ether", "tags": ["magic", "sky"] },
+      { "concept": "glyph", "tags": ["magic", "craft"] },
+      { "concept": "star", "tags": ["celestial"] },
+      { "concept": "moon", "tags": ["celestial"] },
+      { "concept": "hollow", "tags": ["magic", "place"] },
+      { "concept": "whisper", "tags": ["sound", "magic"] },
+      { "concept": "sigil", "tags": ["magic", "craft"] },
+      { "concept": "aether", "tags": ["magic", "sky"] },
+      { "concept": "unseen", "tags": ["magic", "spirit"] },
+      { "concept": "threshold", "tags": ["magic", "place"] },
+      { "concept": "binding", "tags": ["magic"] },
+      { "concept": "far-mind", "tags": ["magic", "wisdom"] },
+      { "concept": "twilight", "tags": ["dark", "light", "celestial"] },
+      { "concept": "wyrd", "tags": ["magic", "fortune", "death"] }
     ]
   },
   "desert": {
     "additive": true,
     "concepts": [
-      "sand",
-      "sun",
-      "dune",
-      "mirage",
-      "ember",
-      "scorpion",
-      "dry",
-      "oasis",
-      "dust",
-      "glare",
-      "thirst",
-      "wanderer",
-      "caravan",
-      "scorched",
-      "sirocco",
-      "waterless",
-      "flint",
-      "vulture",
-      "far-road",
-      "sunblind"
+      { "concept": "sand", "tags": ["earth"] },
+      { "concept": "sun", "tags": ["celestial", "light"] },
+      { "concept": "dune", "tags": ["earth", "place"] },
+      { "concept": "mirage", "tags": ["light", "magic"] },
+      { "concept": "ember", "tags": ["fire"] },
+      { "concept": "scorpion", "tags": ["beast", "wild"] },
+      { "concept": "dry", "tags": ["weather"] },
+      { "concept": "oasis", "tags": ["water", "place"] },
+      { "concept": "dust", "tags": ["earth"] },
+      { "concept": "glare", "tags": ["light"] },
+      { "concept": "thirst", "tags": ["water"] },
+      { "concept": "wanderer", "tags": ["wild"] },
+      { "concept": "caravan", "tags": ["trade"] },
+      { "concept": "scorched", "tags": ["fire"] },
+      { "concept": "sirocco", "tags": ["weather"] },
+      { "concept": "waterless", "tags": ["water"] },
+      { "concept": "flint", "tags": ["stone", "fire"] },
+      { "concept": "vulture", "tags": ["bird", "death", "wild"] },
+      { "concept": "far-road", "tags": ["place", "trade"] },
+      { "concept": "sunblind", "tags": ["light"] }
     ]
   },
   "mercantile": {
     "additive": true,
     "concepts": [
-      "coin",
-      "gate",
-      "guild",
-      "road",
-      "market",
-      "bell",
-      "ledger",
-      "tower",
-      "key",
-      "scale",
-      "bridge",
-      "toll",
-      "banker",
-      "contract",
-      "quarter",
-      "counting-house",
-      "seal",
-      "vault",
-      "wheelwright",
-      "highroad"
+      { "concept": "coin", "tags": ["wealth", "trade"] },
+      { "concept": "gate", "tags": ["settlement", "place"] },
+      { "concept": "guild", "tags": ["trade", "craft"] },
+      { "concept": "road", "tags": ["place", "trade"] },
+      { "concept": "market", "tags": ["trade", "settlement"] },
+      { "concept": "bell", "tags": ["craft", "sound"] },
+      { "concept": "ledger", "tags": ["trade", "craft"] },
+      { "concept": "tower", "tags": ["settlement", "place"] },
+      { "concept": "key", "tags": ["craft"] },
+      { "concept": "scale", "tags": ["trade", "craft"] },
+      { "concept": "bridge", "tags": ["settlement", "place"] },
+      { "concept": "toll", "tags": ["trade"] },
+      { "concept": "banker", "tags": ["trade", "wealth"] },
+      { "concept": "contract", "tags": ["trade"] },
+      { "concept": "quarter", "tags": ["settlement", "place"] },
+      { "concept": "counting-house", "tags": ["trade", "settlement"] },
+      { "concept": "seal", "tags": ["craft", "trade"] },
+      { "concept": "vault", "tags": ["wealth", "settlement"] },
+      { "concept": "wheelwright", "tags": ["craft", "trade"] },
+      { "concept": "highroad", "tags": ["place", "trade"] }
     ]
   },
   "priestly": {
     "additive": true,
     "concepts": [
-      "light",
-      "temple",
-      "prayer",
-      "saint",
-      "vow",
-      "dawn",
-      "incense",
-      "pilgrim",
-      "grace",
-      "ash",
-      "relic",
-      "hymn",
-      "cloister",
-      "penitent",
-      "sanctified",
-      "vigil",
-      "sacred-fire",
-      "confessor",
-      "shroud",
-      "benediction"
+      { "concept": "light", "tags": ["light", "sacred"] },
+      { "concept": "temple", "tags": ["sacred", "settlement", "place"] },
+      { "concept": "prayer", "tags": ["sacred"] },
+      { "concept": "saint", "tags": ["sacred", "rank"] },
+      { "concept": "vow", "tags": ["sacred", "virtue"] },
+      { "concept": "dawn", "tags": ["light", "celestial", "sacred"] },
+      { "concept": "incense", "tags": ["sacred", "craft"] },
+      { "concept": "pilgrim", "tags": ["sacred", "wild"] },
+      { "concept": "grace", "tags": ["beauty", "sacred", "virtue"] },
+      { "concept": "ashes", "tags": ["sacred", "death", "fire"] },
+      { "concept": "relic", "tags": ["sacred", "craft"] },
+      { "concept": "hymn", "tags": ["sacred", "sound"] },
+      { "concept": "cloister", "tags": ["sacred", "settlement", "place"] },
+      { "concept": "penitent", "tags": ["sacred"] },
+      { "concept": "sanctified", "tags": ["sacred"] },
+      { "concept": "vigil", "tags": ["sacred", "light"] },
+      { "concept": "sacred-fire", "tags": ["sacred", "fire"] },
+      { "concept": "confessor", "tags": ["sacred", "rank"] },
+      { "concept": "shroud", "tags": ["sacred", "death"] },
+      { "concept": "benediction", "tags": ["sacred"] }
     ]
   },
   "agrarian": {
     "additive": true,
     "concepts": [
-      "field",
-      "grain",
-      "harvest",
-      "ox",
-      "plough",
-      "hearth",
-      "seed",
-      "meadow",
-      "shepherd",
-      "orchard",
-      "furrow",
-      "millstone",
-      "cattle",
-      "well-fed",
-      "sunlit",
-      "homestead",
-      "scythe",
-      "fallow",
-      "greenrow",
-      "goodhearth"
+      { "concept": "field", "tags": ["earth", "place", "grain"] },
+      { "concept": "grain", "tags": ["grain", "flora"] },
+      { "concept": "harvest", "tags": ["grain", "fortune"] },
+      { "concept": "ox", "tags": ["beast"] },
+      { "concept": "plough", "tags": ["craft"] },
+      { "concept": "hearth", "tags": ["hearth", "fire", "home"] },
+      { "concept": "seed", "tags": ["flora", "grain"] },
+      { "concept": "meadow", "tags": ["flora", "place", "wild"] },
+      { "concept": "shepherd", "tags": ["beast", "craft"] },
+      { "concept": "orchard", "tags": ["tree", "fruit", "place"] },
+      { "concept": "furrow", "tags": ["earth"] },
+      { "concept": "millstone", "tags": ["craft", "stone"] },
+      { "concept": "cattle", "tags": ["beast"] },
+      { "concept": "well-fed", "tags": ["hearth", "fortune"] },
+      { "concept": "sunlit", "tags": ["light"] },
+      { "concept": "homestead", "tags": ["hearth", "settlement", "home", "place"] },
+      { "concept": "scythe", "tags": ["craft"] },
+      { "concept": "fallow", "tags": ["earth"] },
+      { "concept": "greenrow", "tags": ["flora", "place"] },
+      { "concept": "goodhearth", "tags": ["hearth", "home", "fortune"] }
     ]
   }
 };
@@ -694,6 +712,12 @@ var DRIFT_PACKS = {
 };
 
 // src/engine.ts
+var PLACE_TYPE_DRIFT_DEPTH = {
+  feature: 3,
+  continent: 2,
+  kingdom: 1,
+  settlement: 0
+};
 function xmur3(str) {
   let h = 1779033703 ^ str.length;
   for (let i = 0; i < str.length; i++) {
@@ -1018,25 +1042,26 @@ function applySemanticPacks(culture, packNames) {
   culture.appliedPacks = applied;
   const weightOf = /* @__PURE__ */ new Map();
   for (const packName of applied) {
-    for (const concept of SEMANTIC_PACKS[packName].concepts) {
+    for (const { concept, tags } of SEMANTIC_PACKS[packName].concepts) {
       const cur = weightOf.get(concept);
       if (cur) cur.w = Math.min(3, cur.w + 1);
-      else weightOf.set(concept, { w: 1, origin: packName });
+      else weightOf.set(concept, { w: 1, origin: packName, tags });
     }
   }
   const existingByMeaning = new Map(culture.roots.map((r) => [r.meaning, r]));
   const forms = culture.roots.map((r) => r.form);
   const roots = [];
-  for (const [meaning, { w, origin }] of weightOf) {
+  for (const [meaning, { w, origin, tags }] of weightOf) {
     const prior = existingByMeaning.get(meaning);
     if (prior) {
       prior.weight = prior.weight === 0.5 ? 0.5 : w;
+      prior.tags = tags;
       roots.push(prior);
       continue;
     }
     const form = mintForm(culture, meaning, forms);
     forms.push(form);
-    roots.push({ form, meaning, origin, weight: w });
+    roots.push({ form, meaning, origin, weight: w, tags });
   }
   culture.roots = roots;
 }
@@ -1370,7 +1395,7 @@ function deriveCulture(parent, name, driftLevel, driftPackIds, overrides = {}) {
   return culture;
 }
 function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}) {
-  var _a, _b;
+  var _a, _b, _c, _d;
   if (parents.length < 2) throw new Error("mergeCultures requires at least two parents");
   const packs = driftPackIds.map((id) => DRIFT_PACKS[id]).filter((p) => !!p);
   const seed = `${name}::merge::${parents.map((p) => p.id).join("+")}::${Date.now().toString(36)}`;
@@ -1420,7 +1445,9 @@ function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}) 
       form: blended[0].toUpperCase() + blended.slice(1).toLowerCase(),
       meaning,
       origin: `${a.origin}+${b.origin}`,
-      weight: Math.min(3, Math.max(a.weight, b.weight))
+      weight: Math.min(3, Math.max(a.weight, b.weight)),
+      tags: [.../* @__PURE__ */ new Set([...(_a = a.tags) != null ? _a : [], ...(_b = b.tags) != null ? _b : []])]
+      // ?? guards roots saved before tags existed
     });
   }
   const modeOf = (values) => {
@@ -1444,7 +1471,7 @@ function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}) 
     mood: modeOf(parents.map((p) => p.mood)),
     register: modeOf(parents.map((p) => p.register)),
     familiarity: modeOf(parents.map((p) => p.familiarity)),
-    environment: (_a = overrides.environment) != null ? _a : parents[0].environment,
+    environment: (_c = overrides.environment) != null ? _c : parents[0].environment,
     elements,
     middleChance: parents.reduce((t, p) => t + p.middleChance, 0) / parents.length,
     syllableRange: [syllLo, Math.max(syllLo, syllHi)],
@@ -1465,7 +1492,7 @@ function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}) 
   const intensity = DRIFT_PRESETS[driftLevel] * 0.5;
   culture.elements = driftElementSet(rng, culture.elements, packs, intensity);
   culture.roots = culture.roots.map((r) => ({ ...r, form: driftWordWithPacks(rng, r.form, packs, intensity) }));
-  if ((_b = overrides.packs) == null ? void 0 : _b.length) {
+  if ((_d = overrides.packs) == null ? void 0 : _d.length) {
     applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
   }
   culture.summary = oneBreath(culture);
@@ -1498,6 +1525,80 @@ function ageCulture(culture, packId, driftLevel, category = "personal") {
     packId,
     driftLevel
   };
+}
+function resolvePlaceSourceCulture(culture, allCultures, placeType) {
+  var _a;
+  let current = culture;
+  let hops = PLACE_TYPE_DRIFT_DEPTH[placeType];
+  while (hops > 0) {
+    const parents = ((_a = current.parentIds) != null ? _a : []).map((id) => allCultures.find((c) => c.id === id)).filter((c) => !!c);
+    if (parents.length === 0) break;
+    current = parents.reduce((best, p) => {
+      var _a2, _b;
+      const bg = (_a2 = best.generation) != null ? _a2 : 0, pg = (_b = p.generation) != null ? _b : 0;
+      if (pg !== bg) return pg < bg ? p : best;
+      const bi = best.driftLevel ? DRIFT_PRESETS[best.driftLevel] : 0;
+      const pi = p.driftLevel ? DRIFT_PRESETS[p.driftLevel] : 0;
+      return pi < bi ? p : best;
+    });
+    hops--;
+  }
+  return current;
+}
+var CONTACT_DOMAIN_TAGS = {
+  administration: ["rank"],
+  religion: ["sacred"],
+  warfare: ["war", "weapon"],
+  trade: ["trade", "wealth", "craft"],
+  "place-features": ["place", "mountain", "river", "water", "sea", "forest", "earth", "settlement"]
+};
+function legalOnset(word) {
+  const w = word.replace(/^-/, "").toLowerCase();
+  const m = w.match(/^[^aeiou]*/);
+  const onset = m ? m[0] : "";
+  return onset === "" || LEGAL_ONSETS.has(onset);
+}
+function previewContactEdge(donor, borrower, edge, category = "personal") {
+  var _a;
+  const rng = rngFrom(`${edge.id}::contact::${donor.id}::${borrower.id}`);
+  const domainTags = edge.domains.flatMap((d) => CONTACT_DOMAIN_TAGS[d]);
+  const matching = domainTags.length ? donor.roots.filter((r) => {
+    var _a2;
+    return ((_a2 = r.tags) != null ? _a2 : []).some((t) => domainTags.includes(t));
+  }) : [];
+  const pool = matching.length >= 3 ? matching : donor.roots;
+  const count = Math.max(1, Math.round(edge.strength * pool.length));
+  const chosen = sample(rng, pool, Math.min(count, pool.length));
+  const reshapePack = DRIFT_PACKS.prestige_exonym;
+  const existingForms = borrower.roots.map((r) => r.form.toLowerCase());
+  const loanedRoots = [];
+  for (const donorRoot of chosen) {
+    const reshaped = driftWordWithPacks(rng, donorRoot.form, [reshapePack], 1);
+    if (!legalOnset(reshaped)) continue;
+    if (existingForms.some((f) => levenshtein(reshaped.toLowerCase(), f) < 2)) continue;
+    existingForms.push(reshaped.toLowerCase());
+    loanedRoots.push({
+      form: reshaped[0].toUpperCase() + reshaped.slice(1).toLowerCase(),
+      meaning: donorRoot.meaning,
+      origin: `loan:${donor.id}`,
+      weight: 1,
+      tags: (_a = donorRoot.tags) != null ? _a : [],
+      loanOrigin: { donorCultureId: donor.id, edgeId: edge.id }
+    });
+  }
+  const previewCulture = { ...borrower, roots: [...borrower.roots, ...loanedRoots] };
+  const sampleRng = rngFrom(`${edge.id}::contact::samples`);
+  const samples = generateBatch(previewCulture, category, 3, "sound", sampleRng);
+  return { loanedRoots, samples };
+}
+function acceptLoanedRoots(borrower, loanedRoots) {
+  const existingForms = new Set(borrower.roots.map((r) => r.form.toLowerCase()));
+  for (const r of loanedRoots) {
+    if (!existingForms.has(r.form.toLowerCase())) {
+      borrower.roots.push(r);
+      existingForms.add(r.form.toLowerCase());
+    }
+  }
 }
 function cultureNote(culture, allCultures = []) {
   var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -1582,14 +1683,15 @@ var DEFAULT_SETTINGS = {
 var LanguageForgePlugin = class extends import_obsidian.Plugin {
   constructor() {
     super(...arguments);
-    this.data = { settings: { ...DEFAULT_SETTINGS }, cultures: [] };
+    this.data = { settings: { ...DEFAULT_SETTINGS }, cultures: [], contactEdges: [] };
   }
   async onload() {
-    var _a, _b;
+    var _a, _b, _c;
     const stored = await this.loadData();
     if (stored) {
       this.data.settings = { ...DEFAULT_SETTINGS, ...(_a = stored.settings) != null ? _a : {} };
       this.data.cultures = (_b = stored.cultures) != null ? _b : [];
+      this.data.contactEdges = (_c = stored.contactEdges) != null ? _c : [];
     }
     this.addCommand({
       id: "create-culture",
@@ -1634,6 +1736,17 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
           return;
         }
         new PickCultureModal(this.app, this, (c) => new AgeCultureModal(this.app, this, c).open(), "Age this").open();
+      }
+    });
+    this.addCommand({
+      id: "create-contact-edge",
+      name: "Connect two languages via contact",
+      callback: () => {
+        if (this.data.cultures.length < 2) {
+          new import_obsidian.Notice("Need at least two languages to connect.");
+          return;
+        }
+        new ContactEdgeModal(this.app, this).open();
       }
     });
     this.addCommand({
@@ -2101,6 +2214,139 @@ var AgeCultureModal = class extends import_obsidian.Modal {
     this.contentEl.empty();
   }
 };
+var CONTACT_TYPES = [
+  { value: "prestige", label: "Prestige \u2014 a ruling/administrative tongue lends downward" },
+  { value: "substrate", label: "Substrate \u2014 the conquered tongue survives underneath" },
+  { value: "adstrate", label: "Adstrate \u2014 neighbours trading as equals" }
+];
+var CONTACT_STRENGTHS = [
+  { value: 0.2, label: "Light" },
+  { value: 0.5, label: "Moderate" },
+  { value: 0.8, label: "Heavy" }
+];
+var CONTACT_DOMAINS = ["administration", "religion", "warfare", "trade", "place-features"];
+var ContactEdgeModal = class extends import_obsidian.Modal {
+  constructor(app, plugin) {
+    var _a, _b, _c, _d, _e, _f;
+    super(app);
+    this.contactType = "prestige";
+    this.strength = 0.5;
+    this.domains = /* @__PURE__ */ new Set();
+    this.preview = null;
+    this.pendingEdge = null;
+    this.plugin = plugin;
+    this.donorId = (_b = (_a = plugin.data.cultures[0]) == null ? void 0 : _a.id) != null ? _b : "";
+    this.borrowerId = (_f = (_e = (_c = plugin.data.cultures[1]) == null ? void 0 : _c.id) != null ? _e : (_d = plugin.data.cultures[0]) == null ? void 0 : _d.id) != null ? _f : "";
+  }
+  render() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: "Connect two languages via contact" });
+    contentEl.createEl("p", {
+      text: "A directed relationship: the donor lends vocabulary, reshaped to fit the borrower's sounds, as it crosses.",
+      cls: "lf-hint"
+    });
+    new import_obsidian.Setting(contentEl).setName("Donor").addDropdown((d) => {
+      for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
+      d.setValue(this.donorId).onChange((v) => {
+        this.donorId = v;
+        this.preview = null;
+      });
+    });
+    new import_obsidian.Setting(contentEl).setName("Borrower").addDropdown((d) => {
+      for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
+      d.setValue(this.borrowerId).onChange((v) => {
+        this.borrowerId = v;
+        this.preview = null;
+      });
+    });
+    new import_obsidian.Setting(contentEl).setName("Contact type").addDropdown((d) => {
+      for (const t of CONTACT_TYPES) d.addOption(t.value, t.label);
+      d.setValue(this.contactType).onChange((v) => {
+        this.contactType = v;
+        this.preview = null;
+      });
+    });
+    new import_obsidian.Setting(contentEl).setName("Strength").setDesc("How much of the donor's vocabulary crosses.").addDropdown((d) => {
+      for (const s of CONTACT_STRENGTHS) d.addOption(String(s.value), s.label);
+      d.setValue(String(this.strength)).onChange((v) => {
+        this.strength = Number(v);
+        this.preview = null;
+      });
+    });
+    contentEl.createEl("p", { text: "Which kinds of words cross:", cls: "lf-hint" });
+    for (const dom of CONTACT_DOMAINS) {
+      new import_obsidian.Setting(contentEl).setName(dom).addToggle((t) => t.setValue(this.domains.has(dom)).onChange((on) => {
+        if (on) this.domains.add(dom);
+        else this.domains.delete(dom);
+        this.preview = null;
+      }));
+    }
+    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Preview").setCta().onClick(() => {
+      const donor = this.plugin.data.cultures.find((c) => c.id === this.donorId);
+      const borrower = this.plugin.data.cultures.find((c) => c.id === this.borrowerId);
+      if (!donor || !borrower) {
+        new import_obsidian.Notice("Pick a donor and a borrower first.");
+        return;
+      }
+      if (donor.id === borrower.id) {
+        new import_obsidian.Notice("Donor and borrower must be different languages.");
+        return;
+      }
+      const edge = {
+        id: `${donor.id}->${borrower.id}::${Date.now().toString(36)}`,
+        donorId: donor.id,
+        borrowerId: borrower.id,
+        contactType: this.contactType,
+        strength: this.strength,
+        domains: [...this.domains]
+      };
+      this.preview = previewContactEdge(donor, borrower, edge);
+      this.pendingEdge = edge;
+      this.render();
+    }));
+    if (this.preview) {
+      const borrower = this.plugin.data.cultures.find((c) => c.id === this.borrowerId);
+      contentEl.createEl("h3", { text: `Loanwords ${borrower.name} would gain` });
+      const grid = contentEl.createDiv({ cls: "lf-specimens" });
+      for (const s of this.preview.samples) {
+        const chip = grid.createDiv({ cls: "lf-specimen" });
+        chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
+        chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
+      }
+      contentEl.createEl("p", {
+        text: `Words: ${this.preview.loanedRoots.map((r) => `${r.form} = ${r.meaning}`).join("  \xB7  ") || "(none survived the borrower's phonotactics)"}`,
+        cls: "lf-hint"
+      });
+      const actions = new import_obsidian.Setting(contentEl);
+      actions.addButton((b) => b.setButtonText("Save contact edge").onClick(async () => {
+        const edge = this.pendingEdge;
+        if (!edge) return;
+        this.plugin.data.contactEdges.push(edge);
+        await this.plugin.persist();
+        new import_obsidian.Notice("Contact edge saved.");
+      }));
+      actions.addButton((b) => b.setButtonText(`Add loanwords to ${borrower.name}`).setCta().onClick(async () => {
+        if (!this.preview || this.preview.loanedRoots.length === 0) {
+          new import_obsidian.Notice("Nothing to add.");
+          return;
+        }
+        acceptLoanedRoots(borrower, this.preview.loanedRoots);
+        this.plugin.upsertCulture(borrower);
+        await this.plugin.persist();
+        new import_obsidian.Notice(`${this.preview.loanedRoots.length} loanword(s) added to ${borrower.name}.`);
+      }));
+    }
+    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Close").onClick(() => this.close()));
+  }
+  onOpen() {
+    this.render();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
 var FamilyTreeModal = class extends import_obsidian.Modal {
   constructor(app, plugin) {
     super(app);
@@ -2160,6 +2406,7 @@ var GenerateModal = class extends import_obsidian.Modal {
   constructor(app, plugin, cultureId) {
     super(app);
     this.category = "personal";
+    this.placeType = "settlement";
     this.mode = "sound";
     this.batch = [];
     this.starred = /* @__PURE__ */ new Set();
@@ -2170,8 +2417,14 @@ var GenerateModal = class extends import_obsidian.Modal {
     var _a;
     return (_a = this.plugin.data.cultures.find((c) => c.id === this.cultureId)) != null ? _a : this.plugin.data.cultures[0];
   }
+  // Gap 4: for places, generation (and its registry bookkeeping) runs against whichever
+  // ancestor the place type's drift depth resolves to — a "feature" may draw on a much
+  // older tongue than the culture the user actually selected.
+  getGenCulture() {
+    return this.category === "place" ? resolvePlaceSourceCulture(this.culture, this.plugin.data.cultures, this.placeType) : this.culture;
+  }
   newBatch() {
-    this.batch = generateBatch(this.culture, this.category, this.plugin.data.settings.batchSize, this.mode);
+    this.batch = generateBatch(this.getGenCulture(), this.category, this.plugin.data.settings.batchSize, this.mode);
     this.starred.clear();
   }
   render() {
@@ -2198,6 +2451,19 @@ var GenerateModal = class extends import_obsidian.Modal {
         this.render();
       });
     });
+    if (this.category === "place") {
+      controls.addDropdown((d) => {
+        d.addOption("settlement", "Settlement");
+        d.addOption("kingdom", "Kingdom");
+        d.addOption("continent", "Continent");
+        d.addOption("feature", "Feature (river, peak\u2026)");
+        d.setValue(this.placeType).onChange((v) => {
+          this.placeType = v;
+          this.newBatch();
+          this.render();
+        });
+      });
+    }
     controls.addDropdown((d) => {
       d.addOption("sound", "By sound");
       d.addOption("meaning", "By meaning");
@@ -2220,6 +2486,13 @@ var GenerateModal = class extends import_obsidian.Modal {
       new FamilyTreeModal(this.app, this.plugin).open();
     }));
     contentEl.createEl("p", { text: this.culture.summary, cls: "lf-hint" });
+    const genCulture = this.getGenCulture();
+    if (genCulture.id !== this.culture.id) {
+      contentEl.createEl("p", {
+        text: `Drawing on ${genCulture.name}'s older tongue (${this.placeType} names run deep).`,
+        cls: "lf-hint"
+      });
+    }
     const grid = contentEl.createDiv({ cls: "lf-batch" });
     this.batch.forEach((g, i) => {
       const chip = grid.createDiv({ cls: "lf-name-chip" + (this.starred.has(i) ? " is-starred" : "") });
@@ -2251,7 +2524,7 @@ var GenerateModal = class extends import_obsidian.Modal {
           new import_obsidian.Notice("Star a name or two first.");
           return;
         }
-        reinforce(this.culture, starredNames);
+        reinforce(this.getGenCulture(), starredNames);
         await this.plugin.persist();
         this.newBatch();
         this.render();
@@ -2267,7 +2540,7 @@ var GenerateModal = class extends import_obsidian.Modal {
       }
       this.insert(view.editor, chosen);
       for (const g of chosen) {
-        if (!this.culture.registry.includes(g.name.toLowerCase())) this.culture.registry.push(g.name.toLowerCase());
+        if (!this.getGenCulture().registry.includes(g.name.toLowerCase())) this.getGenCulture().registry.push(g.name.toLowerCase());
       }
       await this.plugin.persist();
       new import_obsidian.Notice(`${chosen.length} name${chosen.length === 1 ? "" : "s"} inserted and reserved.`);

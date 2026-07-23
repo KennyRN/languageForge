@@ -4,8 +4,8 @@
 // reverse-seeding from pasted names, pin-and-regenerate, pronunciation hints,
 // the Step 6 gates (lite), and the culture card.
 
-import { PHONETIC_PACKS, SEMANTIC_PACKS, DRIFT_PACKS, DriftPack, SoundChange, DriftWhen } from "./data";
-export { DRIFT_PACKS, DriftPack, SoundChange, DriftWhen };
+import { PHONETIC_PACKS, SEMANTIC_PACKS, DRIFT_PACKS, DriftPack, SoundChange, DriftWhen, TaggedConcept } from "./data";
+export { DRIFT_PACKS, DriftPack, SoundChange, DriftWhen, TaggedConcept };
 
 // ---------------------------------------------------------------- types
 
@@ -18,6 +18,17 @@ export type DriftLevel = "dialect" | "sister" | "distant";
 // a Culture (see ageCulture), so it has no place on this type — it's not a lineage label.
 export type DriftMode = "family" | "family-contact";
 
+// Gap 4 — place sub-types, each with a default "drift depth": how many ancestor-hops back
+// into a family's lineage to draw a place name's roots/elements from. Features are the
+// oldest names on a map; settlements the newest.
+export type PlaceType = "continent" | "kingdom" | "settlement" | "feature";
+export const PLACE_TYPE_DRIFT_DEPTH: Record<PlaceType, number> = {
+  feature: 3,
+  continent: 2,
+  kingdom: 1,
+  settlement: 0,
+};
+
 export interface ElementSet { start: string[]; middle: string[]; end: string[]; }
 
 export interface Root {
@@ -25,6 +36,8 @@ export interface Root {
   meaning: string;
   origin: string;          // pack the concept came from
   weight: number;          // capped multiplicity: 1 normal, 2 common, 3 dominant, 0.5 rare (user demotion)
+  tags: string[];          // from concept-packs.json's tag_vocabulary — drives contact-edge domain bias
+  loanOrigin?: { donorCultureId: string; edgeId: string }; // set only for roots borrowed via a ContactEdge
 }
 
 export interface Culture {
@@ -382,23 +395,25 @@ function mintForm(culture: Culture, concept: string, existing: string[]): string
 export function applySemanticPacks(culture: Culture, packNames: string[]): void {
   const applied = ["core", ...packNames.filter(p => p !== "core" && SEMANTIC_PACKS[p])];
   culture.appliedPacks = applied;
-  const weightOf = new Map<string, { w: number; origin: string }>();
+  const weightOf = new Map<string, { w: number; origin: string; tags: string[] }>();
   for (const packName of applied) {
-    for (const concept of SEMANTIC_PACKS[packName].concepts) {
+    for (const { concept, tags } of SEMANTIC_PACKS[packName].concepts) {
       const cur = weightOf.get(concept);
       if (cur) cur.w = Math.min(3, cur.w + 1);
-      else weightOf.set(concept, { w: 1, origin: packName });
+      else weightOf.set(concept, { w: 1, origin: packName, tags });
     }
   }
   const existingByMeaning = new Map(culture.roots.map(r => [r.meaning, r]));
   const forms = culture.roots.map(r => r.form);
   const roots: Root[] = [];
-  for (const [meaning, { w, origin }] of weightOf) {
+  for (const [meaning, { w, origin, tags }] of weightOf) {
     const prior = existingByMeaning.get(meaning);
-    if (prior) { prior.weight = prior.weight === 0.5 ? 0.5 : w; roots.push(prior); continue; } // mints are stable: never re-mint
+    // mints are stable: never re-mint the form, but tags aren't part of that promise —
+    // refresh them from the current data so reapplying packs keeps them in sync.
+    if (prior) { prior.weight = prior.weight === 0.5 ? 0.5 : w; prior.tags = tags; roots.push(prior); continue; }
     const form = mintForm(culture, meaning, forms);
     forms.push(form);
-    roots.push({ form, meaning, origin, weight: w });
+    roots.push({ form, meaning, origin, weight: w, tags });
   }
   culture.roots = roots;
 }
@@ -882,6 +897,7 @@ export function mergeCultures(
       meaning,
       origin: `${a.origin}+${b.origin}`,
       weight: Math.min(3, Math.max(a.weight, b.weight)),
+      tags: [...new Set([...(a.tags ?? []), ...(b.tags ?? [])])], // ?? guards roots saved before tags existed
     });
   }
 
@@ -985,6 +1001,128 @@ export function ageCulture(
     packId,
     driftLevel,
   };
+}
+
+/** Gap 4 — resolve which Culture a place name should actually draw its roots/elements
+ *  from: walk `culture.parentIds` up to the place type's default drift depth, so a
+ *  "feature" (deepest) can carry an ancestral form while a "settlement" (depth 0) always
+ *  uses the culture as-is. At each hop with 2+ parents (a merge/contact-blend), follows
+ *  the oldest/least-drifted one — lowest generation, tie-broken by lowest drift intensity —
+ *  as the best approximation of "the most conservative surviving branch." Stops early if
+ *  the lineage runs out before the depth does. */
+export function resolvePlaceSourceCulture(culture: Culture, allCultures: Culture[], placeType: PlaceType): Culture {
+  let current = culture;
+  let hops = PLACE_TYPE_DRIFT_DEPTH[placeType];
+  while (hops > 0) {
+    const parents = (current.parentIds ?? [])
+      .map(id => allCultures.find(c => c.id === id))
+      .filter((c): c is Culture => !!c);
+    if (parents.length === 0) break;
+    current = parents.reduce((best, p) => {
+      const bg = best.generation ?? 0, pg = p.generation ?? 0;
+      if (pg !== bg) return pg < bg ? p : best;
+      const bi = best.driftLevel ? DRIFT_PRESETS[best.driftLevel] : 0;
+      const pi = p.driftLevel ? DRIFT_PRESETS[p.driftLevel] : 0;
+      return pi < bi ? p : best;
+    });
+    hops--;
+  }
+  return current;
+}
+
+// ---------------------------------------------------------------- contact graph (Gap 3)
+
+export type ContactType = "prestige" | "substrate" | "adstrate";
+export type ContactDomain = "administration" | "religion" | "warfare" | "trade" | "place-features";
+
+export interface ContactEdge {
+  id: string;
+  donorId: string;
+  borrowerId: string;
+  contactType: ContactType;
+  strength: number;        // 0..1, share of donor vocabulary that crosses
+  domains: ContactDomain[];
+}
+
+// Which concept-packs.json tags a domain draws on, for biasing which donor roots cross.
+const CONTACT_DOMAIN_TAGS: Record<ContactDomain, string[]> = {
+  administration: ["rank"],
+  religion: ["sacred"],
+  warfare: ["war", "weapon"],
+  trade: ["trade", "wealth", "craft"],
+  "place-features": ["place", "mountain", "river", "water", "sea", "forest", "earth", "settlement"],
+};
+
+/** A lightweight phonotactic check for a borrowed word — reuses the same LEGAL_ONSETS set
+ *  the procedural element-builder uses, rather than the full gateName gate (which needs a
+ *  `parts` breakdown a raw borrowed word doesn't have). Vowel-initial words pass trivially. */
+function legalOnset(word: string): boolean {
+  const w = word.replace(/^-/, "").toLowerCase();
+  const m = w.match(/^[^aeiou]*/);
+  const onset = m ? m[0] : "";
+  return onset === "" || LEGAL_ONSETS.has(onset);
+}
+
+export interface ContactPreview {
+  loanedRoots: Root[];
+  samples: GeneratedName[];
+}
+
+/** Gap 3 — preview what a contact edge would lend the borrower: pick donor roots (biased
+ *  toward the edge's domains via CONTACT_DOMAIN_TAGS, falling back to the whole donor
+ *  vocabulary if too few match), reshape each via the prestige_exonym pack (the Confucius
+ *  mechanic — a donor form worn to the borrower's simpler phonology), drop anything that
+ *  fails the borrower's phonotactics or collides with its existing roots, and generate a
+ *  few samples from an ephemeral borrower-plus-loans view. Pure and non-mutating — nothing
+ *  here touches the real borrower Culture; see acceptLoanedRoots for the explicit,
+ *  user-consented step that actually saves loanwords. */
+export function previewContactEdge(donor: Culture, borrower: Culture, edge: ContactEdge, category: Category = "personal"): ContactPreview {
+  const rng = rngFrom(`${edge.id}::contact::${donor.id}::${borrower.id}`);
+  const domainTags = edge.domains.flatMap(d => CONTACT_DOMAIN_TAGS[d]);
+  const matching = domainTags.length
+    ? donor.roots.filter(r => (r.tags ?? []).some(t => domainTags.includes(t)))
+    : [];
+  const pool = matching.length >= 3 ? matching : donor.roots;
+  const count = Math.max(1, Math.round(edge.strength * pool.length));
+  const chosen = sample(rng, pool, Math.min(count, pool.length));
+
+  const reshapePack = DRIFT_PACKS.prestige_exonym;
+  const existingForms = borrower.roots.map(r => r.form.toLowerCase());
+  const loanedRoots: Root[] = [];
+  for (const donorRoot of chosen) {
+    const reshaped = driftWordWithPacks(rng, donorRoot.form, [reshapePack], 1);
+    if (!legalOnset(reshaped)) continue;
+    if (existingForms.some(f => levenshtein(reshaped.toLowerCase(), f) < 2)) continue;
+    existingForms.push(reshaped.toLowerCase());
+    loanedRoots.push({
+      form: reshaped[0].toUpperCase() + reshaped.slice(1).toLowerCase(),
+      meaning: donorRoot.meaning,
+      origin: `loan:${donor.id}`,
+      weight: 1,
+      tags: donorRoot.tags ?? [],
+      loanOrigin: { donorCultureId: donor.id, edgeId: edge.id },
+    });
+  }
+
+  const previewCulture: Culture = { ...borrower, roots: [...borrower.roots, ...loanedRoots] };
+  const sampleRng = rngFrom(`${edge.id}::contact::samples`);
+  const samples = generateBatch(previewCulture, category, 3, "sound", sampleRng);
+
+  return { loanedRoots, samples };
+}
+
+/** The one explicit, user-consented mutation point for contact: pushes any loanedRoots not
+ *  already present (by lowercase form) onto the borrower's SAVED roots[]. Additive — new
+ *  root entries, never a re-mint of an existing one — so this doesn't touch the
+ *  stable-minting promise. Caller is responsible for persisting the culture afterward. */
+export function acceptLoanedRoots(borrower: Culture, loanedRoots: Root[]): void {
+  const existingForms = new Set(borrower.roots.map(r => r.form.toLowerCase()));
+  for (const r of loanedRoots) {
+    if (!existingForms.has(r.form.toLowerCase())) {
+      borrower.roots.push(r);
+      existingForms.add(r.form.toLowerCase());
+    }
+  }
 }
 
 // ---------------------------------------------------------------- markdown export

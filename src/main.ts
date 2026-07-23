@@ -6,10 +6,12 @@ import {
   Setting, TFile, normalizePath,
 } from "obsidian";
 import {
-  AgedSnapshot, Category, Culture, DriftLevel, DRIFT_PACKS, ENV_DEFAULT_PACK, GeneratedName,
-  MOOD_DEFAULT_DRIFT_PACK, Mood, Register, SeedTraits,
-  ageCulture, cultureNote, deriveCulture, generateBatch, makeCultureCard, mergeCultures, reinforce,
-  reshuffleElements, reverseSeedCulture, seedCulture, weightLabel,
+  AgedSnapshot, Category, ContactDomain, ContactEdge, ContactPreview, ContactType, Culture,
+  DriftLevel, DRIFT_PACKS, ENV_DEFAULT_PACK, GeneratedName,
+  MOOD_DEFAULT_DRIFT_PACK, Mood, PlaceType, Register, SeedTraits,
+  acceptLoanedRoots, ageCulture, cultureNote, deriveCulture, generateBatch, makeCultureCard,
+  mergeCultures, previewContactEdge, reinforce, reshuffleElements, resolvePlaceSourceCulture,
+  reverseSeedCulture, seedCulture, weightLabel,
 } from "./engine";
 import { PHONETIC_PACKS, SEMANTIC_PACKS } from "./data";
 
@@ -25,6 +27,7 @@ interface LanguageForgeSettings {
 interface LanguageForgeData {
   settings: LanguageForgeSettings;
   cultures: Culture[];
+  contactEdges: ContactEdge[];
 }
 
 const DEFAULT_SETTINGS: LanguageForgeSettings = {
@@ -35,13 +38,14 @@ const DEFAULT_SETTINGS: LanguageForgeSettings = {
 };
 
 export default class LanguageForgePlugin extends Plugin {
-  data: LanguageForgeData = { settings: { ...DEFAULT_SETTINGS }, cultures: [] };
+  data: LanguageForgeData = { settings: { ...DEFAULT_SETTINGS }, cultures: [], contactEdges: [] };
 
   async onload() {
     const stored = (await this.loadData()) as Partial<LanguageForgeData> | null;
     if (stored) {
       this.data.settings = { ...DEFAULT_SETTINGS, ...(stored.settings ?? {}) };
       this.data.cultures = stored.cultures ?? [];
+      this.data.contactEdges = stored.contactEdges ?? [];
     }
 
     this.addCommand({
@@ -88,6 +92,15 @@ export default class LanguageForgePlugin extends Plugin {
       callback: () => {
         if (this.data.cultures.length === 0) { new Notice("No cultures yet — create one first."); return; }
         new PickCultureModal(this.app, this, (c) => new AgeCultureModal(this.app, this, c).open(), "Age this").open();
+      },
+    });
+
+    this.addCommand({
+      id: "create-contact-edge",
+      name: "Connect two languages via contact",
+      callback: () => {
+        if (this.data.cultures.length < 2) { new Notice("Need at least two languages to connect."); return; }
+        new ContactEdgeModal(this.app, this).open();
       },
     });
 
@@ -617,6 +630,132 @@ class AgeCultureModal extends Modal {
   onClose() { this.contentEl.empty(); }
 }
 
+// ---------------------------------------------------------------- contact graph (Gap 3)
+
+const CONTACT_TYPES: { value: ContactType; label: string }[] = [
+  { value: "prestige", label: "Prestige — a ruling/administrative tongue lends downward" },
+  { value: "substrate", label: "Substrate — the conquered tongue survives underneath" },
+  { value: "adstrate", label: "Adstrate — neighbours trading as equals" },
+];
+
+const CONTACT_STRENGTHS: { value: number; label: string }[] = [
+  { value: 0.2, label: "Light" },
+  { value: 0.5, label: "Moderate" },
+  { value: 0.8, label: "Heavy" },
+];
+
+const CONTACT_DOMAINS: ContactDomain[] = ["administration", "religion", "warfare", "trade", "place-features"];
+
+class ContactEdgeModal extends Modal {
+  plugin: LanguageForgePlugin;
+  donorId: string;
+  borrowerId: string;
+  contactType: ContactType = "prestige";
+  strength = 0.5;
+  domains = new Set<ContactDomain>();
+  preview: ContactPreview | null = null;
+  pendingEdge: ContactEdge | null = null;
+
+  constructor(app: App, plugin: LanguageForgePlugin) {
+    super(app);
+    this.plugin = plugin;
+    this.donorId = plugin.data.cultures[0]?.id ?? "";
+    this.borrowerId = plugin.data.cultures[1]?.id ?? plugin.data.cultures[0]?.id ?? "";
+  }
+
+  render() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: "Connect two languages via contact" });
+    contentEl.createEl("p", {
+      text: "A directed relationship: the donor lends vocabulary, reshaped to fit the borrower's sounds, as it crosses.",
+      cls: "lf-hint",
+    });
+
+    new Setting(contentEl).setName("Donor")
+      .addDropdown(d => {
+        for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
+        d.setValue(this.donorId).onChange(v => { this.donorId = v; this.preview = null; });
+      });
+    new Setting(contentEl).setName("Borrower")
+      .addDropdown(d => {
+        for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
+        d.setValue(this.borrowerId).onChange(v => { this.borrowerId = v; this.preview = null; });
+      });
+    new Setting(contentEl).setName("Contact type")
+      .addDropdown(d => {
+        for (const t of CONTACT_TYPES) d.addOption(t.value, t.label);
+        d.setValue(this.contactType).onChange(v => { this.contactType = v as ContactType; this.preview = null; });
+      });
+    new Setting(contentEl).setName("Strength")
+      .setDesc("How much of the donor's vocabulary crosses.")
+      .addDropdown(d => {
+        for (const s of CONTACT_STRENGTHS) d.addOption(String(s.value), s.label);
+        d.setValue(String(this.strength)).onChange(v => { this.strength = Number(v); this.preview = null; });
+      });
+    contentEl.createEl("p", { text: "Which kinds of words cross:", cls: "lf-hint" });
+    for (const dom of CONTACT_DOMAINS) {
+      new Setting(contentEl).setName(dom)
+        .addToggle(t => t.setValue(this.domains.has(dom)).onChange(on => {
+          if (on) this.domains.add(dom); else this.domains.delete(dom);
+          this.preview = null;
+        }));
+    }
+
+    new Setting(contentEl).addButton(b => b.setButtonText("Preview").setCta().onClick(() => {
+      const donor = this.plugin.data.cultures.find(c => c.id === this.donorId);
+      const borrower = this.plugin.data.cultures.find(c => c.id === this.borrowerId);
+      if (!donor || !borrower) { new Notice("Pick a donor and a borrower first."); return; }
+      if (donor.id === borrower.id) { new Notice("Donor and borrower must be different languages."); return; }
+      const edge: ContactEdge = {
+        id: `${donor.id}->${borrower.id}::${Date.now().toString(36)}`,
+        donorId: donor.id, borrowerId: borrower.id,
+        contactType: this.contactType, strength: this.strength, domains: [...this.domains],
+      };
+      this.preview = previewContactEdge(donor, borrower, edge);
+      this.pendingEdge = edge;
+      this.render();
+    }));
+
+    if (this.preview) {
+      const borrower = this.plugin.data.cultures.find(c => c.id === this.borrowerId)!;
+      contentEl.createEl("h3", { text: `Loanwords ${borrower.name} would gain` });
+      const grid = contentEl.createDiv({ cls: "lf-specimens" });
+      for (const s of this.preview.samples) {
+        const chip = grid.createDiv({ cls: "lf-specimen" });
+        chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
+        chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
+      }
+      contentEl.createEl("p", {
+        text: `Words: ${this.preview.loanedRoots.map(r => `${r.form} = ${r.meaning}`).join("  ·  ") || "(none survived the borrower's phonotactics)"}`,
+        cls: "lf-hint",
+      });
+
+      const actions = new Setting(contentEl);
+      actions.addButton(b => b.setButtonText("Save contact edge").onClick(async () => {
+        const edge = this.pendingEdge;
+        if (!edge) return;
+        this.plugin.data.contactEdges.push(edge);
+        await this.plugin.persist();
+        new Notice("Contact edge saved.");
+      }));
+      actions.addButton(b => b.setButtonText(`Add loanwords to ${borrower.name}`).setCta().onClick(async () => {
+        if (!this.preview || this.preview.loanedRoots.length === 0) { new Notice("Nothing to add."); return; }
+        acceptLoanedRoots(borrower, this.preview.loanedRoots);
+        this.plugin.upsertCulture(borrower);
+        await this.plugin.persist();
+        new Notice(`${this.preview.loanedRoots.length} loanword(s) added to ${borrower.name}.`);
+      }));
+    }
+
+    new Setting(contentEl).addButton(b => b.setButtonText("Close").onClick(() => this.close()));
+  }
+
+  onOpen() { this.render(); }
+  onClose() { this.contentEl.empty(); }
+}
+
 // ---------------------------------------------------------------- family tree
 
 class FamilyTreeModal extends Modal {
@@ -691,6 +830,7 @@ class GenerateModal extends Modal {
   plugin: LanguageForgePlugin;
   cultureId: string;
   category: Category = "personal";
+  placeType: PlaceType = "settlement";
   mode: "sound" | "meaning" = "sound";
   batch: GeneratedName[] = [];
   starred = new Set<number>();
@@ -705,8 +845,17 @@ class GenerateModal extends Modal {
     return this.plugin.data.cultures.find(c => c.id === this.cultureId) ?? this.plugin.data.cultures[0];
   }
 
+  // Gap 4: for places, generation (and its registry bookkeeping) runs against whichever
+  // ancestor the place type's drift depth resolves to — a "feature" may draw on a much
+  // older tongue than the culture the user actually selected.
+  getGenCulture(): Culture {
+    return this.category === "place"
+      ? resolvePlaceSourceCulture(this.culture, this.plugin.data.cultures, this.placeType)
+      : this.culture;
+  }
+
   newBatch() {
-    this.batch = generateBatch(this.culture, this.category, this.plugin.data.settings.batchSize, this.mode);
+    this.batch = generateBatch(this.getGenCulture(), this.category, this.plugin.data.settings.batchSize, this.mode);
     this.starred.clear();
   }
 
@@ -727,6 +876,15 @@ class GenerateModal extends Modal {
       d.addOption("place", "Places");
       d.setValue(this.category).onChange(v => { this.category = v as Category; this.newBatch(); this.render(); });
     });
+    if (this.category === "place") {
+      controls.addDropdown(d => {
+        d.addOption("settlement", "Settlement");
+        d.addOption("kingdom", "Kingdom");
+        d.addOption("continent", "Continent");
+        d.addOption("feature", "Feature (river, peak…)");
+        d.setValue(this.placeType).onChange(v => { this.placeType = v as PlaceType; this.newBatch(); this.render(); });
+      });
+    }
     controls.addDropdown(d => {
       d.addOption("sound", "By sound");
       d.addOption("meaning", "By meaning");
@@ -746,6 +904,13 @@ class GenerateModal extends Modal {
     }));
 
     contentEl.createEl("p", { text: this.culture.summary, cls: "lf-hint" });
+    const genCulture = this.getGenCulture();
+    if (genCulture.id !== this.culture.id) {
+      contentEl.createEl("p", {
+        text: `Drawing on ${genCulture.name}'s older tongue (${this.placeType} names run deep).`,
+        cls: "lf-hint",
+      });
+    }
 
     const grid = contentEl.createDiv({ cls: "lf-batch" });
     this.batch.forEach((g, i) => {
@@ -773,7 +938,7 @@ class GenerateModal extends Modal {
       b.setButtonText("More like starred").onClick(async () => {
         const starredNames = [...this.starred].map(i => this.batch[i]);
         if (starredNames.length === 0) { new Notice("Star a name or two first."); return; }
-        reinforce(this.culture, starredNames);
+        reinforce(this.getGenCulture(), starredNames);
         await this.plugin.persist();
         this.newBatch();
         this.render();
@@ -786,7 +951,7 @@ class GenerateModal extends Modal {
       if (!view) { new Notice("Open a note to insert into."); return; }
       this.insert(view.editor, chosen);
       for (const g of chosen) {
-        if (!this.culture.registry.includes(g.name.toLowerCase())) this.culture.registry.push(g.name.toLowerCase());
+        if (!this.getGenCulture().registry.includes(g.name.toLowerCase())) this.getGenCulture().registry.push(g.name.toLowerCase());
       }
       await this.plugin.persist();
       new Notice(`${chosen.length} name${chosen.length === 1 ? "" : "s"} inserted and reserved.`);
