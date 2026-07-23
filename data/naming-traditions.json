@@ -1,0 +1,339 @@
+{
+  "_meta": {
+    "title": "Naming-Tradition Presets — European set",
+    "purpose": "How real cultures named people, places, and houses: content (concept domains) + structure (patterns). Sound comes from the culture's own phonology, not from here.",
+    "axes": "A tradition sets CONTENT (contentPolicy over concept-packs tags) and STRUCTURE (patterns + particles + toponymic generics). The culture supplies the SOUND. Independent choices.",
+    "caveat": "Each preset EVOKES a documented naming practice; it does not define a people. All fields are editable.",
+    "pattern_vocab": {
+      "personal": ["single", "dithematic", "theophoric", "epithet"],
+      "place": ["descriptive-generic", "feature-descriptive", "possessive-settlement", "theonymic-place", "single"],
+      "house": ["gens", "clan-patronymic", "clan", "locative", "occupational", "founder-line", "patronymic"]
+    },
+    "generic_position": "Each toponymic generic is a prefix (Glen-, Llan-, Colonia-) or a suffix (-by, -ton, -fell)."
+  },
+  "traditions": {
+    "old_norse": {
+      "label": "Old Norse naming",
+      "subtitle": "Norse · Scandinavian",
+      "contentPolicy": { "favour": ["beast", "war", "strength", "sacred", "rank"] },
+      "genders": {
+        "masculine": { "themes": ["beast", "war", "strength", "weapon", "rank"], "patronymicAffix": "-son" },
+        "feminine": { "themes": ["beauty", "virtue", "sacred", "fortune", "joy"], "patronymicAffix": "-dottir" },
+        "neutral": { "themes": ["beast", "sacred", "war"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "dithematic", "weight": 0.7 }, { "type": "single", "weight": 0.3 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.6 }, { "type": "feature-descriptive", "weight": 0.4 }],
+        "house": [{ "type": "founder-line", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "by", "meaning": "village", "position": "suffix" },
+          { "form": "thorpe", "meaning": "outlying farm", "position": "suffix" },
+          { "form": "gard", "meaning": "enclosure", "position": "suffix" },
+          { "form": "stad", "meaning": "place", "position": "suffix" },
+          { "form": "saetr", "meaning": "shieling", "position": "suffix" }
+        ],
+        "feature": [
+          { "form": "fell", "meaning": "hill", "position": "suffix" },
+          { "form": "dalr", "meaning": "valley", "position": "suffix" },
+          { "form": "vik", "meaning": "bay", "position": "suffix" },
+          { "form": "foss", "meaning": "waterfall", "position": "suffix" },
+          { "form": "vatn", "meaning": "lake", "position": "suffix" },
+          { "form": "nes", "meaning": "headland", "position": "suffix" }
+        ]
+      },
+      "particles": {
+        "patronymic": { "genitive": "s", "of": "" },
+        "house": { "kind": "founder-line", "affix": "-ungar" }
+      },
+      "surnameRate": 0.8,
+      "notes": "Dithematic given names plus a patronymic that changes each generation; features keep the deepest map-strata."
+    },
+    "anglo_saxon": {
+      "label": "Anglo-Saxon naming",
+      "subtitle": "Old English",
+      "contentPolicy": { "favour": ["virtue", "rank", "war", "sacred", "kin"] },
+      "genders": {
+        "masculine": { "themes": ["rank", "war", "virtue", "weapon"] },
+        "feminine": { "themes": ["virtue", "beauty", "sacred", "joy"] },
+        "neutral": { "themes": ["virtue", "rank"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "dithematic", "weight": 0.8 }, { "type": "single", "weight": 0.2 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.5 }, { "type": "possessive-settlement", "weight": 0.3 }, { "type": "feature-descriptive", "weight": 0.2 }],
+        "house": [{ "type": "founder-line", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "ton", "meaning": "farmstead", "position": "suffix" },
+          { "form": "ham", "meaning": "homestead", "position": "suffix" },
+          { "form": "wich", "meaning": "dwelling", "position": "suffix" },
+          { "form": "bury", "meaning": "fortified place", "position": "suffix" },
+          { "form": "worth", "meaning": "enclosure", "position": "suffix" },
+          { "form": "stead", "meaning": "place", "position": "suffix" }
+        ],
+        "feature": [
+          { "form": "ford", "meaning": "river crossing", "position": "suffix" },
+          { "form": "mere", "meaning": "lake", "position": "suffix" },
+          { "form": "combe", "meaning": "valley", "position": "suffix" },
+          { "form": "don", "meaning": "hill", "position": "suffix" },
+          { "form": "ley", "meaning": "clearing", "position": "suffix" },
+          { "form": "hurst", "meaning": "wooded hill", "position": "suffix" }
+        ]
+      },
+      "particles": { "house": { "kind": "founder-line", "affix": "-ingas" } },
+      "surnameRate": 0.4,
+      "notes": "Dithematic names with family alliteration; -ingas marks 'the people of'."
+    },
+    "roman": {
+      "label": "Roman naming",
+      "subtitle": "Latin",
+      "contentPolicy": { "favour": ["virtue", "beauty", "light", "beast", "flora"] },
+      "genders": {
+        "masculine": { "themes": ["virtue", "rank", "strength"] },
+        "feminine": { "themes": ["beauty", "virtue", "flora"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "single", "weight": 0.5 }, { "type": "epithet", "weight": 0.5 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.6 }, { "type": "possessive-settlement", "weight": 0.4 }],
+        "house": [{ "type": "gens", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "Colonia", "meaning": "colony", "position": "prefix" },
+          { "form": "Castra", "meaning": "fort", "position": "prefix" },
+          { "form": "Portus", "meaning": "port", "position": "prefix" },
+          { "form": "Forum", "meaning": "market", "position": "prefix" },
+          { "form": "Villa", "meaning": "estate", "position": "prefix" }
+        ],
+        "feature": [
+          { "form": "Mons", "meaning": "mountain", "position": "prefix" },
+          { "form": "Flumen", "meaning": "river", "position": "prefix" },
+          { "form": "Silva", "meaning": "forest", "position": "prefix" },
+          { "form": "Lacus", "meaning": "lake", "position": "prefix" }
+        ]
+      },
+      "particles": {
+        "epithet": { "article": "", "position": "after" },
+        "house": { "kind": "gens", "affix": "-ius" }
+      },
+      "surnameRate": 0.9,
+      "notes": "Tria nomina — given + gens (family) + trait cognomen. The gens is the house name; feminine takes -ia."
+    },
+    "greek": {
+      "label": "Ancient Greek naming",
+      "subtitle": "Hellenic",
+      "contentPolicy": { "favour": ["sacred", "virtue", "war", "celestial", "rank"] },
+      "genders": {
+        "masculine": { "themes": ["war", "rank", "virtue", "celestial"] },
+        "feminine": { "themes": ["beauty", "virtue", "sacred", "joy"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "theophoric", "weight": 0.4 }, { "type": "dithematic", "weight": 0.4 }, { "type": "single", "weight": 0.2 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.5 }, { "type": "feature-descriptive", "weight": 0.3 }, { "type": "theonymic-place", "weight": 0.2 }],
+        "house": [{ "type": "founder-line", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "polis", "meaning": "city", "position": "suffix" },
+          { "form": "a", "meaning": "place", "position": "suffix" },
+          { "form": "ia", "meaning": "region", "position": "suffix" }
+        ],
+        "feature": [
+          { "form": "Acro", "meaning": "height", "position": "prefix" },
+          { "form": "oros", "meaning": "mountain", "position": "suffix" },
+          { "form": "potamos", "meaning": "river", "position": "suffix" },
+          { "form": "nesos", "meaning": "island", "position": "suffix" }
+        ]
+      },
+      "particles": {
+        "theophoric": {
+          "relations": { "gift": "doros", "glory": "kleos", "ruler": "kratos", "people": "laos" },
+          "order": "element-first"
+        },
+        "house": { "kind": "founder-line", "affix": "-idai" }
+      },
+      "surnameRate": 0.5,
+      "notes": "Theophoric and dithematic given names; -idai marks a descent line (Herakleidai)."
+    },
+    "gaelic": {
+      "label": "Gaelic naming",
+      "subtitle": "Irish · Scottish",
+      "contentPolicy": { "favour": ["virtue", "beast", "sacred", "flora", "wild"] },
+      "genders": {
+        "masculine": { "themes": ["beast", "war", "virtue", "rank"] },
+        "feminine": { "themes": ["beauty", "virtue", "sacred", "flora"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "single", "weight": 0.7 }, { "type": "epithet", "weight": 0.3 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.6 }, { "type": "feature-descriptive", "weight": 0.4 }],
+        "house": [{ "type": "clan-patronymic", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "Bally", "meaning": "town", "position": "prefix" },
+          { "form": "Kil", "meaning": "church", "position": "prefix" },
+          { "form": "Dun", "meaning": "fort", "position": "prefix" },
+          { "form": "Rath", "meaning": "ringfort", "position": "prefix" },
+          { "form": "Lis", "meaning": "fort", "position": "prefix" }
+        ],
+        "feature": [
+          { "form": "Inver", "meaning": "river mouth", "position": "prefix" },
+          { "form": "Glen", "meaning": "valley", "position": "prefix" },
+          { "form": "Ben", "meaning": "mountain", "position": "prefix" },
+          { "form": "Loch", "meaning": "lake", "position": "prefix" },
+          { "form": "Ard", "meaning": "height", "position": "prefix" },
+          { "form": "Drum", "meaning": "ridge", "position": "prefix" }
+        ]
+      },
+      "particles": {
+        "epithet": { "article": "the", "position": "after" },
+        "house": { "kind": "clan", "prefix": "Mac", "of": "" }
+      },
+      "surnameRate": 0.7,
+      "notes": "Single given name plus a clan name (Mac 'son of', O 'grandson of') and a descriptive byname."
+    },
+    "welsh": {
+      "label": "Welsh naming",
+      "subtitle": "Brythonic",
+      "contentPolicy": { "favour": ["flora", "water", "mountain", "virtue", "rank"] },
+      "genders": {
+        "masculine": { "themes": ["rank", "virtue", "beast"], "patronymicAffix": "ap" },
+        "feminine": { "themes": ["beauty", "virtue", "flora"], "patronymicAffix": "ferch" },
+        "neutral": { "themes": ["virtue", "flora"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "single", "weight": 0.7 }, { "type": "epithet", "weight": 0.3 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.7 }, { "type": "feature-descriptive", "weight": 0.3 }],
+        "house": [{ "type": "clan-patronymic", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "Llan", "meaning": "church", "position": "prefix" },
+          { "form": "Caer", "meaning": "fort", "position": "prefix" },
+          { "form": "Tre", "meaning": "town", "position": "prefix" }
+        ],
+        "feature": [
+          { "form": "Aber", "meaning": "estuary", "position": "prefix" },
+          { "form": "Pen", "meaning": "head", "position": "prefix" },
+          { "form": "Cwm", "meaning": "valley", "position": "prefix" },
+          { "form": "Nant", "meaning": "stream", "position": "prefix" },
+          { "form": "Bryn", "meaning": "hill", "position": "prefix" }
+        ]
+      },
+      "particles": {
+        "epithet": { "article": "", "position": "after" },
+        "patronymic": { "of": "ap", "genitive": "" },
+        "house": { "kind": "clan", "prefix": "ap", "of": "" }
+      },
+      "surnameRate": 0.6,
+      "notes": "Patronymic with ap/ab ('son of') or ferch ('daughter of'); prefix-heavy place names."
+    },
+    "slavic": {
+      "label": "Slavic naming",
+      "subtitle": "Slavic",
+      "contentPolicy": { "favour": ["rank", "sacred", "war", "virtue", "joy"] },
+      "genders": {
+        "masculine": { "themes": ["rank", "war", "virtue", "sacred"], "patronymicAffix": "-ovich" },
+        "feminine": { "themes": ["beauty", "virtue", "sacred", "joy"], "patronymicAffix": "-ovna" },
+        "neutral": { "themes": ["rank", "sacred"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "dithematic", "weight": 0.7 }, { "type": "single", "weight": 0.3 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.6 }, { "type": "feature-descriptive", "weight": 0.4 }],
+        "house": [{ "type": "gens", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "grad", "meaning": "city", "position": "suffix" },
+          { "form": "sk", "meaning": "town", "position": "suffix" },
+          { "form": "ovo", "meaning": "village", "position": "suffix" },
+          { "form": "Nov", "meaning": "new", "position": "prefix" }
+        ],
+        "feature": [
+          { "form": "gora", "meaning": "mountain", "position": "suffix" },
+          { "form": "reka", "meaning": "river", "position": "suffix" },
+          { "form": "les", "meaning": "forest", "position": "suffix" },
+          { "form": "ozero", "meaning": "lake", "position": "suffix" },
+          { "form": "Bel", "meaning": "white", "position": "prefix" },
+          { "form": "Chern", "meaning": "black", "position": "prefix" }
+        ]
+      },
+      "particles": {
+        "patronymic": { "of": "", "genitive": "" },
+        "house": { "kind": "gens", "affix": "-ov" }
+      },
+      "surnameRate": 0.8,
+      "notes": "Dithematic given names, patronymic (-ovich/-ovna), family names in -ov/-ski (feminine -ova/-ska)."
+    },
+    "puritan_english": {
+      "label": "Puritan English naming",
+      "subtitle": "English · devotional",
+      "contentPolicy": { "lock": ["sacred", "virtue"] },
+      "genders": {
+        "masculine": { "themes": ["sacred", "virtue"] },
+        "feminine": { "themes": ["virtue", "sacred"] },
+        "neutral": { "themes": ["virtue", "sacred"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "single", "weight": 0.9 }, { "type": "epithet", "weight": 0.1 }],
+        "place": [{ "type": "single", "weight": 0.5 }, { "type": "descriptive-generic", "weight": 0.5 }],
+        "house": [{ "type": "occupational", "weight": 0.6 }, { "type": "locative", "weight": 0.4 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "New", "meaning": "new", "position": "prefix" },
+          { "form": "Mount", "meaning": "mount", "position": "prefix" },
+          { "form": "field", "meaning": "field", "position": "suffix" },
+          { "form": "haven", "meaning": "haven", "position": "suffix" }
+        ],
+        "feature": [
+          { "form": "field", "meaning": "field", "position": "suffix" },
+          { "form": "brook", "meaning": "brook", "position": "suffix" }
+        ]
+      },
+      "particles": {
+        "epithet": { "article": "", "position": "after" },
+        "house": { "kind": "occupational" }
+      },
+      "surnameRate": 0.9,
+      "notes": "The given name IS a virtue (Faith, Prudence, Increase); surnames stay ordinary English (occupational/locative)."
+    },
+    "finnic": {
+      "label": "Finnic naming",
+      "subtitle": "Finnic",
+      "contentPolicy": { "favour": ["flora", "forest", "water", "weather", "beast", "ice"] },
+      "genders": {
+        "masculine": { "themes": ["beast", "forest", "strength", "weather"], "patronymicAffix": "-poika" },
+        "feminine": { "themes": ["flora", "water", "light", "beauty"], "patronymicAffix": "-tytar" },
+        "neutral": { "themes": ["forest", "water"] }
+      },
+      "patterns": {
+        "personal": [{ "type": "single", "weight": 0.8 }, { "type": "dithematic", "weight": 0.2 }],
+        "place": [{ "type": "descriptive-generic", "weight": 0.6 }, { "type": "feature-descriptive", "weight": 0.4 }],
+        "house": [{ "type": "occupational", "weight": 1.0 }]
+      },
+      "toponymicGenerics": {
+        "settlement": [
+          { "form": "la", "meaning": "place of", "position": "suffix" },
+          { "form": "kyla", "meaning": "village", "position": "suffix" }
+        ],
+        "feature": [
+          { "form": "jarvi", "meaning": "lake", "position": "suffix" },
+          { "form": "joki", "meaning": "river", "position": "suffix" },
+          { "form": "maki", "meaning": "hill", "position": "suffix" },
+          { "form": "saari", "meaning": "island", "position": "suffix" },
+          { "form": "vaara", "meaning": "forested hill", "position": "suffix" },
+          { "form": "koski", "meaning": "rapids", "position": "suffix" }
+        ]
+      },
+      "particles": {
+        "patronymic": { "of": "", "genitive": "" },
+        "house": { "kind": "occupational", "affix": "-nen" }
+      },
+      "surnameRate": 0.6,
+      "notes": "Nature single-roots, patronymic (-poika/-tytar), family names in -nen from nature/place."
+    }
+  }
+}
