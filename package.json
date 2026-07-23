@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "validate:packs": "python3 tools/pack_validator.py data/starter-packs-v2.json",
+    "validate:concepts": "python3 tools/concept_validator.py data/concept-packs.json",
+    "validate:drift": "python3 tools/drift_validator.py data/drift-packs.json",
+    "validate:traditions": "python3 tools/naming_traditions_validator.py data/naming-traditions.json data/concept-packs.json",
+    "validate": "npm run validate:packs && npm run validate:concepts && npm run validate:drift && npm run validate:traditions"
   },
   "keywords": [],
   "author": "",
