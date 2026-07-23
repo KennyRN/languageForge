@@ -1152,8 +1152,176 @@ function reshuffleElements(culture, salt) {
   culture.elements = culture.familiarity === "alien" ? buildProceduralElements(rng, culture.mood) : samplePackElements(rng, culture.mood);
   culture.summary = oneBreath(culture);
 }
-function cultureNote(culture) {
-  var _a;
+var DRIFT_PRESETS = {
+  dialect: 0.15,
+  sister: 0.4,
+  distant: 0.7
+};
+var SOUND_CHANGE_RULES = [
+  { pattern: /p/g, replacement: "f" },
+  { pattern: /t(?!h)/g, replacement: "th" },
+  { pattern: /k/g, replacement: "h" },
+  { pattern: /(?<=[aeiou])b(?=[aeiou])/g, replacement: "v" },
+  { pattern: /(?<=[aeiou])g(?=[aeiou])/g, replacement: "gh" },
+  { pattern: /d(?!h)/g, replacement: "dh" },
+  { pattern: /o/g, replacement: "u" },
+  { pattern: /e/g, replacement: "i" },
+  { pattern: /s(?!h)/g, replacement: "z" },
+  { pattern: /([aeiou])\1/g, replacement: "$1" }
+  // long-vowel simplification
+];
+function driftWord(rng, word, intensity) {
+  const hasLeadingDash = word.startsWith("-");
+  const hasCap = /^[A-Z]/.test(word.replace(/^-/, ""));
+  let w = word.replace(/^-/, "").toLowerCase();
+  for (const rule of SOUND_CHANGE_RULES) {
+    if (rng() < intensity) w = w.replace(rule.pattern, rule.replacement);
+  }
+  if (w.length === 0) w = word.replace(/^-/, "").toLowerCase();
+  if (hasCap) w = w[0].toUpperCase() + w.slice(1);
+  return hasLeadingDash ? "-" + w : w;
+}
+function driftElementSet(rng, elements, intensity) {
+  return {
+    start: elements.start.map((el) => driftWord(rng, el, intensity)),
+    middle: elements.middle.map((el) => driftWord(rng, el, intensity)),
+    end: elements.end.map((el) => driftWord(rng, el, intensity))
+  };
+}
+function deriveCulture(parent, name, driftLevel, overrides = {}) {
+  var _a, _b, _c;
+  const intensity = DRIFT_PRESETS[driftLevel];
+  const seed = `${name}::from::${parent.id}::${Date.now().toString(36)}`;
+  const rng = rngFrom(seed + "::drift");
+  const elements = driftElementSet(rng, parent.elements, intensity);
+  const roots = parent.roots.map((r) => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+  const culture = {
+    id: seed,
+    name,
+    seed,
+    mood: parent.mood,
+    register: parent.register,
+    familiarity: parent.familiarity,
+    environment: (_a = overrides.environment) != null ? _a : parent.environment,
+    elements,
+    middleChance: parent.middleChance,
+    syllableRange: [...parent.syllableRange],
+    stress: parent.stress,
+    roots,
+    appliedPacks: [...parent.appliedPacks],
+    registry: [],
+    summary: "",
+    parentIds: [parent.id],
+    generation: ((_b = parent.generation) != null ? _b : 0) + 1,
+    driftLevel
+  };
+  if ((_c = overrides.packs) == null ? void 0 : _c.length) {
+    applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
+  }
+  culture.summary = oneBreath(culture);
+  return culture;
+}
+function mergeCultures(parents, name, driftLevel, overrides = {}) {
+  var _a, _b;
+  if (parents.length < 2) throw new Error("mergeCultures requires at least two parents");
+  const seed = `${name}::merge::${parents.map((p) => p.id).join("+")}::${Date.now().toString(36)}`;
+  const rng = rngFrom(seed + "::merge");
+  const mergeSlot = (slot, targetSize) => {
+    const per = Math.max(1, Math.round(targetSize / parents.length));
+    const pooled = parents.flatMap((p) => sample(rng, p.elements[slot], per));
+    const seen = /* @__PURE__ */ new Set();
+    const out = pooled.filter((el) => {
+      const k = el.toLowerCase();
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    if (out.length < targetSize) {
+      const rest = parents.flatMap((p) => p.elements[slot]).filter((el) => !seen.has(el.toLowerCase()));
+      out.push(...sample(rng, rest, targetSize - out.length));
+    }
+    return out.slice(0, targetSize);
+  };
+  const elements = {
+    start: mergeSlot("start", 10),
+    middle: mergeSlot("middle", 8),
+    end: mergeSlot("end", 5)
+  };
+  const byMeaning = /* @__PURE__ */ new Map();
+  for (const p of parents) {
+    for (const r of p.roots) {
+      if (!byMeaning.has(r.meaning)) byMeaning.set(r.meaning, []);
+      byMeaning.get(r.meaning).push(r);
+    }
+  }
+  const roots = [];
+  for (const [meaning, variants] of byMeaning) {
+    if (variants.length === 1) {
+      roots.push({ ...variants[0] });
+      continue;
+    }
+    const [a, b] = sample(rng, variants, 2);
+    const sylA = syllabify(a.form), sylB = syllabify(b.form);
+    const cutA = Math.max(1, Math.floor(sylA.length / 2));
+    const cutB = Math.floor(sylB.length / 2);
+    let blended = sylA.slice(0, cutA).join("") + sylB.slice(cutB).join("");
+    blended = blended.replace(/[aeiou]{3,}/g, (m) => m.slice(0, 2));
+    if (blended.length < 3) blended = a.form;
+    roots.push({
+      form: blended[0].toUpperCase() + blended.slice(1).toLowerCase(),
+      meaning,
+      origin: `${a.origin}+${b.origin}`,
+      weight: Math.min(3, Math.max(a.weight, b.weight))
+    });
+  }
+  const modeOf = (values) => {
+    const counts = /* @__PURE__ */ new Map();
+    for (const v of values) {
+      const k = String(v);
+      const e = counts.get(k);
+      if (e) e.n++;
+      else counts.set(k, { v, n: 1 });
+    }
+    const max = Math.max(...[...counts.values()].map((e) => e.n));
+    const tied = [...counts.values()].filter((e) => e.n === max).map((e) => e.v);
+    return pick(rng, tied);
+  };
+  const syllLo = Math.min(...parents.map((p) => p.syllableRange[0]));
+  const syllHi = Math.max(...parents.map((p) => p.syllableRange[1]));
+  const culture = {
+    id: seed,
+    name,
+    seed,
+    mood: modeOf(parents.map((p) => p.mood)),
+    register: modeOf(parents.map((p) => p.register)),
+    familiarity: modeOf(parents.map((p) => p.familiarity)),
+    environment: (_a = overrides.environment) != null ? _a : parents[0].environment,
+    elements,
+    middleChance: parents.reduce((t, p) => t + p.middleChance, 0) / parents.length,
+    syllableRange: [syllLo, Math.max(syllLo, syllHi)],
+    stress: modeOf(parents.map((p) => p.stress)),
+    roots,
+    appliedPacks: [...new Set(parents.flatMap((p) => p.appliedPacks))],
+    registry: [],
+    summary: "",
+    parentIds: parents.map((p) => p.id),
+    generation: Math.max(...parents.map((p) => {
+      var _a2;
+      return (_a2 = p.generation) != null ? _a2 : 0;
+    })) + 1,
+    driftLevel
+  };
+  const intensity = DRIFT_PRESETS[driftLevel] * 0.5;
+  culture.elements = driftElementSet(rng, culture.elements, intensity);
+  culture.roots = culture.roots.map((r) => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+  if ((_b = overrides.packs) == null ? void 0 : _b.length) {
+    applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
+  }
+  culture.summary = oneBreath(culture);
+  return culture;
+}
+function cultureNote(culture, allCultures = []) {
+  var _a, _b, _c, _d, _e, _f;
   const card = makeCultureCard(culture);
   const lines = [];
   lines.push("---");
@@ -1172,6 +1340,32 @@ function cultureNote(culture) {
     lines.push(`Seeded from your own names: ${culture.fromNames.join(", ")}.`);
     lines.push("");
   }
+  const parents = ((_b = culture.parentIds) != null ? _b : []).map((id) => allCultures.find((c) => c.id === id)).filter((c) => !!c);
+  const descendants = allCultures.filter((c) => {
+    var _a2;
+    return (_a2 = c.parentIds) == null ? void 0 : _a2.includes(culture.id);
+  });
+  if (parents.length > 0 || descendants.length > 0) {
+    lines.push("## Family");
+    lines.push("");
+    if (parents.length === 1) {
+      lines.push(`Descended from: **${parents[0].name}** (generation ${(_c = culture.generation) != null ? _c : 1}, drift: ${(_d = culture.driftLevel) != null ? _d : "unknown"})`);
+    } else if (parents.length >= 2) {
+      lines.push(`Merged from: ${parents.map((p) => `**${p.name}**`).join(" + ")} (generation ${(_e = culture.generation) != null ? _e : 1}, contact drift: ${(_f = culture.driftLevel) != null ? _f : "unknown"})`);
+    }
+    if (descendants.length > 0) {
+      lines.push(`Descendants: ${descendants.map((d) => d.name).join(", ")}`);
+    }
+    lines.push("");
+  }
+  lines.push("## Sound elements");
+  lines.push("");
+  lines.push(`Starts: ${culture.elements.start.join(", ")}`);
+  lines.push("");
+  lines.push(`Middles: ${culture.elements.middle.join(", ")}`);
+  lines.push("");
+  lines.push(`Endings: ${culture.elements.end.join(", ")}`);
+  lines.push("");
   lines.push("## Sample names");
   lines.push("");
   for (const s of card.samples) lines.push(`- **${s.name}** (${s.category}) \u2014 say it: *${s.pronunciation}*`);
@@ -1233,6 +1427,29 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
       }
     });
     this.addCommand({
+      id: "derive-culture",
+      name: "Derive a descendant language",
+      callback: () => {
+        if (this.data.cultures.length === 0) {
+          new import_obsidian.Notice("No cultures yet \u2014 create one first.");
+          new SeedWizardModal(this.app, this).open();
+          return;
+        }
+        new DeriveCultureModal(this.app, this).open();
+      }
+    });
+    this.addCommand({
+      id: "view-family-tree",
+      name: "View language family tree",
+      callback: () => {
+        if (this.data.cultures.length === 0) {
+          new import_obsidian.Notice("No cultures yet \u2014 create one first.");
+          return;
+        }
+        new FamilyTreeModal(this.app, this).open();
+      }
+    });
+    this.addCommand({
       id: "save-culture-card",
       name: "Save a culture card as a note",
       callback: () => {
@@ -1266,7 +1483,7 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
     } catch {
     }
     const path = (0, import_obsidian.normalizePath)(`${folder}/${culture.name}.md`);
-    const content = cultureNote(culture);
+    const content = cultureNote(culture, this.data.cultures);
     const existing = this.app.vault.getAbstractFileByPath(path);
     if (existing instanceof import_obsidian.TFile) await this.app.vault.modify(existing, content);
     else await this.app.vault.create(path, content);
@@ -1340,7 +1557,9 @@ var SeedWizardModal = class extends import_obsidian.Modal {
         else this.traits.packs = this.traits.packs.filter((p) => p !== packName);
       }));
     }
-    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Seed the culture").setCta().onClick(() => {
+    const buttons = new import_obsidian.Setting(contentEl);
+    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton((b) => b.setButtonText("Seed the culture").setCta().onClick(() => {
       if (!this.traits.name) {
         new import_obsidian.Notice("The culture needs a name.");
         return;
@@ -1380,7 +1599,9 @@ var PasteNamesModal = class extends import_obsidian.Modal {
       t.inputEl.rows = 4;
       t.onChange((v) => this.pasted = v);
     });
-    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Work out the sound").setCta().onClick(() => {
+    const buttons = new import_obsidian.Setting(contentEl);
+    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton((b) => b.setButtonText("Work out the sound").setCta().onClick(() => {
       const names = this.pasted.split(/[,\n;]+/).map((s) => s.trim()).filter((s) => s.length >= 3);
       if (names.length < 2) {
         new import_obsidian.Notice("Paste at least two names.");
@@ -1444,6 +1665,18 @@ var CultureCardModal = class extends import_obsidian.Modal {
       this.shuffle++;
       this.render();
     }));
+    if (!this.isNew) {
+      row.addButton((b) => b.setButtonText("Branch a new language\u2026").onClick(() => {
+        this.close();
+        new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
+      }));
+    }
+    if (this.isNew) {
+      row.addButton((b) => b.setButtonText("Cancel").onClick(() => {
+        this.close();
+        new import_obsidian.Notice("Culture discarded \u2014 nothing was saved.");
+      }));
+    }
     row.addButton((b) => b.setButtonText(this.isNew ? "Accept culture" : "Save changes").setCta().onClick(async () => {
       this.plugin.upsertCulture(this.culture);
       await this.plugin.persist();
@@ -1454,6 +1687,166 @@ var CultureCardModal = class extends import_obsidian.Modal {
   }
   onOpen() {
     this.render();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+var DRIFT_LEVELS = [
+  { value: "dialect", label: "Dialect \u2014 light drift, clearly the same tongue" },
+  { value: "sister", label: "Sister language \u2014 moderate drift, kin but distinct" },
+  { value: "distant", label: "Distant cousin \u2014 heavy drift, related if you look closely" }
+];
+var DeriveCultureModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, parentId) {
+    var _a, _b;
+    super(app);
+    this.mode = "branch";
+    this.mergeParentIds = /* @__PURE__ */ new Set();
+    this.name = "";
+    this.driftLevel = "sister";
+    this.environment = "none";
+    this.plugin = plugin;
+    this.branchParentId = (_b = parentId != null ? parentId : (_a = plugin.data.cultures[0]) == null ? void 0 : _a.id) != null ? _b : "";
+  }
+  render() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: "Branch a new language" });
+    contentEl.createEl("p", {
+      text: "Branch drifts one parent's sounds and words into a descendant. Merge blends two or more languages together, as if they'd come into contact.",
+      cls: "lf-hint"
+    });
+    if (this.plugin.data.cultures.length === 0) {
+      contentEl.createEl("p", { text: "No cultures yet \u2014 create one first.", cls: "lf-hint" });
+      new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Close").onClick(() => this.close()));
+      return;
+    }
+    new import_obsidian.Setting(contentEl).setName("Mode").setDesc("Branch: one parent drifts into a descendant. Merge: two or more parents blend via contact.").addDropdown((d) => {
+      d.addOption("branch", "Branch from one parent");
+      d.addOption("merge", "Merge two or more parents");
+      d.setValue(this.mode).onChange((v) => {
+        this.mode = v;
+        this.render();
+      });
+    });
+    if (this.mode === "branch") {
+      new import_obsidian.Setting(contentEl).setName("Parent language").addDropdown((d) => {
+        for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
+        d.setValue(this.branchParentId).onChange((v) => this.branchParentId = v);
+      });
+    } else {
+      contentEl.createEl("p", { text: "Select two or more languages to merge.", cls: "lf-hint" });
+      for (const c of this.plugin.data.cultures) {
+        new import_obsidian.Setting(contentEl).setName(c.name).addToggle((t) => t.setValue(this.mergeParentIds.has(c.id)).onChange((on) => {
+          if (on) this.mergeParentIds.add(c.id);
+          else this.mergeParentIds.delete(c.id);
+        }));
+      }
+    }
+    new import_obsidian.Setting(contentEl).setName("New language name").addText((t) => t.setPlaceholder("Velari-dhen").onChange((v) => this.name = v.trim()));
+    new import_obsidian.Setting(contentEl).setName("Drift").setDesc(this.mode === "branch" ? "How far the branch has diverged from its parent." : "How far the blended language has settled since contact.").addDropdown((d) => {
+      for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
+      d.setValue(this.driftLevel).onChange((v) => this.driftLevel = v);
+    });
+    new import_obsidian.Setting(contentEl).setName("Environment").setDesc("Optional \u2014 adds regional word themes on top of the parents' vocabulary.").addDropdown((d) => {
+      for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
+      d.setValue(this.environment).onChange((v) => this.environment = v);
+    });
+    const buttons = new import_obsidian.Setting(contentEl);
+    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton((b) => b.setButtonText(this.mode === "branch" ? "Derive language" : "Merge languages").setCta().onClick(() => {
+      if (!this.name) {
+        new import_obsidian.Notice("The new language needs a name.");
+        return;
+      }
+      if (this.plugin.data.cultures.some((c) => c.name.toLowerCase() === this.name.toLowerCase())) {
+        new import_obsidian.Notice("A culture with that name already exists.");
+        return;
+      }
+      const envPack = ENV_DEFAULT_PACK[this.environment];
+      const overrides = {};
+      if (this.environment !== "none") {
+        overrides.environment = this.environment;
+        if (envPack) overrides.packs = [envPack];
+      }
+      let culture;
+      if (this.mode === "branch") {
+        const parent = this.plugin.data.cultures.find((c) => c.id === this.branchParentId);
+        if (!parent) {
+          new import_obsidian.Notice("Pick a parent language first.");
+          return;
+        }
+        culture = deriveCulture(parent, this.name, this.driftLevel, overrides);
+      } else {
+        const parents = this.plugin.data.cultures.filter((c) => this.mergeParentIds.has(c.id));
+        if (parents.length < 2) {
+          new import_obsidian.Notice("Select at least two languages to merge.");
+          return;
+        }
+        culture = mergeCultures(parents, this.name, this.driftLevel, overrides);
+      }
+      this.close();
+      new CultureCardModal(this.app, this.plugin, culture, true).open();
+    }));
+  }
+  onOpen() {
+    this.render();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+var FamilyTreeModal = class extends import_obsidian.Modal {
+  constructor(app, plugin) {
+    super(app);
+    this.plugin = plugin;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: "Family tree" });
+    const all = this.plugin.data.cultures;
+    if (all.length === 0) {
+      contentEl.createEl("p", { text: "No cultures yet.", cls: "lf-hint" });
+      return;
+    }
+    const roots = all.filter((c) => !c.parentIds || c.parentIds.length === 0);
+    if (roots.length === 0) {
+      contentEl.createEl("p", { text: "No root languages found.", cls: "lf-hint" });
+      return;
+    }
+    for (const root of roots) {
+      const section = contentEl.createDiv({ cls: "lf-tree-section" });
+      this.renderNode(section, root, all, 0, /* @__PURE__ */ new Set());
+    }
+  }
+  renderNode(container, culture, all, depth, visited) {
+    var _a, _b, _c, _d;
+    const row = container.createDiv({ cls: "lf-tree-node" });
+    row.style.marginLeft = `${depth * 18}px`;
+    const parents = ((_a = culture.parentIds) != null ? _a : []).map((id) => all.find((c) => c.id === id)).filter((c) => !!c);
+    const relLabel = parents.length === 0 ? "root" : parents.length === 1 ? `${(_b = culture.driftLevel) != null ? _b : "drift"} of ${parents[0].name}` : `merged: ${parents.map((p) => p.name).join(" + ")} (${(_c = culture.driftLevel) != null ? _c : "contact"})`;
+    const label = row.createEl("a", {
+      text: `${culture.name}  \xB7  gen ${(_d = culture.generation) != null ? _d : 0}  \xB7  ${relLabel}`,
+      cls: "lf-tree-link"
+    });
+    label.onClickEvent(() => {
+      this.close();
+      new CultureCardModal(this.app, this.plugin, culture, false).open();
+    });
+    if (visited.has(culture.id)) {
+      row.createSpan({ text: "  (see above)", cls: "lf-hint" });
+      return;
+    }
+    visited.add(culture.id);
+    if (depth > 50) return;
+    const children = all.filter((c) => {
+      var _a2;
+      return (_a2 = c.parentIds) == null ? void 0 : _a2.includes(culture.id);
+    });
+    for (const child of children) this.renderNode(container, child, all, depth + 1, visited);
   }
   onClose() {
     this.contentEl.empty();
@@ -1510,6 +1903,18 @@ var GenerateModal = class extends import_obsidian.Modal {
         this.render();
       });
     });
+    controls.addButton((b) => b.setButtonText("New culture\u2026").onClick(() => {
+      this.close();
+      new SeedWizardModal(this.app, this.plugin).open();
+    }));
+    controls.addButton((b) => b.setButtonText("Branch a new language\u2026").onClick(() => {
+      this.close();
+      new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
+    }));
+    controls.addButton((b) => b.setButtonText("Family tree\u2026").onClick(() => {
+      this.close();
+      new FamilyTreeModal(this.app, this.plugin).open();
+    }));
     contentEl.createEl("p", { text: this.culture.summary, cls: "lf-hint" });
     const grid = contentEl.createDiv({ cls: "lf-batch" });
     this.batch.forEach((g, i) => {
@@ -1613,6 +2018,17 @@ var LanguageForgeSettingTab = class extends import_obsidian.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
+    new import_obsidian.Setting(containerEl).setName("Create a new culture").setDesc("Start the wizard for another culture \u2014 you can have as many as you like.").addButton((b) => b.setButtonText("New culture\u2026").onClick(() => {
+      new SeedWizardModal(this.app, this.plugin).open();
+    }));
+    if (this.plugin.data.cultures.length > 0) {
+      new import_obsidian.Setting(containerEl).setName("Branch or merge a language").setDesc("Derive a descendant from one parent, or merge two or more existing languages together via contact.").addButton((b) => b.setButtonText("Branch a language\u2026").onClick(() => {
+        new DeriveCultureModal(this.app, this.plugin).open();
+      }));
+      new import_obsidian.Setting(containerEl).setName("Family tree").setDesc("Browse every language's ancestors and descendants.").addButton((b) => b.setButtonText("View family tree\u2026").onClick(() => {
+        new FamilyTreeModal(this.app, this.plugin).open();
+      }));
+    }
     new import_obsidian.Setting(containerEl).setName("Folder for culture cards").setDesc("Culture notes are saved under this folder.").addText((t) => t.setValue(this.plugin.data.settings.folder).onChange(async (v) => {
       this.plugin.data.settings.folder = v.trim() || DEFAULT_SETTINGS.folder;
       await this.plugin.persist();

@@ -6,8 +6,8 @@ import {
   Setting, TFile, normalizePath,
 } from "obsidian";
 import {
-  Category, Culture, GeneratedName, Mood, Register, SeedTraits,
-  cultureNote, generateBatch, makeCultureCard, reinforce, reshuffleElements,
+  Category, Culture, DriftLevel, ENV_DEFAULT_PACK, GeneratedName, Mood, Register, SeedTraits,
+  cultureNote, deriveCulture, generateBatch, makeCultureCard, mergeCultures, reinforce, reshuffleElements,
   reverseSeedCulture, seedCulture, weightLabel,
 } from "./engine";
 import { PHONETIC_PACKS, SEMANTIC_PACKS } from "./data";
@@ -69,6 +69,28 @@ export default class LanguageForgePlugin extends Plugin {
     });
 
     this.addCommand({
+      id: "derive-culture",
+      name: "Derive a descendant language",
+      callback: () => {
+        if (this.data.cultures.length === 0) {
+          new Notice("No cultures yet — create one first.");
+          new SeedWizardModal(this.app, this).open();
+          return;
+        }
+        new DeriveCultureModal(this.app, this).open();
+      },
+    });
+
+    this.addCommand({
+      id: "view-family-tree",
+      name: "View language family tree",
+      callback: () => {
+        if (this.data.cultures.length === 0) { new Notice("No cultures yet — create one first."); return; }
+        new FamilyTreeModal(this.app, this).open();
+      },
+    });
+
+    this.addCommand({
       id: "save-culture-card",
       name: "Save a culture card as a note",
       callback: () => {
@@ -100,7 +122,7 @@ export default class LanguageForgePlugin extends Plugin {
     const folder = normalizePath(`${this.data.settings.folder}/Cultures`);
     try { await this.app.vault.createFolder(folder); } catch { /* exists */ }
     const path = normalizePath(`${folder}/${culture.name}.md`);
-    const content = cultureNote(culture);
+    const content = cultureNote(culture, this.data.cultures);
     const existing = this.app.vault.getAbstractFileByPath(path);
     if (existing instanceof TFile) await this.app.vault.modify(existing, content);
     else await this.app.vault.create(path, content);
@@ -196,7 +218,9 @@ class SeedWizardModal extends Modal {
         }));
     }
 
-    new Setting(contentEl).addButton(b => b.setButtonText("Seed the culture").setCta().onClick(() => {
+    const buttons = new Setting(contentEl);
+    buttons.addButton(b => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton(b => b.setButtonText("Seed the culture").setCta().onClick(() => {
       if (!this.traits.name) { new Notice("The culture needs a name."); return; }
       if (this.plugin.data.cultures.some(c => c.name.toLowerCase() === this.traits.name.toLowerCase())) {
         new Notice("A culture with that name already exists."); return;
@@ -243,7 +267,9 @@ class PasteNamesModal extends Modal {
         t.onChange(v => (this.pasted = v));
       });
 
-    new Setting(contentEl).addButton(b => b.setButtonText("Work out the sound").setCta().onClick(() => {
+    const buttons = new Setting(contentEl);
+    buttons.addButton(b => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton(b => b.setButtonText("Work out the sound").setCta().onClick(() => {
       const names = this.pasted.split(/[,\n;]+/).map(s => s.trim()).filter(s => s.length >= 3);
       if (names.length < 2) { new Notice("Paste at least two names."); return; }
       if (!this.cultureName) this.cultureName = names[0] + "-kin";
@@ -315,6 +341,18 @@ class CultureCardModal extends Modal {
       this.shuffle++;
       this.render();
     }));
+    if (!this.isNew) {
+      row.addButton(b => b.setButtonText("Branch a new language…").onClick(() => {
+        this.close();
+        new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
+      }));
+    }
+    if (this.isNew) {
+      row.addButton(b => b.setButtonText("Cancel").onClick(() => {
+        this.close();
+        new Notice("Culture discarded — nothing was saved.");
+      }));
+    }
     row.addButton(b => b.setButtonText(this.isNew ? "Accept culture" : "Save changes").setCta().onClick(async () => {
       this.plugin.upsertCulture(this.culture);
       await this.plugin.persist();
@@ -325,6 +363,189 @@ class CultureCardModal extends Modal {
   }
 
   onOpen() { this.render(); }
+  onClose() { this.contentEl.empty(); }
+}
+
+// ---------------------------------------------------------------- branching a language family
+
+const DRIFT_LEVELS: { value: DriftLevel; label: string }[] = [
+  { value: "dialect", label: "Dialect — light drift, clearly the same tongue" },
+  { value: "sister", label: "Sister language — moderate drift, kin but distinct" },
+  { value: "distant", label: "Distant cousin — heavy drift, related if you look closely" },
+];
+
+class DeriveCultureModal extends Modal {
+  plugin: LanguageForgePlugin;
+  mode: "branch" | "merge" = "branch";
+  branchParentId: string;
+  mergeParentIds = new Set<string>();
+  name = "";
+  driftLevel: DriftLevel = "sister";
+  environment = "none";
+
+  constructor(app: App, plugin: LanguageForgePlugin, parentId?: string) {
+    super(app);
+    this.plugin = plugin;
+    this.branchParentId = parentId ?? plugin.data.cultures[0]?.id ?? "";
+  }
+
+  render() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: "Branch a new language" });
+    contentEl.createEl("p", {
+      text: "Branch drifts one parent's sounds and words into a descendant. Merge blends two or more languages together, as if they'd come into contact.",
+      cls: "lf-hint",
+    });
+
+    if (this.plugin.data.cultures.length === 0) {
+      contentEl.createEl("p", { text: "No cultures yet — create one first.", cls: "lf-hint" });
+      new Setting(contentEl).addButton(b => b.setButtonText("Close").onClick(() => this.close()));
+      return;
+    }
+
+    new Setting(contentEl).setName("Mode")
+      .setDesc("Branch: one parent drifts into a descendant. Merge: two or more parents blend via contact.")
+      .addDropdown(d => {
+        d.addOption("branch", "Branch from one parent");
+        d.addOption("merge", "Merge two or more parents");
+        d.setValue(this.mode).onChange(v => { this.mode = v as "branch" | "merge"; this.render(); });
+      });
+
+    if (this.mode === "branch") {
+      new Setting(contentEl).setName("Parent language")
+        .addDropdown(d => {
+          for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
+          d.setValue(this.branchParentId).onChange(v => (this.branchParentId = v));
+        });
+    } else {
+      contentEl.createEl("p", { text: "Select two or more languages to merge.", cls: "lf-hint" });
+      for (const c of this.plugin.data.cultures) {
+        new Setting(contentEl).setName(c.name)
+          .addToggle(t => t.setValue(this.mergeParentIds.has(c.id)).onChange(on => {
+            if (on) this.mergeParentIds.add(c.id);
+            else this.mergeParentIds.delete(c.id);
+          }));
+      }
+    }
+
+    new Setting(contentEl).setName("New language name")
+      .addText(t => t.setPlaceholder("Velari-dhen").onChange(v => (this.name = v.trim())));
+
+    new Setting(contentEl).setName("Drift")
+      .setDesc(this.mode === "branch"
+        ? "How far the branch has diverged from its parent."
+        : "How far the blended language has settled since contact.")
+      .addDropdown(d => {
+        for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
+        d.setValue(this.driftLevel).onChange(v => (this.driftLevel = v as DriftLevel));
+      });
+
+    new Setting(contentEl).setName("Environment")
+      .setDesc("Optional — adds regional word themes on top of the parents' vocabulary.")
+      .addDropdown(d => {
+        for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
+        d.setValue(this.environment).onChange(v => (this.environment = v));
+      });
+
+    const buttons = new Setting(contentEl);
+    buttons.addButton(b => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton(b => b.setButtonText(this.mode === "branch" ? "Derive language" : "Merge languages").setCta().onClick(() => {
+      if (!this.name) { new Notice("The new language needs a name."); return; }
+      if (this.plugin.data.cultures.some(c => c.name.toLowerCase() === this.name.toLowerCase())) {
+        new Notice("A culture with that name already exists."); return;
+      }
+      const envPack = ENV_DEFAULT_PACK[this.environment];
+      const overrides: { environment?: string; packs?: string[] } = {};
+      if (this.environment !== "none") {
+        overrides.environment = this.environment;
+        if (envPack) overrides.packs = [envPack];
+      }
+
+      let culture: Culture;
+      if (this.mode === "branch") {
+        const parent = this.plugin.data.cultures.find(c => c.id === this.branchParentId);
+        if (!parent) { new Notice("Pick a parent language first."); return; }
+        culture = deriveCulture(parent, this.name, this.driftLevel, overrides);
+      } else {
+        const parents = this.plugin.data.cultures.filter(c => this.mergeParentIds.has(c.id));
+        if (parents.length < 2) { new Notice("Select at least two languages to merge."); return; }
+        culture = mergeCultures(parents, this.name, this.driftLevel, overrides);
+      }
+      this.close();
+      new CultureCardModal(this.app, this.plugin, culture, true).open();
+    }));
+  }
+
+  onOpen() { this.render(); }
+  onClose() { this.contentEl.empty(); }
+}
+
+// ---------------------------------------------------------------- family tree
+
+class FamilyTreeModal extends Modal {
+  plugin: LanguageForgePlugin;
+
+  constructor(app: App, plugin: LanguageForgePlugin) {
+    super(app);
+    this.plugin = plugin;
+  }
+
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: "Family tree" });
+
+    const all = this.plugin.data.cultures;
+    if (all.length === 0) {
+      contentEl.createEl("p", { text: "No cultures yet.", cls: "lf-hint" });
+      return;
+    }
+
+    const roots = all.filter(c => !c.parentIds || c.parentIds.length === 0);
+    if (roots.length === 0) {
+      contentEl.createEl("p", { text: "No root languages found.", cls: "lf-hint" });
+      return;
+    }
+
+    for (const root of roots) {
+      const section = contentEl.createDiv({ cls: "lf-tree-section" });
+      this.renderNode(section, root, all, 0, new Set());
+    }
+  }
+
+  renderNode(container: HTMLElement, culture: Culture, all: Culture[], depth: number, visited: Set<string>) {
+    const row = container.createDiv({ cls: "lf-tree-node" });
+    row.style.marginLeft = `${depth * 18}px`;
+
+    const parents = (culture.parentIds ?? [])
+      .map(id => all.find(c => c.id === id))
+      .filter((c): c is Culture => !!c);
+    const relLabel = parents.length === 0 ? "root"
+      : parents.length === 1 ? `${culture.driftLevel ?? "drift"} of ${parents[0].name}`
+      : `merged: ${parents.map(p => p.name).join(" + ")} (${culture.driftLevel ?? "contact"})`;
+
+    const label = row.createEl("a", {
+      text: `${culture.name}  ·  gen ${culture.generation ?? 0}  ·  ${relLabel}`,
+      cls: "lf-tree-link",
+    });
+    label.onClickEvent(() => {
+      this.close();
+      new CultureCardModal(this.app, this.plugin, culture, false).open();
+    });
+
+    if (visited.has(culture.id)) {
+      row.createSpan({ text: "  (see above)", cls: "lf-hint" });
+      return;
+    }
+    visited.add(culture.id);
+
+    if (depth > 50) return; // cheap safety net against pathological data
+    const children = all.filter(c => c.parentIds?.includes(culture.id));
+    for (const child of children) this.renderNode(container, child, all, depth + 1, visited);
+  }
+
   onClose() { this.contentEl.empty(); }
 }
 
@@ -375,6 +596,18 @@ class GenerateModal extends Modal {
       d.addOption("meaning", "By meaning");
       d.setValue(this.mode).onChange(v => { this.mode = v as "sound" | "meaning"; this.newBatch(); this.render(); });
     });
+    controls.addButton(b => b.setButtonText("New culture…").onClick(() => {
+      this.close();
+      new SeedWizardModal(this.app, this.plugin).open();
+    }));
+    controls.addButton(b => b.setButtonText("Branch a new language…").onClick(() => {
+      this.close();
+      new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
+    }));
+    controls.addButton(b => b.setButtonText("Family tree…").onClick(() => {
+      this.close();
+      new FamilyTreeModal(this.app, this.plugin).open();
+    }));
 
     contentEl.createEl("p", { text: this.culture.summary, cls: "lf-hint" });
 
@@ -481,6 +714,26 @@ class LanguageForgeSettingTab extends PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
+
+    new Setting(containerEl).setName("Create a new culture")
+      .setDesc("Start the wizard for another culture — you can have as many as you like.")
+      .addButton(b => b.setButtonText("New culture…").onClick(() => {
+        new SeedWizardModal(this.app, this.plugin).open();
+      }));
+
+    if (this.plugin.data.cultures.length > 0) {
+      new Setting(containerEl).setName("Branch or merge a language")
+        .setDesc("Derive a descendant from one parent, or merge two or more existing languages together via contact.")
+        .addButton(b => b.setButtonText("Branch a language…").onClick(() => {
+          new DeriveCultureModal(this.app, this.plugin).open();
+        }));
+
+      new Setting(containerEl).setName("Family tree")
+        .setDesc("Browse every language's ancestors and descendants.")
+        .addButton(b => b.setButtonText("View family tree…").onClick(() => {
+          new FamilyTreeModal(this.app, this.plugin).open();
+        }));
+    }
 
     new Setting(containerEl).setName("Folder for culture cards")
       .setDesc("Culture notes are saved under this folder.")

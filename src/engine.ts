@@ -12,6 +12,7 @@ export type Mood = "harsh" | "soft" | "bright" | "grand" | "exotic";
 export type Register = "ancient" | "balanced" | "modern";
 export type Category = "personal" | "house" | "place";
 export type Slot = "start" | "middle" | "end";
+export type DriftLevel = "dialect" | "sister" | "distant";
 
 export interface ElementSet { start: string[]; middle: string[]; end: string[]; }
 
@@ -39,6 +40,9 @@ export interface Culture {
   registry: string[];      // accepted names — the project-level collision target
   fromNames?: string[];    // if reverse-seeded, the names the user pasted
   summary: string;
+  parentIds?: string[];    // ids of the ancestor Culture(s): 1 = pure divergence, 2+ = contact/merge
+  generation?: number;     // 0 for root cultures, max(parents' generation)+1 for derived ones
+  driftLevel?: DriftLevel; // preset used when deriving/merging from parentIds
 }
 
 export interface GeneratedName {
@@ -306,7 +310,7 @@ export interface SeedTraits {
   seed?: string;
 }
 
-const ENV_DEFAULT_PACK: Record<string, string> = {
+export const ENV_DEFAULT_PACK: Record<string, string> = {
   desert: "desert", mountain: "mountain", forest: "forest",
   coastal: "seafaring", urban: "mercantile",
 };
@@ -672,9 +676,211 @@ export function reshuffleElements(culture: Culture, salt: string): void {
   culture.summary = oneBreath(culture);
 }
 
+// ---------------------------------------------------------------- language families & drift
+
+export const DRIFT_PRESETS: Record<DriftLevel, number> = {
+  dialect: 0.15,
+  sister: 0.4,
+  distant: 0.7,
+};
+
+/** Small curated set of plausible sound shifts. Applied probabilistically during drift —
+ *  not a full historical-linguistics model, just enough to make a lineage audibly related. */
+const SOUND_CHANGE_RULES: { pattern: RegExp; replacement: string }[] = [
+  { pattern: /p/g, replacement: "f" },
+  { pattern: /t(?!h)/g, replacement: "th" },
+  { pattern: /k/g, replacement: "h" },
+  { pattern: /(?<=[aeiou])b(?=[aeiou])/g, replacement: "v" },
+  { pattern: /(?<=[aeiou])g(?=[aeiou])/g, replacement: "gh" },
+  { pattern: /d(?!h)/g, replacement: "dh" },
+  { pattern: /o/g, replacement: "u" },
+  { pattern: /e/g, replacement: "i" },
+  { pattern: /s(?!h)/g, replacement: "z" },
+  { pattern: /([aeiou])\1/g, replacement: "$1" }, // long-vowel simplification
+];
+
+/** Run a randomized subset of SOUND_CHANGE_RULES over one word, weighted by drift intensity.
+ *  Preserves a leading "-" (end-slot marker) and initial capitalization (start-slot marker). */
+function driftWord(rng: () => number, word: string, intensity: number): string {
+  const hasLeadingDash = word.startsWith("-");
+  const hasCap = /^[A-Z]/.test(word.replace(/^-/, ""));
+  let w = word.replace(/^-/, "").toLowerCase();
+  for (const rule of SOUND_CHANGE_RULES) {
+    if (rng() < intensity) w = w.replace(rule.pattern, rule.replacement);
+  }
+  if (w.length === 0) w = word.replace(/^-/, "").toLowerCase();
+  if (hasCap) w = w[0].toUpperCase() + w.slice(1);
+  return hasLeadingDash ? "-" + w : w;
+}
+
+function driftElementSet(rng: () => number, elements: ElementSet, intensity: number): ElementSet {
+  return {
+    start: elements.start.map(el => driftWord(rng, el, intensity)),
+    middle: elements.middle.map(el => driftWord(rng, el, intensity)),
+    end: elements.end.map(el => driftWord(rng, el, intensity)),
+  };
+}
+
+/** Derive a descendant Culture from a parent via sound-change drift. Vocabulary meanings
+ *  are preserved (a family's relatedness is semantic, per the mint-stability promise) but
+ *  forms — and the frozen element set that generates new names — evolve away from the
+ *  parent's under the chosen preset, so the branch reads as related but distinct. */
+export function deriveCulture(
+  parent: Culture,
+  name: string,
+  driftLevel: DriftLevel,
+  overrides: { environment?: string; packs?: string[] } = {},
+): Culture {
+  const intensity = DRIFT_PRESETS[driftLevel];
+  const seed = `${name}::from::${parent.id}::${Date.now().toString(36)}`;
+  const rng = rngFrom(seed + "::drift");
+
+  const elements = driftElementSet(rng, parent.elements, intensity);
+  const roots: Root[] = parent.roots.map(r => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+
+  const culture: Culture = {
+    id: seed,
+    name,
+    seed,
+    mood: parent.mood,
+    register: parent.register,
+    familiarity: parent.familiarity,
+    environment: overrides.environment ?? parent.environment,
+    elements,
+    middleChance: parent.middleChance,
+    syllableRange: [...parent.syllableRange] as [number, number],
+    stress: parent.stress,
+    roots,
+    appliedPacks: [...parent.appliedPacks],
+    registry: [],
+    summary: "",
+    parentIds: [parent.id],
+    generation: (parent.generation ?? 0) + 1,
+    driftLevel,
+  };
+
+  if (overrides.packs?.length) {
+    applySemanticPacks(culture, [...new Set([...culture.appliedPacks, ...overrides.packs])]);
+  }
+  culture.summary = oneBreath(culture);
+  return culture;
+}
+
+/** Merge 2+ parent Cultures into a new one via language contact: phonology is pooled
+ *  proportionally from every parent, shared-meaning vocabulary is blended into hybrid
+ *  forms (not just inherited from one side), and a lighter drift pass runs on top to
+ *  represent the variety settling after contact. */
+export function mergeCultures(
+  parents: Culture[],
+  name: string,
+  driftLevel: DriftLevel,
+  overrides: { environment?: string; packs?: string[] } = {},
+): Culture {
+  if (parents.length < 2) throw new Error("mergeCultures requires at least two parents");
+
+  const seed = `${name}::merge::${parents.map(p => p.id).join("+")}::${Date.now().toString(36)}`;
+  const rng = rngFrom(seed + "::merge");
+
+  const mergeSlot = (slot: Slot, targetSize: number): string[] => {
+    const per = Math.max(1, Math.round(targetSize / parents.length));
+    const pooled = parents.flatMap(p => sample(rng, p.elements[slot], per));
+    const seen = new Set<string>();
+    const out = pooled.filter(el => {
+      const k = el.toLowerCase();
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    if (out.length < targetSize) {
+      const rest = parents.flatMap(p => p.elements[slot]).filter(el => !seen.has(el.toLowerCase()));
+      out.push(...sample(rng, rest, targetSize - out.length));
+    }
+    return out.slice(0, targetSize);
+  };
+  const elements: ElementSet = {
+    start: mergeSlot("start", 10),
+    middle: mergeSlot("middle", 8),
+    end: mergeSlot("end", 5),
+  };
+
+  const byMeaning = new Map<string, Root[]>();
+  for (const p of parents) {
+    for (const r of p.roots) {
+      if (!byMeaning.has(r.meaning)) byMeaning.set(r.meaning, []);
+      byMeaning.get(r.meaning)!.push(r);
+    }
+  }
+  const roots: Root[] = [];
+  for (const [meaning, variants] of byMeaning) {
+    if (variants.length === 1) {
+      roots.push({ ...variants[0] });
+      continue;
+    }
+    const [a, b] = sample(rng, variants, 2);
+    const sylA = syllabify(a.form), sylB = syllabify(b.form);
+    const cutA = Math.max(1, Math.floor(sylA.length / 2));
+    const cutB = Math.floor(sylB.length / 2);
+    let blended = sylA.slice(0, cutA).join("") + sylB.slice(cutB).join("");
+    blended = blended.replace(/[aeiou]{3,}/g, m => m.slice(0, 2));
+    if (blended.length < 3) blended = a.form;
+    roots.push({
+      form: blended[0].toUpperCase() + blended.slice(1).toLowerCase(),
+      meaning,
+      origin: `${a.origin}+${b.origin}`,
+      weight: Math.min(3, Math.max(a.weight, b.weight)),
+    });
+  }
+
+  const modeOf = <T,>(values: T[]): T => {
+    const counts = new Map<string, { v: T; n: number }>();
+    for (const v of values) {
+      const k = String(v);
+      const e = counts.get(k);
+      if (e) e.n++; else counts.set(k, { v, n: 1 });
+    }
+    const max = Math.max(...[...counts.values()].map(e => e.n));
+    const tied = [...counts.values()].filter(e => e.n === max).map(e => e.v);
+    return pick(rng, tied);
+  };
+
+  const syllLo = Math.min(...parents.map(p => p.syllableRange[0]));
+  const syllHi = Math.max(...parents.map(p => p.syllableRange[1]));
+
+  const culture: Culture = {
+    id: seed,
+    name,
+    seed,
+    mood: modeOf(parents.map(p => p.mood)),
+    register: modeOf(parents.map(p => p.register)),
+    familiarity: modeOf(parents.map(p => p.familiarity)),
+    environment: overrides.environment ?? parents[0].environment,
+    elements,
+    middleChance: parents.reduce((t, p) => t + p.middleChance, 0) / parents.length,
+    syllableRange: [syllLo, Math.max(syllLo, syllHi)],
+    stress: modeOf(parents.map(p => p.stress)),
+    roots,
+    appliedPacks: [...new Set(parents.flatMap(p => p.appliedPacks))],
+    registry: [],
+    summary: "",
+    parentIds: parents.map(p => p.id),
+    generation: Math.max(...parents.map(p => p.generation ?? 0)) + 1,
+    driftLevel,
+  };
+
+  const intensity = DRIFT_PRESETS[driftLevel] * 0.5;
+  culture.elements = driftElementSet(rng, culture.elements, intensity);
+  culture.roots = culture.roots.map(r => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+
+  if (overrides.packs?.length) {
+    applySemanticPacks(culture, [...new Set([...culture.appliedPacks, ...overrides.packs])]);
+  }
+  culture.summary = oneBreath(culture);
+  return culture;
+}
+
 // ---------------------------------------------------------------- markdown export
 
-export function cultureNote(culture: Culture): string {
+export function cultureNote(culture: Culture, allCultures: Culture[] = []): string {
   const card = makeCultureCard(culture);
   const lines: string[] = [];
   lines.push("---");
@@ -693,6 +899,34 @@ export function cultureNote(culture: Culture): string {
     lines.push(`Seeded from your own names: ${culture.fromNames.join(", ")}.`);
     lines.push("");
   }
+
+  const parents = (culture.parentIds ?? [])
+    .map(id => allCultures.find(c => c.id === id))
+    .filter((c): c is Culture => !!c);
+  const descendants = allCultures.filter(c => c.parentIds?.includes(culture.id));
+  if (parents.length > 0 || descendants.length > 0) {
+    lines.push("## Family");
+    lines.push("");
+    if (parents.length === 1) {
+      lines.push(`Descended from: **${parents[0].name}** (generation ${culture.generation ?? 1}, drift: ${culture.driftLevel ?? "unknown"})`);
+    } else if (parents.length >= 2) {
+      lines.push(`Merged from: ${parents.map(p => `**${p.name}**`).join(" + ")} (generation ${culture.generation ?? 1}, contact drift: ${culture.driftLevel ?? "unknown"})`);
+    }
+    if (descendants.length > 0) {
+      lines.push(`Descendants: ${descendants.map(d => d.name).join(", ")}`);
+    }
+    lines.push("");
+  }
+
+  lines.push("## Sound elements");
+  lines.push("");
+  lines.push(`Starts: ${culture.elements.start.join(", ")}`);
+  lines.push("");
+  lines.push(`Middles: ${culture.elements.middle.join(", ")}`);
+  lines.push("");
+  lines.push(`Endings: ${culture.elements.end.join(", ")}`);
+  lines.push("");
+
   lines.push("## Sample names");
   lines.push("");
   for (const s of card.samples) lines.push(`- **${s.name}** (${s.category}) — say it: *${s.pronunciation}*`);
