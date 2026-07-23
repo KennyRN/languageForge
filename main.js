@@ -575,6 +575,123 @@ var SEMANTIC_PACKS = {
     ]
   }
 };
+var DRIFT_PACKS = {
+  "romance_softening": {
+    "effectFamily": "softening",
+    "direction": "erosion",
+    "appliesTo": "descent",
+    "plainDescription": "Hard stops soften and voice between vowels, then spirantise; doubles simplify.",
+    "why": "The Western Romance path (Latin to Spanish/Italian): vita-like forms wear toward vida-like ones. Names come out fluid and worn.",
+    "rules": [
+      { "from": "p", "to": "b", "when": "intervocalic", "gloss": "voiceless stop p voices between vowels" },
+      { "from": "t", "to": "d", "when": "intervocalic", "gloss": "voiceless stop t voices between vowels" },
+      { "from": "c", "to": "g", "when": "intervocalic", "gloss": "voiceless stop k/c voices between vowels" },
+      { "from": "k", "to": "g", "when": "intervocalic", "gloss": "voiceless stop k voices between vowels" },
+      { "from": "b", "to": "v", "when": "intervocalic", "gloss": "voiced stop b spirantises (feeds from p>b)" },
+      { "from": "d", "to": "dh", "when": "intervocalic", "gloss": "voiced stop d spirantises to a soft th (feeds from t>d)" },
+      { "from": "g", "to": "gh", "when": "intervocalic", "gloss": "voiced stop g spirantises (feeds from c/k>g)" },
+      { "from": "pp", "to": "p", "when": "always", "gloss": "geminate simplifies" },
+      { "from": "tt", "to": "t", "when": "always", "gloss": "geminate simplifies" },
+      { "from": "kk", "to": "k", "when": "always", "gloss": "geminate simplifies" },
+      { "from": "ll", "to": "l", "when": "always", "gloss": "geminate simplifies" }
+    ]
+  },
+  "celtic_lenition": {
+    "effectFamily": "softening",
+    "direction": "erosion",
+    "appliesTo": "descent",
+    "plainDescription": "Intervocalic consonants weaken toward fricatives and h; m goes to v, s goes to h.",
+    "why": "The Celtic lenition pattern: consonants soften between vowels in distinctive ways (s>h, m>v) that give a different flavour from the Romance path.",
+    "rules": [
+      { "from": "t", "to": "th", "when": "intervocalic", "gloss": "t spirantises" },
+      { "from": "c", "to": "gh", "when": "intervocalic", "gloss": "k/c weakens to a back fricative" },
+      { "from": "k", "to": "gh", "when": "intervocalic", "gloss": "k weakens to a back fricative" },
+      { "from": "b", "to": "v", "when": "intervocalic", "gloss": "b spirantises" },
+      { "from": "m", "to": "v", "when": "intervocalic", "gloss": "nasal lenites to v (the Irish 'mh')" },
+      { "from": "s", "to": "h", "when": "intervocalic", "gloss": "s lenites to h" },
+      { "from": "d", "to": "dh", "when": "intervocalic", "gloss": "d spirantises to a soft th" }
+    ]
+  },
+  "vowel_melting": {
+    "effectFamily": "softening",
+    "direction": "erosion",
+    "appliesTo": "descent",
+    "plainDescription": "Adjacent vowels merge; doubled vowels collapse.",
+    "why": "The path toward French-like smoothing, where vowel clusters melt into single sounds and endings blur.",
+    "rules": [
+      { "from": "aa", "to": "a", "when": "always", "gloss": "long vowel simplifies" },
+      { "from": "ee", "to": "e", "when": "always", "gloss": "long vowel simplifies" },
+      { "from": "oo", "to": "o", "when": "always", "gloss": "long vowel simplifies" },
+      { "from": "ii", "to": "i", "when": "always", "gloss": "long vowel simplifies" },
+      { "from": "ae", "to": "e", "when": "always", "gloss": "diphthong monophthongises" },
+      { "from": "oe", "to": "e", "when": "always", "gloss": "diphthong monophthongises" },
+      { "from": "ea", "to": "a", "when": "always", "gloss": "vowel cluster melts" },
+      { "from": "ou", "to": "u", "when": "always", "gloss": "vowel cluster melts" },
+      { "from": "eo", "to": "o", "when": "always", "gloss": "vowel cluster melts" }
+    ]
+  },
+  "syllable_erosion": {
+    "effectFamily": "compression",
+    "direction": "erosion",
+    "appliesTo": "descent",
+    "plainDescription": "Intervocalic h drops, final unstressed vowels fall away, and resulting doubles simplify.",
+    "why": "The literal 'Ban-hok becomes Bannock' path (rassaku Part III): speakers wear names down toward what is easiest to say. The clearest demonstration of the ease law.",
+    "rules": [
+      { "from": "h", "to": "", "when": "intervocalic", "gloss": "intervocalic h is dropped" },
+      { "from": "e", "to": "", "when": "final", "gloss": "final unstressed vowel apocope" },
+      { "from": "a", "to": "", "when": "final", "gloss": "final unstressed vowel apocope" },
+      { "from": "nn", "to": "n", "when": "always", "gloss": "geminate simplifies after deletion" },
+      { "from": "ll", "to": "l", "when": "always", "gloss": "geminate simplifies after deletion" },
+      { "from": "tt", "to": "t", "when": "always", "gloss": "geminate simplifies after deletion" }
+    ]
+  },
+  "vowel_shift": {
+    "effectFamily": "vowel-shift",
+    "direction": "shift",
+    "appliesTo": "descent",
+    "plainDescription": "A push chain: back vowels raise and the long high front vowel diphthongises. Consonants untouched.",
+    "why": "The Great-Vowel-Shift feel. Ordered as a push chain (o>u fires before a>o) so the vowels rotate without merging into each other.",
+    "rules": [
+      { "from": "ii", "to": "ai", "when": "always", "gloss": "long high front vowel diphthongises" },
+      { "from": "o", "to": "u", "when": "always", "gloss": "mid back vowel raises (fires first to clear the slot)" },
+      { "from": "a", "to": "o", "when": "always", "gloss": "low vowel raises into the vacated slot" }
+    ]
+  },
+  "germanic_hardening": {
+    "effectFamily": "hardening",
+    "direction": "shift",
+    "appliesTo": "descent",
+    "plainDescription": "A Grimm-style consonant shift plus final-obstruent devoicing.",
+    "why": "The Germanic path: p/t/k become fricatives while b/d/g harden into p/t/k. Ordered so the two waves stay distinct in a single pass.",
+    "rules": [
+      { "from": "p", "to": "f", "when": "always", "gloss": "voiceless stop spirantises (wave 1, fires before b>p)" },
+      { "from": "t", "to": "th", "when": "always", "gloss": "voiceless stop spirantises" },
+      { "from": "k", "to": "h", "when": "always", "gloss": "voiceless stop spirantises" },
+      { "from": "b", "to": "p", "when": "always", "gloss": "voiced stop hardens into the vacated p slot (wave 2)" },
+      { "from": "d", "to": "t", "when": "always", "gloss": "voiced stop hardens" },
+      { "from": "g", "to": "k", "when": "always", "gloss": "voiced stop hardens" },
+      { "from": "v", "to": "f", "when": "final", "gloss": "final obstruent devoices (easier to release)" },
+      { "from": "z", "to": "s", "when": "final", "gloss": "final obstruent devoices" },
+      { "from": "thh", "to": "th", "when": "always", "gloss": "tidy: a stop spirantising beside an existing th leaves th, not thh" },
+      { "from": "hh", "to": "h", "when": "always", "gloss": "tidy: doubled h simplifies" }
+    ]
+  },
+  "prestige_exonym": {
+    "effectFamily": "reshaping",
+    "direction": "shift",
+    "appliesTo": "loanword",
+    "plainDescription": "Adapts a foreign name to a borrower who lacks its harder sounds: fricatives plainen, exotic letters simplify, glottal marks drop.",
+    "why": "The Confucius mechanic. A donor form is worn to the borrower's simpler phonology as it crosses the contact edge, which is also a readability win. Used by contact edges, not descent chains.",
+    "rules": [
+      { "from": "dh", "to": "d", "when": "always", "gloss": "borrower lacks the soft-th, hears a plain d" },
+      { "from": "gh", "to": "g", "when": "always", "gloss": "borrower lacks the back fricative, hears a plain g" },
+      { "from": "th", "to": "t", "when": "always", "gloss": "borrower flattens th to t" },
+      { "from": "x", "to": "k", "when": "always", "gloss": "borrower reads x as a plain k" },
+      { "from": "'", "to": "", "when": "always", "gloss": "borrower ignores the glottal mark it cannot say" },
+      { "from": "kh", "to": "k", "when": "always", "gloss": "aspirate simplifies" }
+    ]
+  }
+};
 
 // src/engine.ts
 function xmur3(str) {
@@ -1157,44 +1274,73 @@ var DRIFT_PRESETS = {
   sister: 0.4,
   distant: 0.7
 };
-var SOUND_CHANGE_RULES = [
-  { pattern: /p/g, replacement: "f" },
-  { pattern: /t(?!h)/g, replacement: "th" },
-  { pattern: /k/g, replacement: "h" },
-  { pattern: /(?<=[aeiou])b(?=[aeiou])/g, replacement: "v" },
-  { pattern: /(?<=[aeiou])g(?=[aeiou])/g, replacement: "gh" },
-  { pattern: /d(?!h)/g, replacement: "dh" },
-  { pattern: /o/g, replacement: "u" },
-  { pattern: /e/g, replacement: "i" },
-  { pattern: /s(?!h)/g, replacement: "z" },
-  { pattern: /([aeiou])\1/g, replacement: "$1" }
-  // long-vowel simplification
-];
-function driftWord(rng, word, intensity) {
+var MOOD_DEFAULT_DRIFT_PACK = {
+  harsh: "germanic_hardening",
+  soft: "romance_softening",
+  bright: "vowel_shift",
+  grand: "celtic_lenition",
+  exotic: "vowel_melting"
+};
+var DRIFT_VOWELS = "aeiou";
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function applyOneRule(word, rule) {
+  const f = escapeRegExp(rule.from);
+  switch (rule.when) {
+    case "always":
+      return word.replace(new RegExp(f, "g"), rule.to);
+    case "intervocalic":
+      return word.replace(new RegExp(`(?<=[${DRIFT_VOWELS}])${f}(?=[${DRIFT_VOWELS}])`, "g"), rule.to);
+    case "initial":
+      return word.replace(new RegExp(`^${f}`), rule.to);
+    case "final":
+      return word.replace(new RegExp(`${f}$`), rule.to);
+    case "after_vowel":
+      return word.replace(new RegExp(`(?<=[${DRIFT_VOWELS}])${f}`, "g"), rule.to);
+    case "before_vowel":
+      return word.replace(new RegExp(`${f}(?=[${DRIFT_VOWELS}])`, "g"), rule.to);
+    case "after_consonant":
+      return word.replace(new RegExp(`(?<=[^${DRIFT_VOWELS}])${f}`, "g"), rule.to);
+    case "before_consonant":
+      return word.replace(new RegExp(`${f}(?=[^${DRIFT_VOWELS}])`, "g"), rule.to);
+    case "unstressed": {
+      const m = word.match(new RegExp(`[${DRIFT_VOWELS}]`));
+      if (!m || m.index === void 0) return word;
+      const headEnd = m.index + 1;
+      return word.slice(0, headEnd) + word.slice(headEnd).replace(new RegExp(f, "g"), rule.to);
+    }
+  }
+}
+function driftWord(rng, word, pack, intensity) {
   const hasLeadingDash = word.startsWith("-");
   const hasCap = /^[A-Z]/.test(word.replace(/^-/, ""));
   let w = word.replace(/^-/, "").toLowerCase();
-  for (const rule of SOUND_CHANGE_RULES) {
-    if (rng() < intensity) w = w.replace(rule.pattern, rule.replacement);
+  for (const rule of pack.rules) {
+    if (rng() < intensity) w = applyOneRule(w, rule);
   }
   if (w.length === 0) w = word.replace(/^-/, "").toLowerCase();
   if (hasCap) w = w[0].toUpperCase() + w.slice(1);
   return hasLeadingDash ? "-" + w : w;
 }
-function driftElementSet(rng, elements, intensity) {
+function driftWordWithPacks(rng, word, packs, intensity) {
+  return packs.reduce((acc, pack) => driftWord(rng, acc, pack, intensity), word);
+}
+function driftElementSet(rng, elements, packs, intensity) {
   return {
-    start: elements.start.map((el) => driftWord(rng, el, intensity)),
-    middle: elements.middle.map((el) => driftWord(rng, el, intensity)),
-    end: elements.end.map((el) => driftWord(rng, el, intensity))
+    start: elements.start.map((el) => driftWordWithPacks(rng, el, packs, intensity)),
+    middle: elements.middle.map((el) => driftWordWithPacks(rng, el, packs, intensity)),
+    end: elements.end.map((el) => driftWordWithPacks(rng, el, packs, intensity))
   };
 }
-function deriveCulture(parent, name, driftLevel, overrides = {}) {
+function deriveCulture(parent, name, driftLevel, driftPackIds, overrides = {}) {
   var _a, _b, _c;
   const intensity = DRIFT_PRESETS[driftLevel];
+  const packs = driftPackIds.map((id) => DRIFT_PACKS[id]).filter((p) => !!p);
   const seed = `${name}::from::${parent.id}::${Date.now().toString(36)}`;
   const rng = rngFrom(seed + "::drift");
-  const elements = driftElementSet(rng, parent.elements, intensity);
-  const roots = parent.roots.map((r) => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+  const elements = driftElementSet(rng, parent.elements, packs, intensity);
+  const roots = parent.roots.map((r) => ({ ...r, form: driftWordWithPacks(rng, r.form, packs, intensity) }));
   const culture = {
     id: seed,
     name,
@@ -1213,7 +1359,9 @@ function deriveCulture(parent, name, driftLevel, overrides = {}) {
     summary: "",
     parentIds: [parent.id],
     generation: ((_b = parent.generation) != null ? _b : 0) + 1,
-    driftLevel
+    driftLevel,
+    driftPackIds,
+    driftMode: "family"
   };
   if ((_c = overrides.packs) == null ? void 0 : _c.length) {
     applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
@@ -1221,9 +1369,10 @@ function deriveCulture(parent, name, driftLevel, overrides = {}) {
   culture.summary = oneBreath(culture);
   return culture;
 }
-function mergeCultures(parents, name, driftLevel, overrides = {}) {
+function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}) {
   var _a, _b;
   if (parents.length < 2) throw new Error("mergeCultures requires at least two parents");
+  const packs = driftPackIds.map((id) => DRIFT_PACKS[id]).filter((p) => !!p);
   const seed = `${name}::merge::${parents.map((p) => p.id).join("+")}::${Date.now().toString(36)}`;
   const rng = rngFrom(seed + "::merge");
   const mergeSlot = (slot, targetSize) => {
@@ -1309,19 +1458,49 @@ function mergeCultures(parents, name, driftLevel, overrides = {}) {
       var _a2;
       return (_a2 = p.generation) != null ? _a2 : 0;
     })) + 1,
-    driftLevel
+    driftLevel,
+    driftPackIds,
+    driftMode: "family-contact"
   };
   const intensity = DRIFT_PRESETS[driftLevel] * 0.5;
-  culture.elements = driftElementSet(rng, culture.elements, intensity);
-  culture.roots = culture.roots.map((r) => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+  culture.elements = driftElementSet(rng, culture.elements, packs, intensity);
+  culture.roots = culture.roots.map((r) => ({ ...r, form: driftWordWithPacks(rng, r.form, packs, intensity) }));
   if ((_b = overrides.packs) == null ? void 0 : _b.length) {
     applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
   }
   culture.summary = oneBreath(culture);
   return culture;
 }
+function ageCulture(culture, packId, driftLevel, category = "personal") {
+  const pack = DRIFT_PACKS[packId];
+  if (!pack) throw new Error(`ageCulture: unknown drift pack '${packId}'`);
+  const intensity = DRIFT_PRESETS[driftLevel];
+  const driftRng = rngFrom(`${culture.seed}::age::${packId}::${driftLevel}`);
+  const modernElements = driftElementSet(driftRng, culture.elements, [pack], intensity);
+  const modernRoots = culture.roots.map((r) => ({
+    ...r,
+    form: driftWordWithPacks(driftRng, r.form, [pack], intensity)
+  }));
+  const modernView = { ...culture, elements: modernElements, roots: modernRoots };
+  const archaicRng = rngFrom(`${culture.seed}::age::samples::archaic::${packId}::${driftLevel}`);
+  const modernSampleRng = rngFrom(`${culture.seed}::age::samples::modern::${packId}::${driftLevel}`);
+  return {
+    archaic: {
+      elements: culture.elements,
+      roots: culture.roots,
+      samples: generateBatch(culture, category, 3, "sound", archaicRng)
+    },
+    modern: {
+      elements: modernElements,
+      roots: modernRoots,
+      samples: generateBatch(modernView, category, 3, "sound", modernSampleRng)
+    },
+    packId,
+    driftLevel
+  };
+}
 function cultureNote(culture, allCultures = []) {
-  var _a, _b, _c, _d, _e, _f;
+  var _a, _b, _c, _d, _e, _f, _g, _h;
   const card = makeCultureCard(culture);
   const lines = [];
   lines.push("---");
@@ -1348,10 +1527,18 @@ function cultureNote(culture, allCultures = []) {
   if (parents.length > 0 || descendants.length > 0) {
     lines.push("## Family");
     lines.push("");
+    const packLabel = ((_c = culture.driftPackIds) == null ? void 0 : _c.length) ? ` via ${culture.driftPackIds.join(" + ")}` : "";
     if (parents.length === 1) {
-      lines.push(`Descended from: **${parents[0].name}** (generation ${(_c = culture.generation) != null ? _c : 1}, drift: ${(_d = culture.driftLevel) != null ? _d : "unknown"})`);
+      lines.push(`Descended from: **${parents[0].name}** (generation ${(_d = culture.generation) != null ? _d : 1}, drift: ${(_e = culture.driftLevel) != null ? _e : "unknown"}${packLabel})`);
     } else if (parents.length >= 2) {
-      lines.push(`Merged from: ${parents.map((p) => `**${p.name}**`).join(" + ")} (generation ${(_e = culture.generation) != null ? _e : 1}, contact drift: ${(_f = culture.driftLevel) != null ? _f : "unknown"})`);
+      lines.push(`Merged from: ${parents.map((p) => `**${p.name}**`).join(" + ")} (generation ${(_f = culture.generation) != null ? _f : 1}, contact drift: ${(_g = culture.driftLevel) != null ? _g : "unknown"}${packLabel})`);
+    }
+    if ((_h = culture.driftPackIds) == null ? void 0 : _h.length) {
+      const flavor = culture.driftPackIds.map((id) => {
+        var _a2;
+        return (_a2 = DRIFT_PACKS[id]) == null ? void 0 : _a2.plainDescription;
+      }).filter((s) => !!s).join(" ");
+      if (flavor) lines.push(`*${flavor}*`);
     }
     if (descendants.length > 0) {
       lines.push(`Descendants: ${descendants.map((d) => d.name).join(", ")}`);
@@ -1436,6 +1623,17 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
           return;
         }
         new DeriveCultureModal(this.app, this).open();
+      }
+    });
+    this.addCommand({
+      id: "age-culture",
+      name: "Age a language in place",
+      callback: () => {
+        if (this.data.cultures.length === 0) {
+          new import_obsidian.Notice("No cultures yet \u2014 create one first.");
+          return;
+        }
+        new PickCultureModal(this.app, this, (c) => new AgeCultureModal(this.app, this, c).open(), "Age this").open();
       }
     });
     this.addCommand({
@@ -1670,6 +1868,10 @@ var CultureCardModal = class extends import_obsidian.Modal {
         this.close();
         new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
       }));
+      row.addButton((b) => b.setButtonText("Age this language\u2026").onClick(() => {
+        this.close();
+        new AgeCultureModal(this.app, this.plugin, this.culture).open();
+      }));
     }
     if (this.isNew) {
       row.addButton((b) => b.setButtonText("Cancel").onClick(() => {
@@ -1697,6 +1899,17 @@ var DRIFT_LEVELS = [
   { value: "sister", label: "Sister language \u2014 moderate drift, kin but distinct" },
   { value: "distant", label: "Distant cousin \u2014 heavy drift, related if you look closely" }
 ];
+var DRIFT_PACK_LABELS = {
+  romance_softening: "Romance softening",
+  celtic_lenition: "Celtic lenition",
+  vowel_melting: "Vowel melting",
+  syllable_erosion: "Syllable erosion",
+  vowel_shift: "Vowel shift",
+  germanic_hardening: "Germanic hardening"
+};
+function descentPackIds() {
+  return Object.keys(DRIFT_PACKS).filter((id) => DRIFT_PACKS[id].appliesTo === "descent");
+}
 var DeriveCultureModal = class extends import_obsidian.Modal {
   constructor(app, plugin, parentId) {
     var _a, _b;
@@ -1705,12 +1918,22 @@ var DeriveCultureModal = class extends import_obsidian.Modal {
     this.mergeParentIds = /* @__PURE__ */ new Set();
     this.name = "";
     this.driftLevel = "sister";
+    this.driftPackTouched = false;
+    // once the user picks explicitly, stop overwriting on parent change
     this.environment = "none";
     this.plugin = plugin;
     this.branchParentId = (_b = parentId != null ? parentId : (_a = plugin.data.cultures[0]) == null ? void 0 : _a.id) != null ? _b : "";
+    this.driftPackId = this.defaultPackForCurrentParent();
+  }
+  defaultPackForCurrentParent() {
+    var _a;
+    const firstParent = this.mode === "branch" ? this.plugin.data.cultures.find((c) => c.id === this.branchParentId) : this.plugin.data.cultures.find((c) => this.mergeParentIds.has(c.id));
+    const mood = firstParent == null ? void 0 : firstParent.mood;
+    return (_a = mood && MOOD_DEFAULT_DRIFT_PACK[mood]) != null ? _a : descentPackIds()[0];
   }
   render() {
     const { contentEl } = this;
+    if (!this.driftPackTouched) this.driftPackId = this.defaultPackForCurrentParent();
     contentEl.empty();
     contentEl.addClass("languageforge-modal");
     contentEl.createEl("h2", { text: "Branch a new language" });
@@ -1750,6 +1973,21 @@ var DeriveCultureModal = class extends import_obsidian.Modal {
       for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
       d.setValue(this.driftLevel).onChange((v) => this.driftLevel = v);
     });
+    const packHint = contentEl.createEl("p", { cls: "lf-hint" });
+    const updatePackHint = () => {
+      const pack = DRIFT_PACKS[this.driftPackId];
+      packHint.setText(pack ? `${pack.plainDescription} ${pack.why}` : "");
+    };
+    new import_obsidian.Setting(contentEl).setName("Sound-change pack").setDesc("The kind of sound change this branch/merge undergoes.").addDropdown((d) => {
+      var _a;
+      for (const id of descentPackIds()) d.addOption(id, (_a = DRIFT_PACK_LABELS[id]) != null ? _a : id);
+      d.setValue(this.driftPackId).onChange((v) => {
+        this.driftPackId = v;
+        this.driftPackTouched = true;
+        updatePackHint();
+      });
+    });
+    updatePackHint();
     new import_obsidian.Setting(contentEl).setName("Environment").setDesc("Optional \u2014 adds regional word themes on top of the parents' vocabulary.").addDropdown((d) => {
       for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
       d.setValue(this.environment).onChange((v) => this.environment = v);
@@ -1778,18 +2016,83 @@ var DeriveCultureModal = class extends import_obsidian.Modal {
           new import_obsidian.Notice("Pick a parent language first.");
           return;
         }
-        culture = deriveCulture(parent, this.name, this.driftLevel, overrides);
+        culture = deriveCulture(parent, this.name, this.driftLevel, [this.driftPackId], overrides);
       } else {
         const parents = this.plugin.data.cultures.filter((c) => this.mergeParentIds.has(c.id));
         if (parents.length < 2) {
           new import_obsidian.Notice("Select at least two languages to merge.");
           return;
         }
-        culture = mergeCultures(parents, this.name, this.driftLevel, overrides);
+        culture = mergeCultures(parents, this.name, this.driftLevel, [this.driftPackId], overrides);
       }
       this.close();
       new CultureCardModal(this.app, this.plugin, culture, true).open();
     }));
+  }
+  onOpen() {
+    this.render();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+var AgeCultureModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, culture) {
+    var _a;
+    super(app);
+    this.driftLevel = "sister";
+    this.snapshot = null;
+    this.plugin = plugin;
+    this.culture = culture;
+    this.packId = (_a = MOOD_DEFAULT_DRIFT_PACK[culture.mood]) != null ? _a : descentPackIds()[0];
+  }
+  render() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: `Age ${this.culture.name} in place` });
+    contentEl.createEl("p", {
+      text: "A single language, aged: archaic and worn-modern forms shown side by side. This doesn't create a new language or touch the family tree.",
+      cls: "lf-hint"
+    });
+    const packHint = contentEl.createEl("p", { cls: "lf-hint" });
+    const updatePackHint = () => {
+      const pack = DRIFT_PACKS[this.packId];
+      packHint.setText(pack ? `${pack.plainDescription} ${pack.why}` : "");
+    };
+    new import_obsidian.Setting(contentEl).setName("Sound-change pack").addDropdown((d) => {
+      var _a;
+      for (const id of descentPackIds()) d.addOption(id, (_a = DRIFT_PACK_LABELS[id]) != null ? _a : id);
+      d.setValue(this.packId).onChange((v) => {
+        this.packId = v;
+        updatePackHint();
+      });
+    });
+    updatePackHint();
+    new import_obsidian.Setting(contentEl).setName("Drift").setDesc("How far the modern form has worn from the archaic one.").addDropdown((d) => {
+      for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
+      d.setValue(this.driftLevel).onChange((v) => this.driftLevel = v);
+    });
+    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Preview").setCta().onClick(() => {
+      this.snapshot = ageCulture(this.culture, this.packId, this.driftLevel);
+      this.render();
+    }));
+    if (this.snapshot) {
+      const cols = contentEl.createDiv({ cls: "lf-age-columns" });
+      const renderColumn = (title, samples) => {
+        const col = cols.createDiv({ cls: "lf-age-column" });
+        col.createEl("h3", { text: title });
+        const grid = col.createDiv({ cls: "lf-specimens" });
+        for (const s of samples) {
+          const chip = grid.createDiv({ cls: "lf-specimen" });
+          chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
+          chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
+        }
+      };
+      renderColumn("Archaic", this.snapshot.archaic.samples);
+      renderColumn("Modern", this.snapshot.modern.samples);
+    }
+    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Close").onClick(() => this.close()));
   }
   onOpen() {
     this.render();
@@ -1823,13 +2126,14 @@ var FamilyTreeModal = class extends import_obsidian.Modal {
     }
   }
   renderNode(container, culture, all, depth, visited) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const row = container.createDiv({ cls: "lf-tree-node" });
     row.style.marginLeft = `${depth * 18}px`;
     const parents = ((_a = culture.parentIds) != null ? _a : []).map((id) => all.find((c) => c.id === id)).filter((c) => !!c);
-    const relLabel = parents.length === 0 ? "root" : parents.length === 1 ? `${(_b = culture.driftLevel) != null ? _b : "drift"} of ${parents[0].name}` : `merged: ${parents.map((p) => p.name).join(" + ")} (${(_c = culture.driftLevel) != null ? _c : "contact"})`;
+    const packLabel = ((_b = culture.driftPackIds) == null ? void 0 : _b.length) ? ` [${culture.driftPackIds.join("+")}]` : "";
+    const relLabel = parents.length === 0 ? "root" : parents.length === 1 ? `${(_c = culture.driftLevel) != null ? _c : "drift"} of ${parents[0].name}${packLabel}` : `merged: ${parents.map((p) => p.name).join(" + ")} (${(_d = culture.driftLevel) != null ? _d : "contact"})${packLabel}`;
     const label = row.createEl("a", {
-      text: `${culture.name}  \xB7  gen ${(_d = culture.generation) != null ? _d : 0}  \xB7  ${relLabel}`,
+      text: `${culture.name}  \xB7  gen ${(_e = culture.generation) != null ? _e : 0}  \xB7  ${relLabel}`,
       cls: "lf-tree-link"
     });
     label.onClickEvent(() => {
@@ -1990,17 +2294,18 @@ var GenerateModal = class extends import_obsidian.Modal {
   }
 };
 var PickCultureModal = class extends import_obsidian.Modal {
-  constructor(app, plugin, onPick) {
+  constructor(app, plugin, onPick, buttonText = "Save card") {
     super(app);
     this.plugin = plugin;
     this.onPick = onPick;
+    this.buttonText = buttonText;
   }
   onOpen() {
     const { contentEl } = this;
     contentEl.addClass("languageforge-modal");
     contentEl.createEl("h2", { text: "Which culture?" });
     for (const c of this.plugin.data.cultures) {
-      new import_obsidian.Setting(contentEl).setName(c.name).setDesc(c.summary).addButton((b) => b.setButtonText("Save card").onClick(() => {
+      new import_obsidian.Setting(contentEl).setName(c.name).setDesc(c.summary).addButton((b) => b.setButtonText(this.buttonText).onClick(() => {
         this.close();
         this.onPick(c);
       }));

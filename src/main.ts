@@ -6,9 +6,10 @@ import {
   Setting, TFile, normalizePath,
 } from "obsidian";
 import {
-  Category, Culture, DriftLevel, ENV_DEFAULT_PACK, GeneratedName, Mood, Register, SeedTraits,
-  cultureNote, deriveCulture, generateBatch, makeCultureCard, mergeCultures, reinforce, reshuffleElements,
-  reverseSeedCulture, seedCulture, weightLabel,
+  AgedSnapshot, Category, Culture, DriftLevel, DRIFT_PACKS, ENV_DEFAULT_PACK, GeneratedName,
+  MOOD_DEFAULT_DRIFT_PACK, Mood, Register, SeedTraits,
+  ageCulture, cultureNote, deriveCulture, generateBatch, makeCultureCard, mergeCultures, reinforce,
+  reshuffleElements, reverseSeedCulture, seedCulture, weightLabel,
 } from "./engine";
 import { PHONETIC_PACKS, SEMANTIC_PACKS } from "./data";
 
@@ -78,6 +79,15 @@ export default class LanguageForgePlugin extends Plugin {
           return;
         }
         new DeriveCultureModal(this.app, this).open();
+      },
+    });
+
+    this.addCommand({
+      id: "age-culture",
+      name: "Age a language in place",
+      callback: () => {
+        if (this.data.cultures.length === 0) { new Notice("No cultures yet — create one first."); return; }
+        new PickCultureModal(this.app, this, (c) => new AgeCultureModal(this.app, this, c).open(), "Age this").open();
       },
     });
 
@@ -346,6 +356,10 @@ class CultureCardModal extends Modal {
         this.close();
         new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
       }));
+      row.addButton(b => b.setButtonText("Age this language…").onClick(() => {
+        this.close();
+        new AgeCultureModal(this.app, this.plugin, this.culture).open();
+      }));
     }
     if (this.isNew) {
       row.addButton(b => b.setButtonText("Cancel").onClick(() => {
@@ -374,6 +388,22 @@ const DRIFT_LEVELS: { value: DriftLevel; label: string }[] = [
   { value: "distant", label: "Distant cousin — heavy drift, related if you look closely" },
 ];
 
+// Short labels for the pack dropdown (plainDescription runs to a full sentence, which a
+// native <select> doesn't wrap). Only descent packs are offered here — prestige_exonym is
+// a loanword/contact pack, reserved for the future contact-graph work.
+const DRIFT_PACK_LABELS: Record<string, string> = {
+  romance_softening: "Romance softening",
+  celtic_lenition: "Celtic lenition",
+  vowel_melting: "Vowel melting",
+  syllable_erosion: "Syllable erosion",
+  vowel_shift: "Vowel shift",
+  germanic_hardening: "Germanic hardening",
+};
+
+function descentPackIds(): string[] {
+  return Object.keys(DRIFT_PACKS).filter(id => DRIFT_PACKS[id].appliesTo === "descent");
+}
+
 class DeriveCultureModal extends Modal {
   plugin: LanguageForgePlugin;
   mode: "branch" | "merge" = "branch";
@@ -381,16 +411,28 @@ class DeriveCultureModal extends Modal {
   mergeParentIds = new Set<string>();
   name = "";
   driftLevel: DriftLevel = "sister";
+  driftPackId: string;
+  driftPackTouched = false; // once the user picks explicitly, stop overwriting on parent change
   environment = "none";
 
   constructor(app: App, plugin: LanguageForgePlugin, parentId?: string) {
     super(app);
     this.plugin = plugin;
     this.branchParentId = parentId ?? plugin.data.cultures[0]?.id ?? "";
+    this.driftPackId = this.defaultPackForCurrentParent();
+  }
+
+  defaultPackForCurrentParent(): string {
+    const firstParent = this.mode === "branch"
+      ? this.plugin.data.cultures.find(c => c.id === this.branchParentId)
+      : this.plugin.data.cultures.find(c => this.mergeParentIds.has(c.id));
+    const mood = firstParent?.mood;
+    return (mood && MOOD_DEFAULT_DRIFT_PACK[mood]) ?? descentPackIds()[0];
   }
 
   render() {
     const { contentEl } = this;
+    if (!this.driftPackTouched) this.driftPackId = this.defaultPackForCurrentParent();
     contentEl.empty();
     contentEl.addClass("languageforge-modal");
     contentEl.createEl("h2", { text: "Branch a new language" });
@@ -442,6 +484,23 @@ class DeriveCultureModal extends Modal {
         d.setValue(this.driftLevel).onChange(v => (this.driftLevel = v as DriftLevel));
       });
 
+    const packHint = contentEl.createEl("p", { cls: "lf-hint" });
+    const updatePackHint = () => {
+      const pack = DRIFT_PACKS[this.driftPackId];
+      packHint.setText(pack ? `${pack.plainDescription} ${pack.why}` : "");
+    };
+    new Setting(contentEl).setName("Sound-change pack")
+      .setDesc("The kind of sound change this branch/merge undergoes.")
+      .addDropdown(d => {
+        for (const id of descentPackIds()) d.addOption(id, DRIFT_PACK_LABELS[id] ?? id);
+        d.setValue(this.driftPackId).onChange(v => {
+          this.driftPackId = v;
+          this.driftPackTouched = true;
+          updatePackHint();
+        });
+      });
+    updatePackHint();
+
     new Setting(contentEl).setName("Environment")
       .setDesc("Optional — adds regional word themes on top of the parents' vocabulary.")
       .addDropdown(d => {
@@ -467,15 +526,91 @@ class DeriveCultureModal extends Modal {
       if (this.mode === "branch") {
         const parent = this.plugin.data.cultures.find(c => c.id === this.branchParentId);
         if (!parent) { new Notice("Pick a parent language first."); return; }
-        culture = deriveCulture(parent, this.name, this.driftLevel, overrides);
+        culture = deriveCulture(parent, this.name, this.driftLevel, [this.driftPackId], overrides);
       } else {
         const parents = this.plugin.data.cultures.filter(c => this.mergeParentIds.has(c.id));
         if (parents.length < 2) { new Notice("Select at least two languages to merge."); return; }
-        culture = mergeCultures(parents, this.name, this.driftLevel, overrides);
+        culture = mergeCultures(parents, this.name, this.driftLevel, [this.driftPackId], overrides);
       }
       this.close();
       new CultureCardModal(this.app, this.plugin, culture, true).open();
     }));
+  }
+
+  onOpen() { this.render(); }
+  onClose() { this.contentEl.empty(); }
+}
+
+// ---------------------------------------------------------------- ageing a language in place
+
+// Gap 2, Level 1: a read-only preview, no persistence. Aging deliberately produces no
+// Culture node — see ageCulture in engine.ts — so there is no "accept"/"save" action here,
+// only pack/level selectors and a preview of the archaic vs. modern forms.
+class AgeCultureModal extends Modal {
+  plugin: LanguageForgePlugin;
+  culture: Culture;
+  packId: string;
+  driftLevel: DriftLevel = "sister";
+  snapshot: AgedSnapshot | null = null;
+
+  constructor(app: App, plugin: LanguageForgePlugin, culture: Culture) {
+    super(app);
+    this.plugin = plugin;
+    this.culture = culture;
+    this.packId = MOOD_DEFAULT_DRIFT_PACK[culture.mood] ?? descentPackIds()[0];
+  }
+
+  render() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: `Age ${this.culture.name} in place` });
+    contentEl.createEl("p", {
+      text: "A single language, aged: archaic and worn-modern forms shown side by side. This doesn't create a new language or touch the family tree.",
+      cls: "lf-hint",
+    });
+
+    const packHint = contentEl.createEl("p", { cls: "lf-hint" });
+    const updatePackHint = () => {
+      const pack = DRIFT_PACKS[this.packId];
+      packHint.setText(pack ? `${pack.plainDescription} ${pack.why}` : "");
+    };
+    new Setting(contentEl).setName("Sound-change pack")
+      .addDropdown(d => {
+        for (const id of descentPackIds()) d.addOption(id, DRIFT_PACK_LABELS[id] ?? id);
+        d.setValue(this.packId).onChange(v => { this.packId = v; updatePackHint(); });
+      });
+    updatePackHint();
+
+    new Setting(contentEl).setName("Drift")
+      .setDesc("How far the modern form has worn from the archaic one.")
+      .addDropdown(d => {
+        for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
+        d.setValue(this.driftLevel).onChange(v => (this.driftLevel = v as DriftLevel));
+      });
+
+    new Setting(contentEl).addButton(b => b.setButtonText("Preview").setCta().onClick(() => {
+      this.snapshot = ageCulture(this.culture, this.packId, this.driftLevel);
+      this.render();
+    }));
+
+    if (this.snapshot) {
+      const cols = contentEl.createDiv({ cls: "lf-age-columns" });
+      const renderColumn = (title: string, samples: GeneratedName[]) => {
+        const col = cols.createDiv({ cls: "lf-age-column" });
+        col.createEl("h3", { text: title });
+        const grid = col.createDiv({ cls: "lf-specimens" });
+        for (const s of samples) {
+          const chip = grid.createDiv({ cls: "lf-specimen" });
+          chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
+          chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
+        }
+      };
+      renderColumn("Archaic", this.snapshot.archaic.samples);
+      renderColumn("Modern", this.snapshot.modern.samples);
+    }
+
+    new Setting(contentEl).addButton(b => b.setButtonText("Close").onClick(() => this.close()));
   }
 
   onOpen() { this.render(); }
@@ -522,9 +657,10 @@ class FamilyTreeModal extends Modal {
     const parents = (culture.parentIds ?? [])
       .map(id => all.find(c => c.id === id))
       .filter((c): c is Culture => !!c);
+    const packLabel = culture.driftPackIds?.length ? ` [${culture.driftPackIds.join("+")}]` : "";
     const relLabel = parents.length === 0 ? "root"
-      : parents.length === 1 ? `${culture.driftLevel ?? "drift"} of ${parents[0].name}`
-      : `merged: ${parents.map(p => p.name).join(" + ")} (${culture.driftLevel ?? "contact"})`;
+      : parents.length === 1 ? `${culture.driftLevel ?? "drift"} of ${parents[0].name}${packLabel}`
+      : `merged: ${parents.map(p => p.name).join(" + ")} (${culture.driftLevel ?? "contact"})${packLabel}`;
 
     const label = row.createEl("a", {
       text: `${culture.name}  ·  gen ${culture.generation ?? 0}  ·  ${relLabel}`,
@@ -681,11 +817,13 @@ class GenerateModal extends Modal {
 class PickCultureModal extends Modal {
   plugin: LanguageForgePlugin;
   onPick: (c: Culture) => void;
+  buttonText: string;
 
-  constructor(app: App, plugin: LanguageForgePlugin, onPick: (c: Culture) => void) {
+  constructor(app: App, plugin: LanguageForgePlugin, onPick: (c: Culture) => void, buttonText = "Save card") {
     super(app);
     this.plugin = plugin;
     this.onPick = onPick;
+    this.buttonText = buttonText;
   }
 
   onOpen() {
@@ -694,7 +832,7 @@ class PickCultureModal extends Modal {
     contentEl.createEl("h2", { text: "Which culture?" });
     for (const c of this.plugin.data.cultures) {
       new Setting(contentEl).setName(c.name).setDesc(c.summary)
-        .addButton(b => b.setButtonText("Save card").onClick(() => { this.close(); this.onPick(c); }));
+        .addButton(b => b.setButtonText(this.buttonText).onClick(() => { this.close(); this.onPick(c); }));
     }
   }
 

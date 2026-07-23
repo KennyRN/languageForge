@@ -4,7 +4,8 @@
 // reverse-seeding from pasted names, pin-and-regenerate, pronunciation hints,
 // the Step 6 gates (lite), and the culture card.
 
-import { PHONETIC_PACKS, SEMANTIC_PACKS } from "./data";
+import { PHONETIC_PACKS, SEMANTIC_PACKS, DRIFT_PACKS, DriftPack, SoundChange, DriftWhen } from "./data";
+export { DRIFT_PACKS, DriftPack, SoundChange, DriftWhen };
 
 // ---------------------------------------------------------------- types
 
@@ -13,6 +14,9 @@ export type Register = "ancient" | "balanced" | "modern";
 export type Category = "personal" | "house" | "place";
 export type Slot = "start" | "middle" | "end";
 export type DriftLevel = "dialect" | "sister" | "distant";
+// Structural axis (Gap 2), orthogonal to DriftLevel's intensity axis. "age" never produces
+// a Culture (see ageCulture), so it has no place on this type — it's not a lineage label.
+export type DriftMode = "family" | "family-contact";
 
 export interface ElementSet { start: string[]; middle: string[]; end: string[]; }
 
@@ -42,7 +46,9 @@ export interface Culture {
   summary: string;
   parentIds?: string[];    // ids of the ancestor Culture(s): 1 = pure divergence, 2+ = contact/merge
   generation?: number;     // 0 for root cultures, max(parents' generation)+1 for derived ones
-  driftLevel?: DriftLevel; // preset used when deriving/merging from parentIds
+  driftLevel?: DriftLevel; // intensity preset used when deriving/merging from parentIds
+  driftPackIds?: string[]; // sound-change pack(s) applied when deriving/merging (lineage display)
+  driftMode?: DriftMode;   // structural operation that produced this culture: family | family-contact
 }
 
 export interface GeneratedName {
@@ -684,40 +690,82 @@ export const DRIFT_PRESETS: Record<DriftLevel, number> = {
   distant: 0.7,
 };
 
-/** Small curated set of plausible sound shifts. Applied probabilistically during drift —
- *  not a full historical-linguistics model, just enough to make a lineage audibly related. */
-const SOUND_CHANGE_RULES: { pattern: RegExp; replacement: string }[] = [
-  { pattern: /p/g, replacement: "f" },
-  { pattern: /t(?!h)/g, replacement: "th" },
-  { pattern: /k/g, replacement: "h" },
-  { pattern: /(?<=[aeiou])b(?=[aeiou])/g, replacement: "v" },
-  { pattern: /(?<=[aeiou])g(?=[aeiou])/g, replacement: "gh" },
-  { pattern: /d(?!h)/g, replacement: "dh" },
-  { pattern: /o/g, replacement: "u" },
-  { pattern: /e/g, replacement: "i" },
-  { pattern: /s(?!h)/g, replacement: "z" },
-  { pattern: /([aeiou])\1/g, replacement: "$1" }, // long-vowel simplification
-];
+// Mood-based default pack for DeriveCultureModal (Gap 1 point 4: a user who doesn't care
+// still gets a real, sensible result). A taste call, not a structural one.
+export const MOOD_DEFAULT_DRIFT_PACK: Record<Mood, string> = {
+  harsh: "germanic_hardening",
+  soft: "romance_softening",
+  bright: "vowel_shift",
+  grand: "celtic_lenition",
+  exotic: "vowel_melting",
+};
 
-/** Run a randomized subset of SOUND_CHANGE_RULES over one word, weighted by drift intensity.
+const DRIFT_VOWELS = "aeiou";
+
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Apply one ordered SoundChange rule to a lowercased core word under its environment.
+ *  Mirrors tools/drift_validator.py's _apply_rule exactly — same regex semantics per
+ *  `when` value, cross-checked word-for-word against its demo output. */
+function applyOneRule(word: string, rule: SoundChange): string {
+  const f = escapeRegExp(rule.from);
+  switch (rule.when) {
+    case "always":
+      return word.replace(new RegExp(f, "g"), rule.to);
+    case "intervocalic":
+      return word.replace(new RegExp(`(?<=[${DRIFT_VOWELS}])${f}(?=[${DRIFT_VOWELS}])`, "g"), rule.to);
+    case "initial":
+      return word.replace(new RegExp(`^${f}`), rule.to);
+    case "final":
+      return word.replace(new RegExp(`${f}$`), rule.to);
+    case "after_vowel":
+      return word.replace(new RegExp(`(?<=[${DRIFT_VOWELS}])${f}`, "g"), rule.to);
+    case "before_vowel":
+      return word.replace(new RegExp(`${f}(?=[${DRIFT_VOWELS}])`, "g"), rule.to);
+    case "after_consonant":
+      return word.replace(new RegExp(`(?<=[^${DRIFT_VOWELS}])${f}`, "g"), rule.to);
+    case "before_consonant":
+      return word.replace(new RegExp(`${f}(?=[^${DRIFT_VOWELS}])`, "g"), rule.to);
+    case "unstressed": {
+      // approximation matching the Python validator: everything after the first vowel
+      // counts as unstressed.
+      const m = word.match(new RegExp(`[${DRIFT_VOWELS}]`));
+      if (!m || m.index === undefined) return word;
+      const headEnd = m.index + 1;
+      return word.slice(0, headEnd) + word.slice(headEnd).replace(new RegExp(f, "g"), rule.to);
+    }
+  }
+}
+
+/** Run one DriftPack's rules IN ORDER over one word, each rule firing with probability
+ *  `intensity` (order matters — feeding chains like p>b then b>v are intentional).
  *  Preserves a leading "-" (end-slot marker) and initial capitalization (start-slot marker). */
-function driftWord(rng: () => number, word: string, intensity: number): string {
+function driftWord(rng: () => number, word: string, pack: DriftPack, intensity: number): string {
   const hasLeadingDash = word.startsWith("-");
   const hasCap = /^[A-Z]/.test(word.replace(/^-/, ""));
   let w = word.replace(/^-/, "").toLowerCase();
-  for (const rule of SOUND_CHANGE_RULES) {
-    if (rng() < intensity) w = w.replace(rule.pattern, rule.replacement);
+  for (const rule of pack.rules) {
+    if (rng() < intensity) w = applyOneRule(w, rule);
   }
   if (w.length === 0) w = word.replace(/^-/, "").toLowerCase();
   if (hasCap) w = w[0].toUpperCase() + w.slice(1);
   return hasLeadingDash ? "-" + w : w;
 }
 
-function driftElementSet(rng: () => number, elements: ElementSet, intensity: number): ElementSet {
+/** Fold a word through stacked packs in order (pack 1's full pass, then pack 2 on the
+ *  result, etc.). The engine API accepts multiple packs for future stacking; today's UI
+ *  only ever supplies one. */
+function driftWordWithPacks(rng: () => number, word: string, packs: DriftPack[], intensity: number): string {
+  return packs.reduce((acc, pack) => driftWord(rng, acc, pack, intensity), word);
+}
+
+function driftElementSet(rng: () => number, elements: ElementSet, packs: DriftPack[], intensity: number): ElementSet {
   return {
-    start: elements.start.map(el => driftWord(rng, el, intensity)),
-    middle: elements.middle.map(el => driftWord(rng, el, intensity)),
-    end: elements.end.map(el => driftWord(rng, el, intensity)),
+    start: elements.start.map(el => driftWordWithPacks(rng, el, packs, intensity)),
+    middle: elements.middle.map(el => driftWordWithPacks(rng, el, packs, intensity)),
+    end: elements.end.map(el => driftWordWithPacks(rng, el, packs, intensity)),
   };
 }
 
@@ -729,14 +777,16 @@ export function deriveCulture(
   parent: Culture,
   name: string,
   driftLevel: DriftLevel,
+  driftPackIds: string[],
   overrides: { environment?: string; packs?: string[] } = {},
 ): Culture {
   const intensity = DRIFT_PRESETS[driftLevel];
+  const packs = driftPackIds.map(id => DRIFT_PACKS[id]).filter((p): p is DriftPack => !!p);
   const seed = `${name}::from::${parent.id}::${Date.now().toString(36)}`;
   const rng = rngFrom(seed + "::drift");
 
-  const elements = driftElementSet(rng, parent.elements, intensity);
-  const roots: Root[] = parent.roots.map(r => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+  const elements = driftElementSet(rng, parent.elements, packs, intensity);
+  const roots: Root[] = parent.roots.map(r => ({ ...r, form: driftWordWithPacks(rng, r.form, packs, intensity) }));
 
   const culture: Culture = {
     id: seed,
@@ -757,6 +807,8 @@ export function deriveCulture(
     parentIds: [parent.id],
     generation: (parent.generation ?? 0) + 1,
     driftLevel,
+    driftPackIds,
+    driftMode: "family",
   };
 
   if (overrides.packs?.length) {
@@ -774,9 +826,11 @@ export function mergeCultures(
   parents: Culture[],
   name: string,
   driftLevel: DriftLevel,
+  driftPackIds: string[],
   overrides: { environment?: string; packs?: string[] } = {},
 ): Culture {
   if (parents.length < 2) throw new Error("mergeCultures requires at least two parents");
+  const packs = driftPackIds.map(id => DRIFT_PACKS[id]).filter((p): p is DriftPack => !!p);
 
   const seed = `${name}::merge::${parents.map(p => p.id).join("+")}::${Date.now().toString(36)}`;
   const rng = rngFrom(seed + "::merge");
@@ -865,17 +919,72 @@ export function mergeCultures(
     parentIds: parents.map(p => p.id),
     generation: Math.max(...parents.map(p => p.generation ?? 0)) + 1,
     driftLevel,
+    driftPackIds,
+    driftMode: "family-contact",
   };
 
   const intensity = DRIFT_PRESETS[driftLevel] * 0.5;
-  culture.elements = driftElementSet(rng, culture.elements, intensity);
-  culture.roots = culture.roots.map(r => ({ ...r, form: driftWord(rng, r.form, intensity) }));
+  culture.elements = driftElementSet(rng, culture.elements, packs, intensity);
+  culture.roots = culture.roots.map(r => ({ ...r, form: driftWordWithPacks(rng, r.form, packs, intensity) }));
 
   if (overrides.packs?.length) {
     applySemanticPacks(culture, [...new Set([...culture.appliedPacks, ...overrides.packs])]);
   }
   culture.summary = oneBreath(culture);
   return culture;
+}
+
+/** Gap 2, Level 1 — "a single language, aged." Unlike deriveCulture/mergeCultures, this
+ *  creates NO new Culture node: no id, no parentIds/generation bump, no driftMode. It is a
+ *  pure, non-mutating preview that shows a culture's stably-minted roots/elements (archaic,
+ *  untouched, returned by reference) alongside a worn "modern" form computed fresh each call
+ *  and never written back — the stable-minting promise (a culture's roots are never
+ *  re-minted) is never at risk because nothing here is persisted. Deterministic: the same
+ *  culture+pack+level always reproduces the same archaic/modern pair. */
+export interface AgedSnapshot {
+  archaic: { elements: ElementSet; roots: Root[]; samples: GeneratedName[] };
+  modern: { elements: ElementSet; roots: Root[]; samples: GeneratedName[] };
+  packId: string;
+  driftLevel: DriftLevel;
+}
+
+export function ageCulture(
+  culture: Culture,
+  packId: string,
+  driftLevel: DriftLevel,
+  category: Category = "personal",
+): AgedSnapshot {
+  const pack = DRIFT_PACKS[packId];
+  if (!pack) throw new Error(`ageCulture: unknown drift pack '${packId}'`);
+  const intensity = DRIFT_PRESETS[driftLevel];
+
+  const driftRng = rngFrom(`${culture.seed}::age::${packId}::${driftLevel}`);
+  const modernElements = driftElementSet(driftRng, culture.elements, [pack], intensity);
+  const modernRoots: Root[] = culture.roots.map(r => ({
+    ...r,
+    form: driftWordWithPacks(driftRng, r.form, [pack], intensity),
+  }));
+  // Ephemeral view-only object — never assigned an id, never persisted, thrown away
+  // after this call. culture.roots/elements themselves are never written to.
+  const modernView: Culture = { ...culture, elements: modernElements, roots: modernRoots };
+
+  const archaicRng = rngFrom(`${culture.seed}::age::samples::archaic::${packId}::${driftLevel}`);
+  const modernSampleRng = rngFrom(`${culture.seed}::age::samples::modern::${packId}::${driftLevel}`);
+
+  return {
+    archaic: {
+      elements: culture.elements,
+      roots: culture.roots,
+      samples: generateBatch(culture, category, 3, "sound", archaicRng),
+    },
+    modern: {
+      elements: modernElements,
+      roots: modernRoots,
+      samples: generateBatch(modernView, category, 3, "sound", modernSampleRng),
+    },
+    packId,
+    driftLevel,
+  };
 }
 
 // ---------------------------------------------------------------- markdown export
@@ -907,10 +1016,18 @@ export function cultureNote(culture: Culture, allCultures: Culture[] = []): stri
   if (parents.length > 0 || descendants.length > 0) {
     lines.push("## Family");
     lines.push("");
+    const packLabel = culture.driftPackIds?.length ? ` via ${culture.driftPackIds.join(" + ")}` : "";
     if (parents.length === 1) {
-      lines.push(`Descended from: **${parents[0].name}** (generation ${culture.generation ?? 1}, drift: ${culture.driftLevel ?? "unknown"})`);
+      lines.push(`Descended from: **${parents[0].name}** (generation ${culture.generation ?? 1}, drift: ${culture.driftLevel ?? "unknown"}${packLabel})`);
     } else if (parents.length >= 2) {
-      lines.push(`Merged from: ${parents.map(p => `**${p.name}**`).join(" + ")} (generation ${culture.generation ?? 1}, contact drift: ${culture.driftLevel ?? "unknown"})`);
+      lines.push(`Merged from: ${parents.map(p => `**${p.name}**`).join(" + ")} (generation ${culture.generation ?? 1}, contact drift: ${culture.driftLevel ?? "unknown"}${packLabel})`);
+    }
+    if (culture.driftPackIds?.length) {
+      const flavor = culture.driftPackIds
+        .map(id => DRIFT_PACKS[id]?.plainDescription)
+        .filter((s): s is string => !!s)
+        .join(" ");
+      if (flavor) lines.push(`*${flavor}*`);
     }
     if (descendants.length > 0) {
       lines.push(`Descendants: ${descendants.map(d => d.name).join(", ")}`);

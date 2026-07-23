@@ -26,16 +26,28 @@ An Obsidian plugin (TypeScript, esbuild) that generates fantasy names and langua
   /tools validator. Run `npm run validate` to check all four.
 
 ## Current status (read before assuming a spec is implemented)
-- `engine.ts` has a working drift/family-tree feature (`DRIFT_PRESETS`, `driftWord`,
-  `deriveCulture`, `mergeCultures`) using a simple intensity model — **not** the richer
-  pack-based model in `drift-packs.json`. Migrating the engine onto `drift-packs.json`
-  is planned but not done.
+- **Gap 1 (drift-pack library) and Gap 2 (structure/intensity split) are done.**
+  `deriveCulture`/`mergeCultures` now take `driftPackIds` and apply `DRIFT_PACKS` (ported
+  from `drift-packs.json`) as ordered rule packs, not the old unordered `SOUND_CHANGE_RULES`.
+  `Culture.driftMode` (`family`/`family-contact`) formalizes what `deriveCulture`/
+  `mergeCultures` already did; `ageCulture` is the new Level-1 "single language, aged"
+  operation (`AgeCultureModal`, command `age-culture`) — a read-only preview, no lineage
+  node created, never mutates a culture's stably-minted `roots`/`elements`.
+- **Gaps 3–6 remain open**, per `reconciliation.md`'s own sequencing: directed contact graph
+  (`mergeCultures` is still symmetric, labeled `family-contact` as an interim implementation),
+  place sub-types with per-type drift depth, `title` as a `Category`, and the etymological/
+  phonetic spelling toggle.
 - `SEMANTIC_PACKS` in `data.ts` still stores concepts as plain strings, not the tagged
   `{concept, tags}` shape `concept-packs.json` uses. `contentPolicy`/root-policy resolution
   is not wired into generation yet.
 - `naming-traditions.json`'s patterns are not wired into name generation yet.
-- All three new data files validate clean (0 failures) as of the commit that added them —
-  the data layer is ready; the engine wiring is the next pass.
+- All data files (`starter-packs-v2.json`, `concept-packs.json`, `drift-packs.json`,
+  `naming-traditions.json`) validate clean via `npm run validate`. The new drift-pack rule
+  applier in `engine.ts` was cross-checked word-for-word against `tools/drift_validator.py`'s
+  demo output for all 7 packs — exact match.
+- Not yet manually smoke-tested inside Obsidian itself (would require driving the user's
+  real desktop install via Electron automation with no dedicated test vault — flagged rather
+  than attempted unprompted). `npx tsc --noEmit` and the esbuild bundle both succeed.
 
 ## Build
 - npm install

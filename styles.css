@@ -83,3 +83,16 @@
 .languageforge-modal .lf-disabled { opacity: 0.5; }
 .languageforge-modal details.lf-packs { margin: 0.5em 0; }
 .languageforge-modal details.lf-packs summary { cursor: pointer; color: var(--text-muted); }
+
+/* Age-in-place preview: archaic vs modern side by side */
+.languageforge-modal .lf-age-columns {
+  display: flex;
+  gap: 16px;
+  margin: 0.75em 0;
+}
+.languageforge-modal .lf-age-column { flex: 1 1 0; min-width: 0; }
+.languageforge-modal .lf-age-column h3 {
+  margin: 0 0 0.4em;
+  font-size: var(--font-ui-medium);
+  color: var(--text-accent);
+}
