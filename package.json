@@ -1,11 +1,12 @@
 {
   "name": "languageforge",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --noEmit && esbuild src/main.ts --bundle --external:obsidian --format=cjs --platform=browser --target=es2019 --outfile=main.js",
+    "lint": "eslint src/main.ts src/engine.ts src/familyTreeView.ts",
     "validate:packs": "python3 tools/pack_validator.py data/starter-packs-v2.json",
     "validate:concepts": "python3 tools/concept_validator.py data/concept-packs.json",
     "validate:drift": "python3 tools/drift_validator.py data/drift-packs.json",
@@ -16,8 +17,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.0.1",
     "esbuild": "^0.28.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-obsidianmd": "^0.4.1",
     "obsidian": "^1.13.1",
-    "typescript": "^7.0.2"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.65.0"
   }
 }

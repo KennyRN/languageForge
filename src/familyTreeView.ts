@@ -413,28 +413,27 @@ export function renderFamilyTreeView(
   canvas.style.width = `${layout.width}px`;
   canvas.style.height = `${layout.height}px`;
 
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("class", "lf-tree-edges");
-  svg.setAttribute("width", String(layout.width));
-  svg.setAttribute("height", String(layout.height));
-  svg.setAttribute("viewBox", `0 0 ${layout.width} ${layout.height}`);
+  const svg = canvas.createSvg("svg", {
+    cls: "lf-tree-edges",
+    attr: {
+      width: layout.width,
+      height: layout.height,
+      viewBox: `0 0 ${layout.width} ${layout.height}`,
+    },
+  });
 
   const edgesByChild = new Map<string, SVGLineElement[]>();
   for (const e of layout.edges) {
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", String(e.x1));
-    line.setAttribute("y1", String(e.y1));
-    line.setAttribute("x2", String(e.x2));
-    line.setAttribute("y2", String(e.y2));
-    line.setAttribute("class", "lf-tree-edge");
-    svg.appendChild(line);
+    const line = svg.createSvg("line", {
+      cls: "lf-tree-edge",
+      attr: { x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2 },
+    });
     for (const cid of e.childIds ?? []) {
       const list = edgesByChild.get(cid) ?? [];
       list.push(line);
       edgesByChild.set(cid, list);
     }
   }
-  canvas.appendChild(svg);
 
   for (const u of layout.unions) {
     const mark = canvas.createDiv({ cls: "lf-tree-marriage", text: "⚭" });

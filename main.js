@@ -905,7 +905,10 @@ function medialVowelRun3(name) {
 }
 function levenshtein(a, b) {
   if (Math.abs(a.length - b.length) > 2) return 3;
-  const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...new Array(b.length).fill(0)]);
+  const dp = Array.from(
+    { length: a.length + 1 },
+    (_, i) => [i, ...new Array(b.length).fill(0)]
+  );
   for (let j = 0; j <= b.length; j++) dp[0][j] = j;
   for (let i = 1; i <= a.length; i++)
     for (let j = 1; j <= b.length; j++)
@@ -1619,7 +1622,7 @@ function parseImportInput(raw) {
     const key = t.toLowerCase();
     if (seen.has(key)) return;
     if (!isRomanisedName(t)) {
-      if (/[^\x00-\x7F]/.test(t) || t.replace(/[^A-Za-z]/g, "").length >= 3) {
+      if (/[^\p{ASCII}]/u.test(t) || t.replace(/[^A-Za-z]/g, "").length >= 3) {
         seen.add(key);
         rejected.push(t);
       }
@@ -1644,7 +1647,7 @@ function parseImportInput(raw) {
     }
     const nonLatin = (_c = raw.match(/[^\s,;|/]+/g)) != null ? _c : [];
     for (const tok of nonLatin) {
-      if (/[^\x00-\x7F]/.test(tok)) push(tok);
+      if (/[^\p{ASCII}]/u.test(tok)) push(tok);
     }
   }
   return { candidates, rejected };
@@ -2582,27 +2585,26 @@ function renderFamilyTreeView(parent, cultures, onSelect) {
   const canvas = viewport.createDiv({ cls: "lf-tree-canvas" });
   canvas.style.width = `${layout.width}px`;
   canvas.style.height = `${layout.height}px`;
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("class", "lf-tree-edges");
-  svg.setAttribute("width", String(layout.width));
-  svg.setAttribute("height", String(layout.height));
-  svg.setAttribute("viewBox", `0 0 ${layout.width} ${layout.height}`);
+  const svg = canvas.createSvg("svg", {
+    cls: "lf-tree-edges",
+    attr: {
+      width: layout.width,
+      height: layout.height,
+      viewBox: `0 0 ${layout.width} ${layout.height}`
+    }
+  });
   const edgesByChild = /* @__PURE__ */ new Map();
   for (const e of layout.edges) {
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", String(e.x1));
-    line.setAttribute("y1", String(e.y1));
-    line.setAttribute("x2", String(e.x2));
-    line.setAttribute("y2", String(e.y2));
-    line.setAttribute("class", "lf-tree-edge");
-    svg.appendChild(line);
+    const line = svg.createSvg("line", {
+      cls: "lf-tree-edge",
+      attr: { x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2 }
+    });
     for (const cid of (_a = e.childIds) != null ? _a : []) {
       const list = (_b = edgesByChild.get(cid)) != null ? _b : [];
       list.push(line);
       edgesByChild.set(cid, list);
     }
   }
-  canvas.appendChild(svg);
   for (const u of layout.unions) {
     const mark = canvas.createDiv({ cls: "lf-tree-marriage", text: "\u26AD" });
     mark.style.left = `${u.cx - UNION_R}px`;
@@ -2650,11 +2652,20 @@ var DEFAULT_SETTINGS = {
 function sanitiseNoteName(name) {
   return name.replace(/[\\/:*?"<>|#^[\]]/g, "").trim() || "Untitled";
 }
+function* markdownFilesInFolder(folder) {
+  for (const child of folder.children) {
+    if (child instanceof import_obsidian.TFolder) {
+      yield* markdownFilesInFolder(child);
+    } else if (child instanceof import_obsidian.TFile && child.extension === "md") {
+      yield child;
+    }
+  }
+}
 function elevateStackedModal(modal) {
-  const open = document.querySelectorAll(
+  const open = Array.from(document.querySelectorAll(
     ".modal-container.lf-stacked-modal-nested, .modal-container.lf-stacked-modal-container"
-  );
-  const aboveNested = [...open].some((el) => el.classList.contains("lf-stacked-modal-nested"));
+  ));
+  const aboveNested = open.some((el) => el.classList.contains("lf-stacked-modal-nested"));
   modal.containerEl.addClass(aboveNested ? "lf-stacked-modal-over" : "lf-stacked-modal-nested");
 }
 var LanguageForgePlugin = class extends import_obsidian.Plugin {
@@ -2805,10 +2816,10 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
     const expected = this.notePathFor(culture);
     const byPath = this.app.vault.getAbstractFileByPath(expected);
     if (byPath instanceof import_obsidian.TFile) return byPath;
-    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
-    const prefix = folder + "/";
-    for (const f of this.app.vault.getMarkdownFiles()) {
-      if (!f.path.startsWith(prefix)) continue;
+    const folderPath = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
+    const folder = this.app.vault.getAbstractFileByPath(folderPath);
+    if (!(folder instanceof import_obsidian.TFolder)) return null;
+    for (const f of markdownFilesInFolder(folder)) {
       const cache = this.app.metadataCache.getFileCache(f);
       const id = (_a = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a["lf-id"];
       const kind = (_b = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b["lf-kind"];
@@ -2821,10 +2832,10 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
     const expected = this.glossaryPathFor(culture);
     const byPath = this.app.vault.getAbstractFileByPath(expected);
     if (byPath instanceof import_obsidian.TFile) return byPath;
-    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
-    const prefix = folder + "/";
-    for (const f of this.app.vault.getMarkdownFiles()) {
-      if (!f.path.startsWith(prefix)) continue;
+    const folderPath = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
+    const folder = this.app.vault.getAbstractFileByPath(folderPath);
+    if (!(folder instanceof import_obsidian.TFolder)) return null;
+    for (const f of markdownFilesInFolder(folder)) {
       const cache = this.app.metadataCache.getFileCache(f);
       const id = (_a = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a["lf-id"];
       const kind = (_b = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b["lf-kind"];
@@ -2897,7 +2908,7 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
         try {
           await this.app.fileManager.renameFile(file, dest);
         } catch (e) {
-          new import_obsidian.Notice(`Renamed culture but file rename failed: ${e}`);
+          new import_obsidian.Notice(`Renamed culture but file rename failed: ${e instanceof Error ? e.message : String(e)}`);
         }
       }
     }
@@ -2907,7 +2918,7 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
         try {
           await this.app.fileManager.renameFile(glossFile, dest);
         } catch (e) {
-          new import_obsidian.Notice(`Glossary rename failed: ${e}`);
+          new import_obsidian.Notice(`Glossary rename failed: ${e instanceof Error ? e.message : String(e)}`);
         }
       }
     }
@@ -3515,7 +3526,6 @@ var CreateLanguageModal = class extends import_obsidian.Modal {
     this.contentEl.empty();
   }
 };
-var SeedWizardModal = CreateLanguageModal;
 var CultureCardModal = class extends import_obsidian.Modal {
   constructor(app, plugin, culture, isNew, opts) {
     super(app);
@@ -3594,8 +3604,8 @@ var CultureCardModal = class extends import_obsidian.Modal {
     }
     if (card.glossaryPreview.length > 0) {
       const gl = contentEl.createDiv({ cls: "lf-glossary" });
-      gl.createEl("span", { text: "Words: ", cls: "lf-hint" });
-      gl.createEl("span", {
+      gl.createSpan({ text: "Words: ", cls: "lf-hint" });
+      gl.createSpan({
         text: card.glossaryPreview.map((g) => `${g.form} = ${g.meaning}`).join("  \xB7  "),
         cls: "lf-glossary-items"
       });
@@ -3913,7 +3923,7 @@ var NameClassesModal = class extends import_obsidian.Modal {
       }));
       if (cls.kind === "class" || cls.kind === "gender" && cls.id !== "neutral") {
         if (cls.kind === "class") {
-          row.addButton((b) => b.setButtonText("Remove").setWarning().onClick(async () => {
+          row.addButton((b) => b.setButtonText("Remove").setDestructive().onClick(async () => {
             removeClass(this.culture, cls.id);
             await this.save();
             this.render();
@@ -4492,7 +4502,7 @@ var PickCultureModal = class extends import_obsidian.Modal {
     for (const c of this.plugin.data.cultures) {
       new import_obsidian.Setting(contentEl).setName(c.name).setDesc(c.summary).addButton((b) => b.setButtonText(this.buttonText).onClick(() => {
         this.close();
-        this.onPick(c);
+        void this.onPick(c);
       }));
     }
   }
@@ -4505,43 +4515,68 @@ var LanguageForgeSettingTab = class extends import_obsidian.PluginSettingTab {
     super(app, plugin);
     this.plugin = plugin;
   }
-  display() {
-    const { containerEl } = this;
-    containerEl.empty();
-    new import_obsidian.Setting(containerEl).setName("Create a new culture").setDesc("Start the wizard for another culture \u2014 you can have as many as you like.").addButton((b) => b.setButtonText("New culture\u2026").onClick(() => {
-      new SeedWizardModal(this.app, this.plugin).open();
-    }));
-    if (this.plugin.data.cultures.length > 0) {
-      new import_obsidian.Setting(containerEl).setName("Branch or contact").setDesc("Derive a descendant, or connect two languages via directed contact (donor \u2192 borrower).").addButton((b) => b.setButtonText("Open Child tab\u2026").onClick(() => {
-        new CreateLanguageModal(this.app, this.plugin, "child").open();
-      }));
-      new import_obsidian.Setting(containerEl).setName("Family tree").setDesc("Browse every language's ancestors and descendants.").addButton((b) => b.setButtonText("View family tree\u2026").onClick(() => {
-        new FamilyTreeModal(this.app, this.plugin).open();
-      }));
+  getSettingDefinitions() {
+    return [
+      {
+        name: "Folder for language pages",
+        desc: "Language notes are saved as LanguageForge/Name.md under this folder (default LanguageForge).",
+        control: {
+          type: "text",
+          key: "folder",
+          defaultValue: DEFAULT_SETTINGS.folder
+        }
+      },
+      {
+        name: "Names per batch",
+        control: {
+          type: "slider",
+          key: "batchSize",
+          min: 6,
+          max: 24,
+          step: 2,
+          defaultValue: DEFAULT_SETTINGS.batchSize
+        }
+      },
+      {
+        name: "Show pronunciation hints",
+        desc: "Say-it-like respellings under every name.",
+        control: {
+          type: "toggle",
+          key: "showPronunciation",
+          defaultValue: DEFAULT_SETTINGS.showPronunciation
+        }
+      },
+      {
+        name: "Insert format",
+        desc: "How names are written into your note.",
+        control: {
+          type: "dropdown",
+          key: "insertFormat",
+          defaultValue: DEFAULT_SETTINGS.insertFormat,
+          options: {
+            list: "Bulleted list with details",
+            inline: "Names only, comma-separated"
+          }
+        }
+      }
+    ];
+  }
+  getControlValue(key) {
+    return this.plugin.data.settings[key];
+  }
+  async setControlValue(key, value) {
+    const settings = this.plugin.data.settings;
+    if (key === "folder") {
+      settings.folder = typeof value === "string" && value.trim() || DEFAULT_SETTINGS.folder;
+    } else if (key === "batchSize" && typeof value === "number") {
+      settings.batchSize = value;
+    } else if (key === "showPronunciation" && typeof value === "boolean") {
+      settings.showPronunciation = value;
+    } else if (key === "insertFormat" && (value === "list" || value === "inline")) {
+      settings.insertFormat = value;
+    } else {
+      return;
     }
-    new import_obsidian.Setting(containerEl).setName("Folder for language pages").setDesc("Language notes are saved as LanguageForge/Name.md under this folder (default LanguageForge).").addText((t) => t.setValue(this.plugin.data.settings.folder).onChange(async (v) => {
-      this.plugin.data.settings.folder = v.trim() || DEFAULT_SETTINGS.folder;
-      await this.plugin.persist();
-    }));
-    new import_obsidian.Setting(containerEl).setName("Names per batch").addSlider((s) => s.setLimits(6, 24, 2).setValue(this.plugin.data.settings.batchSize).setDynamicTooltip().onChange(async (v) => {
-      this.plugin.data.settings.batchSize = v;
-      await this.plugin.persist();
-    }));
-    new import_obsidian.Setting(containerEl).setName("Show pronunciation hints").setDesc("Say-it-like respellings under every name.").addToggle((t) => t.setValue(this.plugin.data.settings.showPronunciation).onChange(async (v) => {
-      this.plugin.data.settings.showPronunciation = v;
-      await this.plugin.persist();
-    }));
-    new import_obsidian.Setting(containerEl).setName("Insert format").setDesc("How names are written into your note.").addDropdown((d) => {
-      d.addOption("list", "Bulleted list with details");
-      d.addOption("inline", "Names only, comma-separated");
-      d.setValue(this.plugin.data.settings.insertFormat).onChange(async (v) => {
-        this.plugin.data.settings.insertFormat = v;
-        await this.plugin.persist();
-      });
-    });
-    containerEl.createEl("p", {
-      text: `Element packs loaded: ${Object.keys(PHONETIC_PACKS).length} moods, ${Object.keys(SEMANTIC_PACKS).length} word themes. All gate-validated.`,
-      cls: "lf-hint"
-    });
+    await this.plugin.persist();
   }
 };

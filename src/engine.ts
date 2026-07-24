@@ -276,7 +276,10 @@ function medialVowelRun3(name: string): boolean {
 
 function levenshtein(a: string, b: string): number {
   if (Math.abs(a.length - b.length) > 2) return 3;
-  const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...new Array(b.length).fill(0)]);
+  const dp: number[][] = Array.from(
+    { length: a.length + 1 },
+    (_, i) => [i, ...new Array<number>(b.length).fill(0)],
+  );
   for (let j = 0; j <= b.length; j++) dp[0][j] = j;
   for (let i = 1; i <= a.length; i++)
     for (let j = 1; j <= b.length; j++)
@@ -760,7 +763,7 @@ export function classSpecimens(culture: Culture, classId: string, n = 2): string
 
 
 function pickFrom<T>(rng: () => number, set: Set<T>): T {
-  return pick(rng, [...set].sort() as T[]);
+  return pick(rng, [...set].sort());
 }
 
 /** Mint (via the existing mintForm, respecting stable-minting for anything already present)
@@ -1175,15 +1178,6 @@ export function assembleMeaning(
   };
 }
 
-/** @deprecated Prefer assembleMeaning */
-function assembleSemantic(
-  rng: () => number,
-  culture: Culture,
-  roots?: Root[],
-): { name: string; gloss: string; parts: { slot: Slot; element: string }[]; roots: { form: string; meaning: string }[] } {
-  return assembleMeaning(rng, culture, { roots });
-}
-
 /**
  * Generate a batch. mode optional — falls back to culture.defaultGeneration (mixed).
  * Optional className (personal) swaps endings, applies root policy, and may override mode.
@@ -1418,7 +1412,7 @@ export function parseImportInput(raw: string): { candidates: string[]; rejected:
     const key = t.toLowerCase();
     if (seen.has(key)) return;
     if (!isRomanisedName(t)) {
-      if (/[^\x00-\x7F]/.test(t) || t.replace(/[^A-Za-z]/g, "").length >= 3) {
+      if (/[^\p{ASCII}]/u.test(t) || t.replace(/[^A-Za-z]/g, "").length >= 3) {
         seen.add(key);
         rejected.push(t);
       }
@@ -1446,7 +1440,7 @@ export function parseImportInput(raw: string): { candidates: string[]; rejected:
     }
     const nonLatin = raw.match(/[^\s,;|/]+/g) ?? [];
     for (const tok of nonLatin) {
-      if (/[^\x00-\x7F]/.test(tok)) push(tok);
+      if (/[^\p{ASCII}]/u.test(tok)) push(tok);
     }
   }
 
@@ -1609,8 +1603,8 @@ export const DRIFT_PRESETS: Record<DriftLevel, number> = {
   distant: 0.7,
 };
 
-// Mood-based default pack for DeriveCultureModal (Gap 1 point 4: a user who doesn't care
-// still gets a real, sensible result). A taste call, not a structural one.
+// Mood-based default pack for AgeCultureModal / Child-tab aging (Gap 1 point 4: a user who
+// doesn't care still gets a real, sensible result). A taste call, not a structural one.
 export const MOOD_DEFAULT_DRIFT_PACK: Record<Mood, string> = {
   harsh: "germanic_hardening",
   soft: "romance_softening",
