@@ -1,43 +1,19 @@
 # languageForge — Obsidian plugin
+a (pre-release) name generator by volcanicMole
 
-Seed naming cultures for your world. Build a language family tree, generate names with pronunciation and meaning, and evolve languages across generations.
+I've created another name generator, but as this one is based off conlang rather than Markov Magic I've decided to call it languageForge!
 
-## Install
+Well, that's the base of this plugin, creating a basic conlang and then create names from it. What's more, each name comes with pronuciation guides and meanings.
 
-### From a release
-
-1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest GitHub release](https://github.com/KennyRN/languageForge/releases)
-2. Copy them into `<your vault>/.obsidian/plugins/languageforge/`
-3. In Obsidian: Settings → Community plugins → enable **languageForge**
-
-### From source
-
-```
-npm install
-npx tsc --noEmit
-npx esbuild src/main.ts --bundle --external:obsidian --format=cjs --platform=browser --target=es2019 --outfile=main.js
-```
-
-Then copy `main.js`, `manifest.json`, and `styles.css` into the plugin folder as above.
+This being a plugin, and one which I can play with, I decided to go just *a bit* further. So you can create a family tree of languages! So you can evolve languages across generations, inter-mix languages, make some languages dialects and some languages whole new languages.
 
 ## Ribbon
+There's two icons for this plugin (but it's still in pre-release so it might drop down to one).
 
-- **Generate** — open the name generator (falls back to Languages if you have no cultures yet)
-- **Languages** (tree icon) — family tree of your cultures; click a language to generate names for it, or use **+** to create / evolve languages
+- **Generate:** open the name generator
+- **Languages:** (tree icon) visual family tree of your languages; click a language to generate names for it, or use the + icon to create or evolve languages
 
-## Commands (Ctrl/Cmd-P)
-
-**Create a culture** — sound, register, familiarity, environment, optional word themes. Accept a culture card when it feels right.
-
-**Create a culture from names you already have** — paste two or more names (`Kaelith, Veyra`). The engine reverse-seeds a phonology consistent with them and reserves your originals.
-
-**Generate names** — pick a generation and culture–pack, choose quantity, generate. Results show pronunciation and meaning. Multi-select, then Insert / Checklist / List into the active note.
-
-**Languages** — family tree view (same as the ribbon).
-
-Child languages support **Language aging** (branch from one parent) and **Language intermixing** (directional contact between two languages of the same generation).
-
-## What's under the hood
+## What's under the hood (kept from the ai coder as it knows what it's talking about)
 
 - All names pass Step 6 readability gates (joinery, echo, throwaway-U, connotation, per-culture registry).
 - Word forms are minted once and stay stable for that culture.
