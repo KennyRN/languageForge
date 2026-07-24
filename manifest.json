@@ -1,8 +1,8 @@
 {
   "id": "languageforge",
   "name": "languageForge",
-  "version": "0.8.0",
-  "minAppVersion": "1.4.0",
+  "version": "0.8.1",
+  "minAppVersion": "1.13.0",
   "description": "Seed naming cultures for your world: language family trees, culture cards, gate-filtered name batches with pronunciation and meaning, reverse-seeding, and naming traditions.",
   "author": "KennyRN",
   "authorUrl": "https://github.com/KennyRN",

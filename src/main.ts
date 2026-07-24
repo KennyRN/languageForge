@@ -3,7 +3,7 @@
 
 import {
   App, DropdownComponent, MarkdownView, Modal, Notice, Plugin, PluginSettingTab,
-  Setting, TFile, normalizePath, setIcon,
+  Setting, SettingDefinitionItem, TFile, TFolder, normalizePath, setIcon,
 } from "obsidian";
 import {
   AgedSnapshot, Category, ClassLean, ContactDomain, ContactEdge, ContactPreview, ContactType, Culture,
@@ -17,7 +17,7 @@ import {
   resolveClassEndings, resolvePlaceSourceCulture, reverseSeedCulture,
   seedCulture, visibleClasses, placeholderName,
 } from "./engine";
-import { PHONETIC_PACKS, SEMANTIC_PACKS } from "./data";
+import { SEMANTIC_PACKS } from "./data";
 import { renderFamilyTreeView } from "./familyTreeView";
 
 // ---------------------------------------------------------------- settings & data
@@ -46,12 +46,23 @@ function sanitiseNoteName(name: string): string {
   return name.replace(/[\\/:*?"<>|#^[\]]/g, "").trim() || "Untitled";
 }
 
+/** Walk markdown notes under a folder (and nested folders) without vault-wide enumeration. */
+function* markdownFilesInFolder(folder: TFolder): Generator<TFile> {
+  for (const child of folder.children) {
+    if (child instanceof TFolder) {
+      yield* markdownFilesInFolder(child);
+    } else if (child instanceof TFile && child.extension === "md") {
+      yield child;
+    }
+  }
+}
+
 /** Raise a modal above other languageForge modals already on screen. */
 function elevateStackedModal(modal: Modal) {
-  const open = document.querySelectorAll(
+  const open = Array.from(document.querySelectorAll(
     ".modal-container.lf-stacked-modal-nested, .modal-container.lf-stacked-modal-container",
-  );
-  const aboveNested = [...open].some(el => el.classList.contains("lf-stacked-modal-nested"));
+  ));
+  const aboveNested = open.some(el => el.classList.contains("lf-stacked-modal-nested"));
   modal.containerEl.addClass(aboveNested ? "lf-stacked-modal-over" : "lf-stacked-modal-nested");
 }
 
@@ -206,13 +217,13 @@ export default class LanguageForgePlugin extends Plugin {
     const byPath = this.app.vault.getAbstractFileByPath(expected);
     if (byPath instanceof TFile) return byPath;
 
-    const folder = normalizePath(this.data.settings.folder.replace(/\/+$/, ""));
-    const prefix = folder + "/";
-    for (const f of this.app.vault.getMarkdownFiles()) {
-      if (!f.path.startsWith(prefix)) continue;
+    const folderPath = normalizePath(this.data.settings.folder.replace(/\/+$/, ""));
+    const folder = this.app.vault.getAbstractFileByPath(folderPath);
+    if (!(folder instanceof TFolder)) return null;
+    for (const f of markdownFilesInFolder(folder)) {
       const cache = this.app.metadataCache.getFileCache(f);
-      const id = cache?.frontmatter?.["lf-id"];
-      const kind = cache?.frontmatter?.["lf-kind"];
+      const id = cache?.frontmatter?.["lf-id"] as string | number | undefined;
+      const kind = cache?.frontmatter?.["lf-kind"] as string | undefined;
       if ((id === culture.id || String(id) === culture.id) && kind !== "glossary") return f;
     }
     return null;
@@ -223,13 +234,13 @@ export default class LanguageForgePlugin extends Plugin {
     const byPath = this.app.vault.getAbstractFileByPath(expected);
     if (byPath instanceof TFile) return byPath;
 
-    const folder = normalizePath(this.data.settings.folder.replace(/\/+$/, ""));
-    const prefix = folder + "/";
-    for (const f of this.app.vault.getMarkdownFiles()) {
-      if (!f.path.startsWith(prefix)) continue;
+    const folderPath = normalizePath(this.data.settings.folder.replace(/\/+$/, ""));
+    const folder = this.app.vault.getAbstractFileByPath(folderPath);
+    if (!(folder instanceof TFolder)) return null;
+    for (const f of markdownFilesInFolder(folder)) {
       const cache = this.app.metadataCache.getFileCache(f);
-      const id = cache?.frontmatter?.["lf-id"];
-      const kind = cache?.frontmatter?.["lf-kind"];
+      const id = cache?.frontmatter?.["lf-id"] as string | number | undefined;
+      const kind = cache?.frontmatter?.["lf-kind"] as string | undefined;
       if ((id === culture.id || String(id) === culture.id) && kind === "glossary") return f;
     }
     return null;
@@ -295,14 +306,14 @@ export default class LanguageForgePlugin extends Plugin {
       const dest = this.notePathFor(culture);
       if (file.path !== dest) {
         try { await this.app.fileManager.renameFile(file, dest); }
-        catch (e) { new Notice(`Renamed culture but file rename failed: ${e}`); }
+        catch (e) { new Notice(`Renamed culture but file rename failed: ${e instanceof Error ? e.message : String(e)}`); }
       }
     }
     if (glossFile instanceof TFile) {
       const dest = this.glossaryPathFor(culture);
       if (glossFile.path !== dest) {
         try { await this.app.fileManager.renameFile(glossFile, dest); }
-        catch (e) { new Notice(`Glossary rename failed: ${e}`); }
+        catch (e) { new Notice(`Glossary rename failed: ${e instanceof Error ? e.message : String(e)}`); }
       }
     }
     if (file || glossFile) await this.writeCultureNote(culture);
@@ -1005,23 +1016,6 @@ class CreateLanguageModal extends Modal {
   onClose() { this.contentEl.empty(); }
 }
 
-/** @deprecated Alias — create flow now lives on CreateLanguageModal. */
-const SeedWizardModal = CreateLanguageModal;
-
-// ---------------------------------------------------------------- paste-your-own-names (kept as thin redirect)
-
-class PasteNamesModal extends Modal {
-  plugin: LanguageForgePlugin;
-  constructor(app: App, plugin: LanguageForgePlugin) {
-    super(app);
-    this.plugin = plugin;
-  }
-  onOpen() {
-    this.close();
-    new CreateLanguageModal(this.app, this.plugin, "seeded").open();
-  }
-}
-
 // ---------------------------------------------------------------- the culture card
 
 class CultureCardModal extends Modal {
@@ -1335,9 +1329,6 @@ class EditLanguagesModal extends Modal {
   }
 }
 
-/** @deprecated Prefer CreateLanguageModal Edit tab */
-const LanguagesHubModal = EditLanguagesModal;
-
 // ---------------------------------------------------------------- name classes editor
 
 class NameClassesModal extends Modal {
@@ -1509,7 +1500,7 @@ class NameClassesModal extends Modal {
         // Allow removing custom classes; gender pair can be toggled off instead,
         // but removing custom is the main path. Also allow removing gender entries if user wants.
         if (cls.kind === "class") {
-          row.addButton(b => b.setButtonText("Remove").setWarning().onClick(async () => {
+          row.addButton(b => b.setButtonText("Remove").setDestructive().onClick(async () => {
             removeClass(this.culture, cls.id);
             await this.save();
             this.render();
@@ -1628,24 +1619,6 @@ class ImportNamesModal extends Modal {
   }
 
   onClose() { this.contentEl.empty(); }
-}
-
-// ---------------------------------------------------------------- branching a language family (redirect → Child tab)
-
-class DeriveCultureModal extends Modal {
-  plugin: LanguageForgePlugin;
-  parentId?: string;
-
-  constructor(app: App, plugin: LanguageForgePlugin, parentId?: string) {
-    super(app);
-    this.plugin = plugin;
-    this.parentId = parentId;
-  }
-
-  onOpen() {
-    this.close();
-    new CreateLanguageModal(this.app, this.plugin, "child", this.parentId).open();
-  }
 }
 
 // ---------------------------------------------------------------- ageing a language in place
@@ -2201,10 +2174,15 @@ class GenerateModal extends Modal {
 
 class PickCultureModal extends Modal {
   plugin: LanguageForgePlugin;
-  onPick: (c: Culture) => void;
+  onPick: (c: Culture) => void | Promise<void>;
   buttonText: string;
 
-  constructor(app: App, plugin: LanguageForgePlugin, onPick: (c: Culture) => void, buttonText = "Save card") {
+  constructor(
+    app: App,
+    plugin: LanguageForgePlugin,
+    onPick: (c: Culture) => void | Promise<void>,
+    buttonText = "Save card",
+  ) {
     super(app);
     this.plugin = plugin;
     this.onPick = onPick;
@@ -2217,7 +2195,10 @@ class PickCultureModal extends Modal {
     contentEl.createEl("h2", { text: "Which culture?" });
     for (const c of this.plugin.data.cultures) {
       new Setting(contentEl).setName(c.name).setDesc(c.summary)
-        .addButton(b => b.setButtonText(this.buttonText).onClick(() => { this.close(); this.onPick(c); }));
+        .addButton(b => b.setButtonText(this.buttonText).onClick(() => {
+          this.close();
+          void this.onPick(c);
+        }));
     }
   }
 
@@ -2234,58 +2215,70 @@ class LanguageForgeSettingTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
-  display() {
-    const { containerEl } = this;
-    containerEl.empty();
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      {
+        name: "Folder for language pages",
+        desc: "Language notes are saved as LanguageForge/Name.md under this folder (default LanguageForge).",
+        control: {
+          type: "text",
+          key: "folder",
+          defaultValue: DEFAULT_SETTINGS.folder,
+        },
+      },
+      {
+        name: "Names per batch",
+        control: {
+          type: "slider",
+          key: "batchSize",
+          min: 6,
+          max: 24,
+          step: 2,
+          defaultValue: DEFAULT_SETTINGS.batchSize,
+        },
+      },
+      {
+        name: "Show pronunciation hints",
+        desc: "Say-it-like respellings under every name.",
+        control: {
+          type: "toggle",
+          key: "showPronunciation",
+          defaultValue: DEFAULT_SETTINGS.showPronunciation,
+        },
+      },
+      {
+        name: "Insert format",
+        desc: "How names are written into your note.",
+        control: {
+          type: "dropdown",
+          key: "insertFormat",
+          defaultValue: DEFAULT_SETTINGS.insertFormat,
+          options: {
+            list: "Bulleted list with details",
+            inline: "Names only, comma-separated",
+          },
+        },
+      },
+    ];
+  }
 
-    new Setting(containerEl).setName("Create a new culture")
-      .setDesc("Start the wizard for another culture — you can have as many as you like.")
-      .addButton(b => b.setButtonText("New culture…").onClick(() => {
-        new SeedWizardModal(this.app, this.plugin).open();
-      }));
+  getControlValue(key: string): unknown {
+    return this.plugin.data.settings[key as keyof LanguageForgeSettings];
+  }
 
-    if (this.plugin.data.cultures.length > 0) {
-      new Setting(containerEl).setName("Branch or contact")
-        .setDesc("Derive a descendant, or connect two languages via directed contact (donor → borrower).")
-        .addButton(b => b.setButtonText("Open Child tab…").onClick(() => {
-          new CreateLanguageModal(this.app, this.plugin, "child").open();
-        }));
-
-      new Setting(containerEl).setName("Family tree")
-        .setDesc("Browse every language's ancestors and descendants.")
-        .addButton(b => b.setButtonText("View family tree…").onClick(() => {
-          new FamilyTreeModal(this.app, this.plugin).open();
-        }));
+  async setControlValue(key: string, value: unknown): Promise<void> {
+    const settings = this.plugin.data.settings;
+    if (key === "folder") {
+      settings.folder = (typeof value === "string" && value.trim()) || DEFAULT_SETTINGS.folder;
+    } else if (key === "batchSize" && typeof value === "number") {
+      settings.batchSize = value;
+    } else if (key === "showPronunciation" && typeof value === "boolean") {
+      settings.showPronunciation = value;
+    } else if (key === "insertFormat" && (value === "list" || value === "inline")) {
+      settings.insertFormat = value;
+    } else {
+      return;
     }
-
-    new Setting(containerEl).setName("Folder for language pages")
-      .setDesc("Language notes are saved as LanguageForge/Name.md under this folder (default LanguageForge).")
-      .addText(t => t.setValue(this.plugin.data.settings.folder).onChange(async v => {
-        this.plugin.data.settings.folder = v.trim() || DEFAULT_SETTINGS.folder;
-        await this.plugin.persist();
-      }));
-
-    new Setting(containerEl).setName("Names per batch")
-      .addSlider(s => s.setLimits(6, 24, 2).setValue(this.plugin.data.settings.batchSize).setDynamicTooltip()
-        .onChange(async v => { this.plugin.data.settings.batchSize = v; await this.plugin.persist(); }));
-
-    new Setting(containerEl).setName("Show pronunciation hints")
-      .setDesc("Say-it-like respellings under every name.")
-      .addToggle(t => t.setValue(this.plugin.data.settings.showPronunciation)
-        .onChange(async v => { this.plugin.data.settings.showPronunciation = v; await this.plugin.persist(); }));
-
-    new Setting(containerEl).setName("Insert format")
-      .setDesc("How names are written into your note.")
-      .addDropdown(d => {
-        d.addOption("list", "Bulleted list with details");
-        d.addOption("inline", "Names only, comma-separated");
-        d.setValue(this.plugin.data.settings.insertFormat)
-          .onChange(async v => { this.plugin.data.settings.insertFormat = v as "list" | "inline"; await this.plugin.persist(); });
-      });
-
-    containerEl.createEl("p", {
-      text: `Element packs loaded: ${Object.keys(PHONETIC_PACKS).length} moods, ${Object.keys(SEMANTIC_PACKS).length} word themes. All gate-validated.`,
-      cls: "lf-hint",
-    });
+    await this.plugin.persist();
   }
 }
