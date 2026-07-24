@@ -344,7 +344,11 @@ var SEMANTIC_PACKS = {
       { "concept": "heather", "tags": ["flower", "flora", "herb"] },
       { "concept": "jasmine", "tags": ["flower", "flora"] },
       { "concept": "home", "tags": ["home", "hearth"] },
-      { "concept": "cradle", "tags": ["kin", "hearth", "home"] }
+      { "concept": "cradle", "tags": ["kin", "hearth", "home"] },
+      { "concept": "victory", "tags": ["war", "fortune"] },
+      { "concept": "tide", "tags": ["sea", "water"] },
+      { "concept": "ember", "tags": ["fire"] },
+      { "concept": "echo", "tags": ["sound"] }
     ]
   },
   "warrior": {
@@ -710,1170 +714,6 @@ var DRIFT_PACKS = {
     ]
   }
 };
-var NAMING_TRADITIONS = {
-  "old_norse": {
-    "label": "Old Norse naming",
-    "subtitle": "Norse \xB7 Scandinavian",
-    "contentPolicy": {
-      "favour": [
-        "beast",
-        "war",
-        "strength",
-        "sacred",
-        "rank"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "beast",
-          "war",
-          "strength",
-          "weapon",
-          "rank"
-        ],
-        "patronymicAffix": "-son"
-      },
-      "feminine": {
-        "themes": [
-          "beauty",
-          "virtue",
-          "sacred",
-          "fortune",
-          "joy"
-        ],
-        "patronymicAffix": "-dottir"
-      },
-      "neutral": {
-        "themes": [
-          "beast",
-          "sacred",
-          "war"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "dithematic",
-          "weight": 0.7
-        },
-        {
-          "type": "single",
-          "weight": 0.3
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.6
-        },
-        {
-          "type": "feature-descriptive",
-          "weight": 0.4
-        }
-      ],
-      "house": [
-        {
-          "type": "founder-line",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "by",
-          "meaning": "village",
-          "position": "suffix"
-        },
-        {
-          "form": "thorpe",
-          "meaning": "outlying farm",
-          "position": "suffix"
-        },
-        {
-          "form": "gard",
-          "meaning": "enclosure",
-          "position": "suffix"
-        },
-        {
-          "form": "stad",
-          "meaning": "place",
-          "position": "suffix"
-        },
-        {
-          "form": "saetr",
-          "meaning": "shieling",
-          "position": "suffix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "fell",
-          "meaning": "hill",
-          "position": "suffix"
-        },
-        {
-          "form": "dalr",
-          "meaning": "valley",
-          "position": "suffix"
-        },
-        {
-          "form": "vik",
-          "meaning": "bay",
-          "position": "suffix"
-        },
-        {
-          "form": "foss",
-          "meaning": "waterfall",
-          "position": "suffix"
-        },
-        {
-          "form": "vatn",
-          "meaning": "lake",
-          "position": "suffix"
-        },
-        {
-          "form": "nes",
-          "meaning": "headland",
-          "position": "suffix"
-        }
-      ]
-    },
-    "particles": {
-      "patronymic": {
-        "genitive": "s",
-        "of": ""
-      },
-      "house": {
-        "kind": "founder-line",
-        "affix": "-ungar"
-      }
-    },
-    "surnameRate": 0.8,
-    "notes": "Dithematic given names plus a patronymic that changes each generation; features keep the deepest map-strata."
-  },
-  "anglo_saxon": {
-    "label": "Anglo-Saxon naming",
-    "subtitle": "Old English",
-    "contentPolicy": {
-      "favour": [
-        "virtue",
-        "rank",
-        "war",
-        "sacred",
-        "kin"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "rank",
-          "war",
-          "virtue",
-          "weapon"
-        ]
-      },
-      "feminine": {
-        "themes": [
-          "virtue",
-          "beauty",
-          "sacred",
-          "joy"
-        ]
-      },
-      "neutral": {
-        "themes": [
-          "virtue",
-          "rank"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "dithematic",
-          "weight": 0.8
-        },
-        {
-          "type": "single",
-          "weight": 0.2
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.5
-        },
-        {
-          "type": "possessive-settlement",
-          "weight": 0.3
-        },
-        {
-          "type": "feature-descriptive",
-          "weight": 0.2
-        }
-      ],
-      "house": [
-        {
-          "type": "founder-line",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "ton",
-          "meaning": "farmstead",
-          "position": "suffix"
-        },
-        {
-          "form": "ham",
-          "meaning": "homestead",
-          "position": "suffix"
-        },
-        {
-          "form": "wich",
-          "meaning": "dwelling",
-          "position": "suffix"
-        },
-        {
-          "form": "bury",
-          "meaning": "fortified place",
-          "position": "suffix"
-        },
-        {
-          "form": "worth",
-          "meaning": "enclosure",
-          "position": "suffix"
-        },
-        {
-          "form": "stead",
-          "meaning": "place",
-          "position": "suffix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "ford",
-          "meaning": "river crossing",
-          "position": "suffix"
-        },
-        {
-          "form": "mere",
-          "meaning": "lake",
-          "position": "suffix"
-        },
-        {
-          "form": "combe",
-          "meaning": "valley",
-          "position": "suffix"
-        },
-        {
-          "form": "don",
-          "meaning": "hill",
-          "position": "suffix"
-        },
-        {
-          "form": "ley",
-          "meaning": "clearing",
-          "position": "suffix"
-        },
-        {
-          "form": "hurst",
-          "meaning": "wooded hill",
-          "position": "suffix"
-        }
-      ]
-    },
-    "particles": {
-      "house": {
-        "kind": "founder-line",
-        "affix": "-ingas"
-      }
-    },
-    "surnameRate": 0.4,
-    "notes": "Dithematic names with family alliteration; -ingas marks 'the people of'."
-  },
-  "roman": {
-    "label": "Roman naming",
-    "subtitle": "Latin",
-    "contentPolicy": {
-      "favour": [
-        "virtue",
-        "beauty",
-        "light",
-        "beast",
-        "flora"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "virtue",
-          "rank",
-          "strength"
-        ]
-      },
-      "feminine": {
-        "themes": [
-          "beauty",
-          "virtue",
-          "flora"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "single",
-          "weight": 0.5
-        },
-        {
-          "type": "epithet",
-          "weight": 0.5
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.6
-        },
-        {
-          "type": "possessive-settlement",
-          "weight": 0.4
-        }
-      ],
-      "house": [
-        {
-          "type": "gens",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "Colonia",
-          "meaning": "colony",
-          "position": "prefix"
-        },
-        {
-          "form": "Castra",
-          "meaning": "fort",
-          "position": "prefix"
-        },
-        {
-          "form": "Portus",
-          "meaning": "port",
-          "position": "prefix"
-        },
-        {
-          "form": "Forum",
-          "meaning": "market",
-          "position": "prefix"
-        },
-        {
-          "form": "Villa",
-          "meaning": "estate",
-          "position": "prefix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "Mons",
-          "meaning": "mountain",
-          "position": "prefix"
-        },
-        {
-          "form": "Flumen",
-          "meaning": "river",
-          "position": "prefix"
-        },
-        {
-          "form": "Silva",
-          "meaning": "forest",
-          "position": "prefix"
-        },
-        {
-          "form": "Lacus",
-          "meaning": "lake",
-          "position": "prefix"
-        }
-      ]
-    },
-    "particles": {
-      "epithet": {
-        "article": "",
-        "position": "after"
-      },
-      "house": {
-        "kind": "gens",
-        "affix": "-ius"
-      }
-    },
-    "surnameRate": 0.9,
-    "notes": "Tria nomina \u2014 given + gens (family) + trait cognomen. The gens is the house name; feminine takes -ia."
-  },
-  "greek": {
-    "label": "Ancient Greek naming",
-    "subtitle": "Hellenic",
-    "contentPolicy": {
-      "favour": [
-        "sacred",
-        "virtue",
-        "war",
-        "celestial",
-        "rank"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "war",
-          "rank",
-          "virtue",
-          "celestial"
-        ]
-      },
-      "feminine": {
-        "themes": [
-          "beauty",
-          "virtue",
-          "sacred",
-          "joy"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "theophoric",
-          "weight": 0.4
-        },
-        {
-          "type": "dithematic",
-          "weight": 0.4
-        },
-        {
-          "type": "single",
-          "weight": 0.2
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.5
-        },
-        {
-          "type": "feature-descriptive",
-          "weight": 0.3
-        },
-        {
-          "type": "theonymic-place",
-          "weight": 0.2
-        }
-      ],
-      "house": [
-        {
-          "type": "founder-line",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "polis",
-          "meaning": "city",
-          "position": "suffix"
-        },
-        {
-          "form": "a",
-          "meaning": "place",
-          "position": "suffix"
-        },
-        {
-          "form": "ia",
-          "meaning": "region",
-          "position": "suffix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "Acro",
-          "meaning": "height",
-          "position": "prefix"
-        },
-        {
-          "form": "oros",
-          "meaning": "mountain",
-          "position": "suffix"
-        },
-        {
-          "form": "potamos",
-          "meaning": "river",
-          "position": "suffix"
-        },
-        {
-          "form": "nesos",
-          "meaning": "island",
-          "position": "suffix"
-        }
-      ]
-    },
-    "particles": {
-      "theophoric": {
-        "relations": {
-          "gift": "doros",
-          "glory": "kleos",
-          "ruler": "kratos",
-          "people": "laos"
-        },
-        "order": "element-first"
-      },
-      "house": {
-        "kind": "founder-line",
-        "affix": "-idai"
-      }
-    },
-    "surnameRate": 0.5,
-    "notes": "Theophoric and dithematic given names; -idai marks a descent line (Herakleidai)."
-  },
-  "gaelic": {
-    "label": "Gaelic naming",
-    "subtitle": "Irish \xB7 Scottish",
-    "contentPolicy": {
-      "favour": [
-        "virtue",
-        "beast",
-        "sacred",
-        "flora",
-        "wild"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "beast",
-          "war",
-          "virtue",
-          "rank"
-        ]
-      },
-      "feminine": {
-        "themes": [
-          "beauty",
-          "virtue",
-          "sacred",
-          "flora"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "single",
-          "weight": 0.7
-        },
-        {
-          "type": "epithet",
-          "weight": 0.3
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.6
-        },
-        {
-          "type": "feature-descriptive",
-          "weight": 0.4
-        }
-      ],
-      "house": [
-        {
-          "type": "clan-patronymic",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "Bally",
-          "meaning": "town",
-          "position": "prefix"
-        },
-        {
-          "form": "Kil",
-          "meaning": "church",
-          "position": "prefix"
-        },
-        {
-          "form": "Dun",
-          "meaning": "fort",
-          "position": "prefix"
-        },
-        {
-          "form": "Rath",
-          "meaning": "ringfort",
-          "position": "prefix"
-        },
-        {
-          "form": "Lis",
-          "meaning": "fort",
-          "position": "prefix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "Inver",
-          "meaning": "river mouth",
-          "position": "prefix"
-        },
-        {
-          "form": "Glen",
-          "meaning": "valley",
-          "position": "prefix"
-        },
-        {
-          "form": "Ben",
-          "meaning": "mountain",
-          "position": "prefix"
-        },
-        {
-          "form": "Loch",
-          "meaning": "lake",
-          "position": "prefix"
-        },
-        {
-          "form": "Ard",
-          "meaning": "height",
-          "position": "prefix"
-        },
-        {
-          "form": "Drum",
-          "meaning": "ridge",
-          "position": "prefix"
-        }
-      ]
-    },
-    "particles": {
-      "epithet": {
-        "article": "the",
-        "position": "after"
-      },
-      "house": {
-        "kind": "clan",
-        "prefix": "Mac",
-        "of": ""
-      }
-    },
-    "surnameRate": 0.7,
-    "notes": "Single given name plus a clan name (Mac 'son of', O 'grandson of') and a descriptive byname."
-  },
-  "welsh": {
-    "label": "Welsh naming",
-    "subtitle": "Brythonic",
-    "contentPolicy": {
-      "favour": [
-        "flora",
-        "water",
-        "mountain",
-        "virtue",
-        "rank"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "rank",
-          "virtue",
-          "beast"
-        ],
-        "patronymicAffix": "ap"
-      },
-      "feminine": {
-        "themes": [
-          "beauty",
-          "virtue",
-          "flora"
-        ],
-        "patronymicAffix": "ferch"
-      },
-      "neutral": {
-        "themes": [
-          "virtue",
-          "flora"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "single",
-          "weight": 0.7
-        },
-        {
-          "type": "epithet",
-          "weight": 0.3
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.7
-        },
-        {
-          "type": "feature-descriptive",
-          "weight": 0.3
-        }
-      ],
-      "house": [
-        {
-          "type": "clan-patronymic",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "Llan",
-          "meaning": "church",
-          "position": "prefix"
-        },
-        {
-          "form": "Caer",
-          "meaning": "fort",
-          "position": "prefix"
-        },
-        {
-          "form": "Tre",
-          "meaning": "town",
-          "position": "prefix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "Aber",
-          "meaning": "estuary",
-          "position": "prefix"
-        },
-        {
-          "form": "Pen",
-          "meaning": "head",
-          "position": "prefix"
-        },
-        {
-          "form": "Cwm",
-          "meaning": "valley",
-          "position": "prefix"
-        },
-        {
-          "form": "Nant",
-          "meaning": "stream",
-          "position": "prefix"
-        },
-        {
-          "form": "Bryn",
-          "meaning": "hill",
-          "position": "prefix"
-        }
-      ]
-    },
-    "particles": {
-      "epithet": {
-        "article": "",
-        "position": "after"
-      },
-      "patronymic": {
-        "of": "ap",
-        "genitive": ""
-      },
-      "house": {
-        "kind": "clan",
-        "prefix": "ap",
-        "of": ""
-      }
-    },
-    "surnameRate": 0.6,
-    "notes": "Patronymic with ap/ab ('son of') or ferch ('daughter of'); prefix-heavy place names."
-  },
-  "slavic": {
-    "label": "Slavic naming",
-    "subtitle": "Slavic",
-    "contentPolicy": {
-      "favour": [
-        "rank",
-        "sacred",
-        "war",
-        "virtue",
-        "joy"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "rank",
-          "war",
-          "virtue",
-          "sacred"
-        ],
-        "patronymicAffix": "-ovich"
-      },
-      "feminine": {
-        "themes": [
-          "beauty",
-          "virtue",
-          "sacred",
-          "joy"
-        ],
-        "patronymicAffix": "-ovna"
-      },
-      "neutral": {
-        "themes": [
-          "rank",
-          "sacred"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "dithematic",
-          "weight": 0.7
-        },
-        {
-          "type": "single",
-          "weight": 0.3
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.6
-        },
-        {
-          "type": "feature-descriptive",
-          "weight": 0.4
-        }
-      ],
-      "house": [
-        {
-          "type": "gens",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "grad",
-          "meaning": "city",
-          "position": "suffix"
-        },
-        {
-          "form": "sk",
-          "meaning": "town",
-          "position": "suffix"
-        },
-        {
-          "form": "ovo",
-          "meaning": "village",
-          "position": "suffix"
-        },
-        {
-          "form": "Nov",
-          "meaning": "new",
-          "position": "prefix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "gora",
-          "meaning": "mountain",
-          "position": "suffix"
-        },
-        {
-          "form": "reka",
-          "meaning": "river",
-          "position": "suffix"
-        },
-        {
-          "form": "les",
-          "meaning": "forest",
-          "position": "suffix"
-        },
-        {
-          "form": "ozero",
-          "meaning": "lake",
-          "position": "suffix"
-        },
-        {
-          "form": "Bel",
-          "meaning": "white",
-          "position": "prefix"
-        },
-        {
-          "form": "Chern",
-          "meaning": "black",
-          "position": "prefix"
-        }
-      ]
-    },
-    "particles": {
-      "patronymic": {
-        "of": "",
-        "genitive": ""
-      },
-      "house": {
-        "kind": "gens",
-        "affix": "-ov"
-      }
-    },
-    "surnameRate": 0.8,
-    "notes": "Dithematic given names, patronymic (-ovich/-ovna), family names in -ov/-ski (feminine -ova/-ska)."
-  },
-  "puritan_english": {
-    "label": "Puritan English naming",
-    "subtitle": "English \xB7 devotional",
-    "contentPolicy": {
-      "lock": [
-        "sacred",
-        "virtue"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "sacred",
-          "virtue"
-        ]
-      },
-      "feminine": {
-        "themes": [
-          "virtue",
-          "sacred"
-        ]
-      },
-      "neutral": {
-        "themes": [
-          "virtue",
-          "sacred"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "single",
-          "weight": 0.9
-        },
-        {
-          "type": "epithet",
-          "weight": 0.1
-        }
-      ],
-      "place": [
-        {
-          "type": "single",
-          "weight": 0.5
-        },
-        {
-          "type": "descriptive-generic",
-          "weight": 0.5
-        }
-      ],
-      "house": [
-        {
-          "type": "occupational",
-          "weight": 0.6
-        },
-        {
-          "type": "locative",
-          "weight": 0.4
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "New",
-          "meaning": "new",
-          "position": "prefix"
-        },
-        {
-          "form": "Mount",
-          "meaning": "mount",
-          "position": "prefix"
-        },
-        {
-          "form": "field",
-          "meaning": "field",
-          "position": "suffix"
-        },
-        {
-          "form": "haven",
-          "meaning": "haven",
-          "position": "suffix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "field",
-          "meaning": "field",
-          "position": "suffix"
-        },
-        {
-          "form": "brook",
-          "meaning": "brook",
-          "position": "suffix"
-        }
-      ]
-    },
-    "particles": {
-      "epithet": {
-        "article": "",
-        "position": "after"
-      },
-      "house": {
-        "kind": "occupational"
-      }
-    },
-    "surnameRate": 0.9,
-    "notes": "The given name IS a virtue (Faith, Prudence, Increase); surnames stay ordinary English (occupational/locative)."
-  },
-  "finnic": {
-    "label": "Finnic naming",
-    "subtitle": "Finnic",
-    "contentPolicy": {
-      "favour": [
-        "flora",
-        "forest",
-        "water",
-        "weather",
-        "beast",
-        "ice"
-      ]
-    },
-    "genders": {
-      "masculine": {
-        "themes": [
-          "beast",
-          "forest",
-          "strength",
-          "weather"
-        ],
-        "patronymicAffix": "-poika"
-      },
-      "feminine": {
-        "themes": [
-          "flora",
-          "water",
-          "light",
-          "beauty"
-        ],
-        "patronymicAffix": "-tytar"
-      },
-      "neutral": {
-        "themes": [
-          "forest",
-          "water"
-        ]
-      }
-    },
-    "patterns": {
-      "personal": [
-        {
-          "type": "single",
-          "weight": 0.8
-        },
-        {
-          "type": "dithematic",
-          "weight": 0.2
-        }
-      ],
-      "place": [
-        {
-          "type": "descriptive-generic",
-          "weight": 0.6
-        },
-        {
-          "type": "feature-descriptive",
-          "weight": 0.4
-        }
-      ],
-      "house": [
-        {
-          "type": "occupational",
-          "weight": 1
-        }
-      ]
-    },
-    "toponymicGenerics": {
-      "settlement": [
-        {
-          "form": "la",
-          "meaning": "place of",
-          "position": "suffix"
-        },
-        {
-          "form": "kyla",
-          "meaning": "village",
-          "position": "suffix"
-        }
-      ],
-      "feature": [
-        {
-          "form": "jarvi",
-          "meaning": "lake",
-          "position": "suffix"
-        },
-        {
-          "form": "joki",
-          "meaning": "river",
-          "position": "suffix"
-        },
-        {
-          "form": "maki",
-          "meaning": "hill",
-          "position": "suffix"
-        },
-        {
-          "form": "saari",
-          "meaning": "island",
-          "position": "suffix"
-        },
-        {
-          "form": "vaara",
-          "meaning": "forested hill",
-          "position": "suffix"
-        },
-        {
-          "form": "koski",
-          "meaning": "rapids",
-          "position": "suffix"
-        }
-      ]
-    },
-    "particles": {
-      "patronymic": {
-        "of": "",
-        "genitive": ""
-      },
-      "house": {
-        "kind": "occupational",
-        "affix": "-nen"
-      }
-    },
-    "surnameRate": 0.6,
-    "notes": "Nature single-roots, patronymic (-poika/-tytar), family names in -nen from nature/place."
-  }
-};
 
 // src/engine.ts
 var PLACE_TYPE_DRIFT_DEPTH = {
@@ -2158,14 +998,15 @@ var ENV_DEFAULT_PACK = {
   urban: "mercantile"
 };
 function seedCulture(traits) {
-  var _a;
-  const seed = (_a = traits.seed) != null ? _a : `${traits.name}::${Date.now().toString(36)}`;
+  var _a, _b;
+  const givenName = ((_a = traits.name) == null ? void 0 : _a.trim()) || "";
+  const seed = (_b = traits.seed) != null ? _b : `${givenName || "culture"}::${Date.now().toString(36)}`;
   const rng = rngFrom(seed + "::elements");
   const elements = traits.familiarity === "alien" ? buildProceduralElements(rng, traits.mood) : samplePackElements(rng, traits.mood);
   const syllableRange = traits.register === "ancient" ? [3, 5] : traits.register === "modern" ? [2, 3] : [2, 4];
   const culture = {
     id: seed,
-    name: traits.name,
+    name: givenName || "Untitled",
     seed,
     mood: traits.mood,
     register: traits.register,
@@ -2178,12 +1019,16 @@ function seedCulture(traits) {
     roots: [],
     appliedPacks: [],
     registry: [],
-    summary: ""
+    summary: "",
+    defaultGeneration: "mixed"
   };
   const packs = new Set(traits.packs);
   const envPack = ENV_DEFAULT_PACK[traits.environment];
   if (envPack) packs.add(envPack);
   applySemanticPacks(culture, [...packs]);
+  if (!givenName) culture.name = placeholderName(culture);
+  seedGenderClasses(culture);
+  refreshSamples(culture);
   culture.summary = oneBreath(culture);
   return culture;
 }
@@ -2249,253 +1094,237 @@ for (const [packName, pack] of Object.entries(SEMANTIC_PACKS)) {
     }
   }
 }
-function resolveTokens(tokens) {
-  const out = /* @__PURE__ */ new Set();
-  for (const t of tokens) {
-    if (SEMANTIC_PACKS[t]) {
-      for (const c of SEMANTIC_PACKS[t].concepts) out.add(c.concept);
-    } else if (TAG_TO_CONCEPTS.has(t)) {
-      for (const c of TAG_TO_CONCEPTS.get(t)) out.add(c);
-    } else if (ALL_CONCEPTS.has(t)) out.add(t);
+function endingLeanScore(end, lean) {
+  const core = end.replace(/^-/, "").toLowerCase();
+  if (!core) return 0;
+  const last = core[core.length - 1];
+  const softFinal = "aeioulrnmy".includes(last);
+  const hardFinal = "ktdgbpr".includes(last);
+  switch (lean) {
+    case "soft":
+      return softFinal ? 3 : 0;
+    case "hard":
+      return hardFinal ? 3 : softFinal ? 0 : 1;
+    case "long":
+      return core.length >= 4 ? 3 : core.length >= 3 ? 1 : 0;
+    case "short":
+      return core.length <= 3 ? 3 : 0;
+    case "exotic":
+      return /[zxqjw]/.test(core) ? 3 : /y/.test(core) ? 1 : 0;
   }
-  return out;
 }
-function policyPool(policy) {
-  var _a, _b, _c;
-  const inc = [...(_a = policy.favour) != null ? _a : [], ...(_b = policy.lock) != null ? _b : []];
-  const pool = inc.length ? resolveTokens(inc) : /* @__PURE__ */ new Set();
-  if ((_c = policy.exclude) == null ? void 0 : _c.length) {
-    for (const c of resolveTokens(policy.exclude)) pool.delete(c);
-  }
-  return pool;
-}
-function pickFrom(rng, set) {
-  return pick(rng, [...set].sort());
-}
-function ensureConceptsMinted(culture, concepts) {
+function generateClassEndings(culture, lean, count = 4, salt = "") {
   var _a, _b;
-  const existingByMeaning = new Map(culture.roots.map((r) => [r.meaning, r]));
-  const forms = culture.roots.map((r) => r.form);
-  let added = false;
-  for (const concept of concepts) {
-    if (existingByMeaning.has(concept)) continue;
-    const form = mintForm(culture, concept, forms);
-    forms.push(form);
-    const root = {
-      form,
-      meaning: concept,
-      origin: (_a = CONCEPT_ORIGIN.get(concept)) != null ? _a : "tradition",
-      weight: 1,
-      tags: (_b = CONCEPT_TAGS.get(concept)) != null ? _b : []
-    };
-    culture.roots.push(root);
-    existingByMeaning.set(concept, root);
-    added = true;
+  const rng = rngFrom(`${culture.seed}::class-ends::${lean}::${salt}`);
+  const pool = [...culture.elements.end];
+  for (const e of (_b = (_a = PHONETIC_PACKS[culture.mood]) == null ? void 0 : _a.end) != null ? _b : []) {
+    if (!pool.some((p) => p.toLowerCase() === e.toLowerCase())) pool.push(e);
   }
-  return added;
-}
-function formOf(culture, concept) {
-  const r = culture.roots.find((r2) => r2.meaning === concept);
-  return r ? r.form : mintForm(culture, concept, culture.roots.map((r2) => r2.form));
-}
-function intersectSets(a, b) {
-  const out = /* @__PURE__ */ new Set();
-  for (const x of a) if (b.has(x)) out.add(x);
-  return out;
-}
-function weightedPatternType(rng, patterns) {
-  const total = patterns.reduce((t, p) => t + p.weight, 0);
-  let x = rng() * total;
-  for (const p of patterns) {
-    x -= p.weight;
-    if (x <= 0) return p.type;
-  }
-  return patterns[patterns.length - 1].type;
-}
-function traditionGenderPool(tradition, gender, content) {
-  var _a, _b;
-  const themes = (_b = (_a = tradition.genders[gender]) == null ? void 0 : _a.themes) != null ? _b : [];
-  const resolved = themes.length ? resolveTokens(themes) : /* @__PURE__ */ new Set();
-  return resolved.size > 0 ? resolved : content;
-}
-function buildGiven(rng, culture, tradition, content, gender) {
-  var _a;
-  const type = weightedPatternType(rng, tradition.patterns.personal);
-  const gp = traditionGenderPool(tradition, gender, content);
-  if (type === "dithematic") {
-    const c1 = pickFrom(rng, content);
-    const c2 = pickFrom(rng, gp);
-    const f1 = formOf(culture, c1);
-    const f2raw = formOf(culture, c2).replace(/-/g, "").toLowerCase();
-    return {
-      headWord: cap(f1) + f2raw,
-      parts: [{ slot: "start", element: f1 }, { slot: "end", element: f2raw }],
-      gloss: `${c1}-${c2}`
-    };
-  }
-  if (type === "theophoric" && ((_a = tradition.particles) == null ? void 0 : _a.theophoric)) {
-    const sacBase = resolveTokens(["sacred", "celestial"]);
-    const sacIntersect = intersectSets(sacBase, content);
-    const sac = sacIntersect.size > 0 ? sacIntersect : resolveTokens(["sacred"]);
-    const s = pickFrom(rng, sac);
-    const relations = tradition.particles.theophoric.relations;
-    const rk = pick(rng, Object.keys(relations));
-    const f2 = formOf(culture, s);
-    return {
-      headWord: cap(f2) + relations[rk],
-      parts: [{ slot: "start", element: f2 }, { slot: "end", element: "-" + relations[rk] }],
-      gloss: `${s}-${rk}`
-    };
-  }
-  const c = pickFrom(rng, gp);
-  const f = formOf(culture, c);
-  return { headWord: cap(f), parts: [{ slot: "start", element: f }], gloss: c };
-}
-function buildHouseWord(rng, culture, content, type, hpart) {
-  var _a, _b, _c;
-  if (type === "clan" || type === "clan-patronymic") {
-    const c2 = pickFrom(rng, content);
-    const f2 = formOf(culture, c2);
-    const prefix = (_a = hpart.prefix) != null ? _a : "Mac";
-    const text2 = prefix + cap(f2);
-    return { text: text2, headWord: text2, parts: [{ slot: "start", element: prefix }, { slot: "end", element: "-" + f2 }] };
-  }
-  if (type === "occupational") {
-    const craft = resolveTokens(["craft", "trade"]);
-    const pool = craft.size > 0 ? craft : content;
-    const c2 = pickFrom(rng, pool);
-    const f2 = formOf(culture, c2);
-    const affix2 = ((_b = hpart.affix) != null ? _b : "").replace(/^-/, "");
-    const text2 = cap(f2) + affix2;
-    const parts2 = affix2 ? [{ slot: "start", element: f2 }, { slot: "end", element: "-" + affix2 }] : [{ slot: "start", element: f2 }];
-    return { text: text2, headWord: text2, parts: parts2 };
-  }
-  if (type === "locative") {
-    const c2 = pickFrom(rng, content);
-    const f2 = formOf(culture, c2);
-    const text2 = "of " + cap(f2);
-    return { text: text2, headWord: cap(f2), parts: [{ slot: "start", element: f2 }] };
-  }
-  const c = pickFrom(rng, content);
-  const f = formOf(culture, c);
-  const affix = ((_c = hpart.affix) != null ? _c : "").replace(/^-/, "");
-  const text = cap(f) + affix;
-  const parts = affix ? [{ slot: "start", element: f }, { slot: "end", element: "-" + affix }] : [{ slot: "start", element: f }];
-  return { text, headWord: text, parts };
-}
-function buildSurname(rng, culture, tradition, content, gender) {
-  var _a, _b, _c, _d;
-  const genderProfile = tradition.genders[gender];
-  const affix = genderProfile == null ? void 0 : genderProfile.patronymicAffix;
-  if (affix && ((_a = tradition.particles) == null ? void 0 : _a.patronymic)) {
-    const parentConcept = pickFrom(rng, content);
-    const parentForm = formOf(culture, parentConcept);
-    if (affix.startsWith("-")) {
-      const genitive = (_b = tradition.particles.patronymic.genitive) != null ? _b : "";
-      const text = cap(parentForm) + genitive + affix.slice(1);
-      return { text };
+  const cons = [...new Set(
+    [...culture.elements.start, ...culture.elements.middle].join("").toLowerCase().replace(/[^bcdfghjklmnpqrstvwxyz]/g, "").split("")
+  )].filter((c) => c.length === 1);
+  const softVowels = ["a", "ae", "ia", "ie", "e"];
+  const hardFinals = ["k", "r", "n", "d", "th", "g", "t"];
+  for (let i = 0; i < 6; i++) {
+    const c0 = pick(rng, cons.length ? cons : ["n", "l", "r"]);
+    if (lean === "soft" || lean === "long") {
+      pool.push(`-${c0}${pick(rng, softVowels)}`);
+    } else if (lean === "hard") {
+      pool.push(`-${c0}${pick(rng, softVowels).slice(0, 1)}${pick(rng, hardFinals)}`);
+    } else if (lean === "short") {
+      pool.push(`-${c0}${pick(rng, ["a", "e", "i"])}`);
+    } else {
+      pool.push(`-${pick(rng, ["z", "x", "j", "q"])}${pick(rng, softVowels)}`);
     }
-    return { text: affix + " " + cap(parentForm) };
   }
-  const housePatterns = tradition.patterns.house.length ? tradition.patterns.house : [{ type: "founder-line", weight: 1 }];
-  const type = housePatterns[0].type;
-  const hpart = (_d = (_c = tradition.particles) == null ? void 0 : _c.house) != null ? _d : {};
-  return buildHouseWord(rng, culture, content, type, hpart);
-}
-function buildTraditionPersonal(rng, culture, tradition, gender) {
-  var _a, _b, _c, _d;
-  const content = policyPool(tradition.contentPolicy);
-  const given = buildGiven(rng, culture, tradition, content, gender);
-  const words = [given.headWord];
-  if (rng() < ((_a = tradition.surnameRate) != null ? _a : 0)) {
-    words.push(buildSurname(rng, culture, tradition, content, gender).text);
+  const scored = pool.map((e) => ({ e, s: endingLeanScore(e, lean) + rng() })).sort((a, b) => b.s - a.s);
+  const picked = [];
+  for (const { e } of scored) {
+    if (picked.length >= count) break;
+    const norm = e.startsWith("-") ? e : `-${e}`;
+    if (!picked.some((p) => p.toLowerCase() === norm.toLowerCase())) picked.push(norm);
   }
-  if (tradition.patterns.personal.some((p) => p.type === "epithet") && rng() < 0.4) {
-    const article = (_d = (_c = (_b = tradition.particles) == null ? void 0 : _b.epithet) == null ? void 0 : _c.article) != null ? _d : "";
-    const traitBase = resolveTokens(["light", "beast", "virtue", "strength"]);
-    const traitIntersect = intersectSets(traitBase, content);
-    const traitPool = traitIntersect.size > 0 ? traitIntersect : content;
-    const c = pickFrom(rng, traitPool);
-    const traitCap = cap(formOf(culture, c));
-    words.push((article + " " + traitCap).trim());
+  while (picked.length < Math.min(count, culture.elements.end.length)) {
+    const e = culture.elements.end[picked.length % culture.elements.end.length];
+    if (!picked.some((p) => p.toLowerCase() === e.toLowerCase())) picked.push(e);
   }
-  return { name: words.join(" "), headWord: given.headWord, parts: given.parts, gloss: given.gloss };
+  return picked;
 }
-function applyGeneric(baseForm, g) {
-  const s = g.position === "suffix" ? cap(baseForm) + g.form : cap(g.form) + baseForm.toLowerCase();
-  return s.length ? s[0].toUpperCase() + s.slice(1) : s;
-}
-function buildTraditionPlace(rng, culture, tradition, placeType) {
-  var _a;
-  const content = policyPool(tradition.contentPolicy);
-  const genericsKey = placeType === "feature" || placeType === "settlement" ? placeType : null;
-  const gens = genericsKey ? (_a = tradition.toponymicGenerics) == null ? void 0 : _a[genericsKey] : void 0;
-  if (gens && gens.length > 0) {
-    const g = pick(rng, gens);
-    const baseConcept2 = pickFrom(rng, content);
-    const baseForm2 = formOf(culture, baseConcept2);
-    const name2 = applyGeneric(baseForm2, g);
-    const parts = g.position === "suffix" ? [{ slot: "start", element: baseForm2 }, { slot: "end", element: "-" + g.form }] : [{ slot: "start", element: g.form }, { slot: "end", element: "-" + baseForm2 }];
-    return { name: name2, headWord: name2, parts, gloss: `${baseConcept2} + '${g.form}' (${g.meaning})` };
-  }
-  const baseConcept = pickFrom(rng, content);
-  const baseForm = formOf(culture, baseConcept);
-  const name = cap(baseForm);
-  return { name, headWord: name, parts: [{ slot: "start", element: baseForm }], gloss: baseConcept };
-}
-function buildTraditionHouse(rng, culture, tradition) {
+function resolveClassEndings(culture, cls, seen = /* @__PURE__ */ new Set()) {
   var _a, _b;
-  const content = policyPool(tradition.contentPolicy);
-  const housePatterns = tradition.patterns.house.length ? tradition.patterns.house : [{ type: "founder-line", weight: 1 }];
-  const type = housePatterns[0].type;
-  const hpart = (_b = (_a = tradition.particles) == null ? void 0 : _a.house) != null ? _b : {};
-  const h = buildHouseWord(rng, culture, content, type, hpart);
-  return { name: h.text, headWord: h.headWord, parts: h.parts, gloss: type };
+  if (seen.has(cls.id)) return culture.elements.end;
+  seen.add(cls.id);
+  if (cls.endingSource === "inherit" && cls.inheritFrom) {
+    const parent = (_a = culture.classes) == null ? void 0 : _a.find((c) => c.id === cls.inheritFrom);
+    if (parent) return resolveClassEndings(culture, parent, seen);
+  }
+  if ((_b = cls.endings) == null ? void 0 : _b.length) return cls.endings;
+  return culture.elements.end;
 }
-function traditionConceptUniverse(tradition) {
+function resolveRootPool(culture, policy) {
   var _a;
-  const out = policyPool(tradition.contentPolicy);
-  for (const g of Object.values(tradition.genders)) {
-    if ((_a = g == null ? void 0 : g.themes) == null ? void 0 : _a.length) for (const c of resolveTokens(g.themes)) out.add(c);
+  const expand = (token) => {
+    var _a2;
+    const concepts = /* @__PURE__ */ new Set();
+    const pack = SEMANTIC_PACKS[token];
+    if (pack) for (const { concept } of pack.concepts) concepts.add(concept);
+    const tagged = TAG_TO_CONCEPTS.get(token);
+    if (tagged) for (const c of tagged) concepts.add(c);
+    for (const r of culture.roots) {
+      if (((_a2 = r.tags) == null ? void 0 : _a2.includes(token)) || r.meaning === token) concepts.add(r.meaning);
+    }
+    if (ALL_CONCEPTS.has(token)) concepts.add(token);
+    return concepts;
+  };
+  const included = /* @__PURE__ */ new Set();
+  for (const t of policy.include) for (const c of expand(t)) included.add(c);
+  for (const t of (_a = policy.exclude) != null ? _a : []) for (const c of expand(t)) included.delete(c);
+  if (policy.mode === "lock") {
+    const locked = culture.roots.filter((r) => included.has(r.meaning));
+    if (locked.length < 2) {
+      const favoured2 = culture.roots.map(
+        (r) => included.has(r.meaning) ? { ...r, weight: Math.min(3, r.weight + 1) } : { ...r }
+      );
+      return { roots: favoured2, fellBack: true };
+    }
+    return { roots: locked, fellBack: false };
   }
-  for (const c of resolveTokens(["sacred", "celestial"])) out.add(c);
-  for (const c of resolveTokens(["light", "beast", "virtue", "strength"])) out.add(c);
-  return out;
+  const favoured = culture.roots.map(
+    (r) => included.has(r.meaning) ? { ...r, weight: Math.min(3, r.weight + 1) } : { ...r }
+  );
+  return { roots: favoured, fellBack: false };
 }
-function generateTraditionBatch(culture, tradition, category, count, gender = "neutral", placeType = "settlement", rng = rngFrom(`${culture.seed}::tradition-batch::${Date.now()}::${Math.random()}`)) {
-  ensureConceptsMinted(culture, traditionConceptUniverse(tradition));
-  const out = [];
-  const session = /* @__PURE__ */ new Set();
-  let attempts = 0;
-  while (out.length < count && attempts++ < count * 40) {
-    const built = category === "personal" ? buildTraditionPersonal(rng, culture, tradition, gender) : category === "place" ? buildTraditionPlace(rng, culture, tradition, placeType) : buildTraditionHouse(rng, culture, tradition);
-    if (session.has(built.name.toLowerCase())) continue;
-    const gate = gateName(built.headWord, culture, built.parts, session);
-    if (!gate.pass) continue;
-    session.add(built.name.toLowerCase());
-    out.push({
-      name: built.name,
-      pronunciation: pronounce(built.headWord, culture.stress),
-      parts: built.parts,
-      category,
-      gloss: built.gloss
-    });
+function seedGenderClasses(culture) {
+  if (culture.gendered === void 0) culture.gendered = true;
+  culture.classes = [
+    {
+      id: "feminine",
+      label: "feminine",
+      kind: "gender",
+      endingSource: "generate",
+      endings: generateClassEndings(culture, "soft", 4, "feminine"),
+      rootPolicy: { mode: "favour", include: ["flora", "hearth", "virtue"], exclude: ["tree"] },
+      generation: "mixed"
+    },
+    {
+      id: "masculine",
+      label: "masculine",
+      kind: "gender",
+      endingSource: "generate",
+      endings: generateClassEndings(culture, "hard", 4, "masculine"),
+      rootPolicy: { mode: "favour", include: ["forest", "sea", "strength"] },
+      generation: "mixed"
+    },
+    {
+      id: "neutral",
+      label: "neutral",
+      kind: "gender",
+      endingSource: "generate",
+      endings: culture.elements.end.slice()
+    }
+  ];
+}
+function ensureCultureClasses(culture) {
+  var _a;
+  let changed = false;
+  if (culture.defaultGeneration === void 0) {
+    culture.defaultGeneration = "mixed";
+    changed = true;
   }
-  return out;
+  if ((_a = culture.classes) == null ? void 0 : _a.length) {
+    if (culture.gendered === void 0) culture.gendered = true;
+    return changed;
+  }
+  seedGenderClasses(culture);
+  return true;
 }
-function assemble(rng, culture, category) {
-  const { start, middle, end } = culture.elements;
+function visibleClasses(culture) {
+  var _a;
+  ensureCultureClasses(culture);
+  const all = (_a = culture.classes) != null ? _a : [];
+  if (culture.gendered === false) {
+    return all.filter((c) => !(c.kind === "gender" && (c.id === "feminine" || c.id === "masculine")));
+  }
+  return all;
+}
+function slugClassId(label, culture) {
+  var _a;
+  let base = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "class";
+  let id = base;
+  let n = 2;
+  while ((_a = culture.classes) == null ? void 0 : _a.some((c) => c.id === id)) {
+    id = `${base}-${n++}`;
+  }
+  return id;
+}
+function addClass(culture, label, lean = "soft") {
+  ensureCultureClasses(culture);
+  const id = slugClassId(label, culture);
+  const cls = {
+    id,
+    label: label.trim() || id,
+    kind: "class",
+    endingSource: "generate",
+    endings: generateClassEndings(culture, lean, 4, id),
+    generation: "mixed"
+  };
+  culture.classes.push(cls);
+  return cls;
+}
+function editClass(culture, id, patch) {
+  var _a;
+  ensureCultureClasses(culture);
+  const cls = (_a = culture.classes) == null ? void 0 : _a.find((c) => c.id === id);
+  if (!cls) return null;
+  const { id: _ignore, ...rest } = patch;
+  void _ignore;
+  Object.assign(cls, rest);
+  return cls;
+}
+function removeClass(culture, id) {
+  if (!culture.classes) return false;
+  const before = culture.classes.length;
+  culture.classes = culture.classes.filter((c) => c.id !== id);
+  for (const c of culture.classes) {
+    if (c.inheritFrom === id) {
+      c.inheritFrom = void 0;
+      if (c.endingSource === "inherit") {
+        c.endingSource = "generate";
+        c.endings = generateClassEndings(culture, "soft", 4, c.id);
+      }
+    }
+  }
+  return culture.classes.length < before;
+}
+function regenerateClassEndings(culture, id, lean) {
+  var _a;
+  const cls = (_a = culture.classes) == null ? void 0 : _a.find((c) => c.id === id);
+  if (!cls) return null;
+  cls.endingSource = "generate";
+  cls.inheritFrom = void 0;
+  cls.endings = generateClassEndings(culture, lean, 4, `${id}::${Date.now().toString(36)}`);
+  return cls;
+}
+function classSpecimens(culture, classId, n = 2) {
+  return generateBatch(culture, "personal", n, void 0, classId, rngFrom(`${culture.seed}::class-sample::${classId}`)).map((g) => g.gloss ? `${g.name} (${g.gloss})` : g.name);
+}
+function assemble(rng, culture, category, opts = {}) {
+  var _a;
+  const { start, middle } = culture.elements;
+  const endPool = ((_a = opts.ends) == null ? void 0 : _a.length) ? opts.ends : culture.elements.end;
   const parts = [];
   const s = pick(rng, start);
   parts.push({ slot: "start", element: s });
   let body = s;
-  const middles = category === "house" || category === "title" ? rng() < 0.5 ? 2 : 1 : category === "place" ? 1 : rng() < culture.middleChance ? 1 : 0;
+  let middleChance = culture.middleChance;
+  if (opts.lengthLean) middleChance = Math.max(0, Math.min(1, middleChance + opts.lengthLean * 0.25));
+  const middles = category === "house" || category === "title" ? rng() < 0.5 ? 2 : 1 : category === "place" ? 1 : rng() < middleChance ? 1 : 0;
   for (let i = 0; i < middles; i++) {
     const m = pick(rng, middle);
     parts.push({ slot: "middle", element: m });
     body += m;
   }
-  const e = pick(rng, end);
+  const e = pick(rng, endPool);
   parts.push({ slot: "end", element: e });
   body += e.replace(/^-/, "");
   const name = body[0].toUpperCase() + body.slice(1).toLowerCase();
@@ -2513,63 +1342,128 @@ function weightedRoot(rng, roots, exclude) {
   }
   return pool[pool.length - 1];
 }
-function assembleSemantic(rng, culture) {
-  const r1 = weightedRoot(rng, culture.roots);
-  const r2 = weightedRoot(rng, culture.roots, r1);
-  let a = r1.form, b = r2.form;
+function joinForms(rng, left, right) {
+  let a = left, b = right;
   const aEndsVowel = isVowel(a[a.length - 1], 1);
   const bStartsVowel = isVowel(b[0], 0);
   if (aEndsVowel && bStartsVowel) b = pick(rng, ["n", "r", "l"]) + b;
   if (!aEndsVowel && !bStartsVowel && !SONORANTS.has(a[a.length - 1])) a = a + pick(rng, ["a", "o", "e"]);
-  const body = a + b;
-  const name = body[0].toUpperCase() + body.slice(1);
-  return { name, gloss: `${r1.meaning} + ${r2.meaning}`, parts: [{ slot: "start", element: a }, { slot: "end", element: b }] };
+  return a + b;
 }
-function generateBatch(culture, category, count, mode = "sound", rng = rngFrom(`${culture.seed}::batch::${Date.now()}::${Math.random()}`)) {
+function pickRootCount(rng, register) {
+  const r = rng();
+  if (register === "modern") return r < 0.7 ? 1 : 2;
+  if (register === "ancient") return r < 0.25 ? 1 : r < 0.9 ? 2 : 3;
+  return r < 0.45 ? 1 : 2;
+}
+function categoryRootBias(category) {
+  if (category === "place") return { mode: "favour", include: ["place", "water", "earth", "forest", "river", "mountain", "sea", "stone"] };
+  if (category === "house") return { mode: "favour", include: ["kin", "rank", "virtue", "home", "hearth"] };
+  if (category === "title") return { mode: "favour", include: ["rank", "virtue", "war", "strength"] };
+  return void 0;
+}
+function assembleMeaning(rng, culture, opts = {}) {
+  var _a, _b, _c;
+  const pool = ((_a = opts.roots) == null ? void 0 : _a.length) ? opts.roots : culture.roots;
+  const n = Math.min(pickRootCount(rng, culture.register), Math.max(1, pool.length));
+  const picked = [];
+  for (let i = 0; i < n; i++) {
+    const r = weightedRoot(rng, pool, picked[picked.length - 1]);
+    picked.push(r);
+  }
+  let body = picked[0].form.toLowerCase();
+  const parts = [{ slot: "start", element: picked[0].form }];
+  for (let i = 1; i < picked.length; i++) {
+    const next = picked[i].form.toLowerCase();
+    body = joinForms(rng, body, next);
+    parts.push({ slot: i === picked.length - 1 && !((_b = opts.ends) == null ? void 0 : _b.length) ? "end" : "middle", element: picked[i].form });
+  }
+  const endPool = ((_c = opts.ends) == null ? void 0 : _c.length) ? opts.ends : culture.elements.end;
+  const endEl = pick(rng, endPool);
+  let endCore = endEl.replace(/^-/, "").toLowerCase();
+  const bodyEndsVowel = isVowel(body[body.length - 1], 1);
+  const endStartsVowel = isVowel(endCore[0], 0);
+  if (bodyEndsVowel && endStartsVowel) {
+    endCore = endCore.replace(/^[aeiouy]+/, "") || endCore;
+    if (isVowel(endCore[0], 0)) endCore = pick(rng, ["n", "r", "l"]) + endCore;
+  } else if (!bodyEndsVowel && !endStartsVowel && !SONORANTS.has(body[body.length - 1])) {
+    body = body + pick(rng, ["a", "o", "e"]);
+  }
+  if (opts.lengthLean && opts.lengthLean > 0 && rng() < opts.lengthLean * 0.4 && culture.elements.middle.length) {
+    const m = pick(rng, culture.elements.middle).toLowerCase();
+    body = joinForms(rng, body, m);
+    parts.push({ slot: "middle", element: m });
+  }
+  body = body + endCore;
+  parts.push({ slot: "end", element: endEl.startsWith("-") ? endEl : `-${endCore}` });
+  const name = body[0].toUpperCase() + body.slice(1);
+  const gloss = picked.map((r) => r.meaning).join(" + ");
+  return {
+    name,
+    gloss,
+    parts,
+    roots: picked.map((r) => ({ form: r.form, meaning: r.meaning }))
+  };
+}
+function generateBatch(culture, category, count, mode, classNameOrRng, rngArg) {
+  var _a, _b, _c, _d;
+  let className;
+  let rng;
+  if (typeof classNameOrRng === "function") {
+    rng = classNameOrRng;
+  } else {
+    className = classNameOrRng != null ? classNameOrRng : void 0;
+    rng = rngArg != null ? rngArg : rngFrom(`${culture.seed}::batch::${Date.now()}::${Math.random()}`);
+  }
+  const cls = category === "personal" && className ? (_a = culture.classes) == null ? void 0 : _a.find((c) => c.id === className) : void 0;
+  const ends = cls ? resolveClassEndings(culture, cls) : culture.elements.end;
+  let modePref = (_d = (_c = (_b = cls == null ? void 0 : cls.generation) != null ? _b : mode) != null ? _c : culture.defaultGeneration) != null ? _d : "mixed";
+  let rootPool = culture.roots;
+  if (cls == null ? void 0 : cls.rootPolicy) {
+    rootPool = resolveRootPool(culture, cls.rootPolicy).roots;
+  } else {
+    const bias = categoryRootBias(category);
+    if (bias) rootPool = resolveRootPool(culture, bias).roots;
+  }
   const out = [];
   const session = /* @__PURE__ */ new Set();
   let attempts = 0;
-  const useMeaning = mode === "meaning" && culture.roots.length >= 2;
   while (out.length < count && attempts++ < count * 40) {
-    const built = useMeaning ? assembleSemantic(rng, culture) : assemble(rng, culture, category);
-    const gate = gateName(built.name, culture, built.parts, session);
-    if (!gate.pass) continue;
-    session.add(built.name.toLowerCase());
-    out.push({
-      name: built.name,
-      pronunciation: pronounce(built.name, culture.stress),
-      parts: built.parts,
-      category,
-      gloss: built.gloss
-    });
+    let nameMode = modePref === "mixed" ? rng() < 0.7 ? "meaning" : "sound" : modePref === "meaning" ? "meaning" : "sound";
+    const useMeaning = nameMode === "meaning" && rootPool.length >= 1;
+    if (useMeaning) {
+      const built = assembleMeaning(rng, culture, {
+        roots: rootPool,
+        ends,
+        lengthLean: cls == null ? void 0 : cls.lengthLean
+      });
+      const gate = gateName(built.name, culture, built.parts, session);
+      if (!gate.pass) continue;
+      session.add(built.name.toLowerCase());
+      out.push({
+        name: built.name,
+        pronunciation: pronounce(built.name, culture.stress),
+        parts: built.parts,
+        category,
+        gloss: built.gloss,
+        roots: built.roots,
+        className: cls == null ? void 0 : cls.id
+      });
+    } else {
+      const built = assemble(rng, culture, category, { ends, lengthLean: cls == null ? void 0 : cls.lengthLean });
+      const gate = gateName(built.name, culture, built.parts, session);
+      if (!gate.pass) continue;
+      session.add(built.name.toLowerCase());
+      out.push({
+        name: built.name,
+        pronunciation: pronounce(built.name, culture.stress),
+        parts: built.parts,
+        category,
+        className: cls == null ? void 0 : cls.id
+      });
+    }
   }
   return out;
-}
-function reinforce(culture, starred) {
-  var _a;
-  const capCount = (list, el) => list.filter((x) => x.toLowerCase() === el.toLowerCase()).length;
-  for (const g of starred) {
-    for (const p of g.parts) {
-      const list = culture.elements[p.slot];
-      if (capCount(list, p.element) < 4) list.push(p.element);
-    }
-  }
-  const starredEnds = [...new Set(starred.flatMap((g) => g.parts.filter((p) => p.slot === "end").map((p) => p.element)))];
-  if (starredEnds.length > 0) {
-    const counts = /* @__PURE__ */ new Map();
-    for (const e of culture.elements.end) counts.set(e, ((_a = counts.get(e)) != null ? _a : 0) + 1);
-    const rest = [...counts.keys()].filter((e) => !starredEnds.some((s) => s.toLowerCase() === e.toLowerCase())).sort((x, y) => {
-      var _a2, _b;
-      return ((_a2 = counts.get(y)) != null ? _a2 : 0) - ((_b = counts.get(x)) != null ? _b : 0);
-    });
-    const keep = [...starredEnds, ...rest].slice(0, 5);
-    culture.elements.end = culture.elements.end.filter((e) => keep.some((k) => k.toLowerCase() === e.toLowerCase()));
-    for (const s of starredEnds) {
-      if (capCount(culture.elements.end, s) < 4) culture.elements.end.push(s);
-      if (capCount(culture.elements.end, s) < 4) culture.elements.end.push(s);
-    }
-  }
-  culture.summary = oneBreath(culture);
 }
 function segmentPastedName(raw) {
   const w = raw.trim().toLowerCase().replace(/[^a-z]/g, "");
@@ -2617,9 +1511,11 @@ function detectMood(names) {
   }
   return best;
 }
-function reverseSeedCulture(cultureName, pastedNames, packs = []) {
+function reverseSeedCulture(cultureName, pastedNames, packsOrTraits = []) {
+  var _a, _b, _c, _d;
+  const traits = Array.isArray(packsOrTraits) ? { packs: packsOrTraits } : packsOrTraits;
   const cleaned = pastedNames.map((n) => n.trim()).filter((n) => n.length >= 3);
-  const mood = detectMood(cleaned);
+  const mood = (_a = traits.mood) != null ? _a : detectMood(cleaned);
   const segments = cleaned.map(segmentPastedName).filter((s) => s !== null);
   const seed = `${cultureName}::from::${cleaned.join("+").toLowerCase()}`;
   const rng = rngFrom(seed + "::backfill");
@@ -2639,28 +1535,181 @@ function reverseSeedCulture(cultureName, pastedNames, packs = []) {
   const syllCounts = cleaned.map((n) => syllabify(n).length);
   const lo = Math.max(2, Math.min(...syllCounts) - 0);
   const hi = Math.min(5, Math.max(...syllCounts) + 1);
+  const register = (_b = traits.register) != null ? _b : "balanced";
+  const syllableRange = register === "ancient" ? [3, 5] : register === "modern" ? [2, 3] : [lo, Math.max(lo, hi)];
+  const env = !traits.environment || traits.environment === "none" ? "\u2014" : traits.environment;
   const culture = {
     id: seed,
     name: cultureName,
     seed,
     mood,
-    register: "balanced",
-    familiarity: "familiar",
-    environment: "\u2014",
+    register,
+    familiarity: (_c = traits.familiarity) != null ? _c : "familiar",
+    environment: env,
     elements: { start: starts, middle: middles, end: ends },
     middleChance: syllCounts.some((c) => c >= 3) ? 0.5 : 0.3,
-    syllableRange: [lo, Math.max(lo, hi)],
-    stress: mood === "grand" ? "penult" : "initial",
+    syllableRange,
+    stress: mood === "grand" || register === "ancient" ? "penult" : "initial",
     roots: [],
     appliedPacks: [],
     registry: cleaned.map((n) => n.toLowerCase()),
     // their names are already taken
     fromNames: cleaned,
-    summary: ""
+    summary: "",
+    defaultGeneration: "mixed"
   };
-  applySemanticPacks(culture, packs);
+  const semanticPacks = new Set((_d = traits.packs) != null ? _d : []);
+  const envPack = ENV_DEFAULT_PACK[env];
+  if (envPack) semanticPacks.add(envPack);
+  applySemanticPacks(culture, [...semanticPacks]);
+  seedGenderClasses(culture);
+  refreshSamples(culture);
   culture.summary = oneBreath(culture);
   return culture;
+}
+function isRomanisedName(raw) {
+  const letters = raw.trim().replace(/[\s\-'.]/g, "");
+  return letters.length >= 3 && /^[A-Za-z]+$/.test(letters);
+}
+function parseImportInput(raw) {
+  var _a, _b, _c;
+  const rejected = [];
+  const seen = /* @__PURE__ */ new Set();
+  const candidates = [];
+  const STOP = /* @__PURE__ */ new Set([
+    "the",
+    "and",
+    "or",
+    "of",
+    "a",
+    "an",
+    "to",
+    "in",
+    "on",
+    "by",
+    "for",
+    "was",
+    "were",
+    "are",
+    "is",
+    "be",
+    "called",
+    "named",
+    "with",
+    "from",
+    "that",
+    "this",
+    "their",
+    "his",
+    "her",
+    "she",
+    "he",
+    "they",
+    "who",
+    "whom",
+    "which",
+    "into",
+    "onto",
+    "over",
+    "under"
+  ]);
+  const push = (token) => {
+    const t = token.trim();
+    if (!t) return;
+    const key = t.toLowerCase();
+    if (seen.has(key)) return;
+    if (!isRomanisedName(t)) {
+      if (/[^\x00-\x7F]/.test(t) || t.replace(/[^A-Za-z]/g, "").length >= 3) {
+        seen.add(key);
+        rejected.push(t);
+      }
+      return;
+    }
+    seen.add(key);
+    candidates.push(t);
+  };
+  if (/[,;\n|/]/.test(raw)) {
+    for (const part of raw.split(/[,;\n|/]+/)) push(part);
+  } else {
+    const caps = (_a = raw.match(/\b[A-Z][A-Za-z'-]{2,}\b/g)) != null ? _a : [];
+    const nameLike = caps.filter((w) => !STOP.has(w.toLowerCase()));
+    if (nameLike.length >= 1) {
+      for (const w of nameLike) push(w);
+    } else {
+      const words = (_b = raw.match(/[A-Za-z][A-Za-z'-]{2,}/g)) != null ? _b : [];
+      for (const w of words) {
+        if (!STOP.has(w.toLowerCase())) push(w);
+      }
+      if (candidates.length === 0 && raw.trim()) push(raw.trim());
+    }
+    const nonLatin = (_c = raw.match(/[^\s,;|/]+/g)) != null ? _c : [];
+    for (const tok of nonLatin) {
+      if (/[^\x00-\x7F]/.test(tok)) push(tok);
+    }
+  }
+  return { candidates, rejected };
+}
+function importNames(culture, raw) {
+  var _a;
+  const { candidates, rejected } = parseImportInput(raw);
+  const added = { start: [], middle: [], end: [] };
+  const accepted = [];
+  let segmented = 0;
+  const capCount = (list, el) => list.filter((x) => x.toLowerCase() === el.toLowerCase()).length;
+  const pushCapped = (list, el, times = 3) => {
+    for (let i = 0; i < times; i++) {
+      if (capCount(list, el) < 4) list.push(el);
+    }
+  };
+  for (const name of candidates) {
+    const seg = segmentPastedName(name);
+    accepted.push(name);
+    const key = name.toLowerCase();
+    if (!culture.registry.includes(key)) culture.registry.push(key);
+    if (!culture.importedNames) culture.importedNames = [];
+    if (!culture.importedNames.some((n) => n.toLowerCase() === key)) culture.importedNames.push(name);
+    if (!seg) continue;
+    segmented++;
+    pushCapped(culture.elements.start, seg.start);
+    pushCapped(added.start, seg.start, 1);
+    for (const m of seg.middles) {
+      pushCapped(culture.elements.middle, m);
+      pushCapped(added.middle, m, 1);
+    }
+    pushCapped(culture.elements.end, seg.end);
+    pushCapped(added.end, seg.end, 1);
+  }
+  const importedEnds = [...new Set(added.end)];
+  if (importedEnds.length > 0) {
+    const counts = /* @__PURE__ */ new Map();
+    for (const e of culture.elements.end) counts.set(e, ((_a = counts.get(e)) != null ? _a : 0) + 1);
+    const rest = [...counts.keys()].filter((e) => !importedEnds.some((s) => s.toLowerCase() === e.toLowerCase())).sort((x, y) => {
+      var _a2, _b;
+      return ((_a2 = counts.get(y)) != null ? _a2 : 0) - ((_b = counts.get(x)) != null ? _b : 0);
+    });
+    const keep = [...importedEnds, ...rest].slice(0, 6);
+    culture.elements.end = culture.elements.end.filter(
+      (e) => keep.some((k) => k.toLowerCase() === e.toLowerCase())
+    );
+    for (const s of importedEnds) {
+      if (capCount(culture.elements.end, s) < 2) culture.elements.end.push(s);
+      if (capCount(culture.elements.end, s) < 2) culture.elements.end.push(s);
+    }
+  }
+  if (accepted.length >= 2) {
+    const sylls = accepted.map((n) => syllabify(n.replace(/[^a-zA-Z]/g, "")).length).filter((n) => n > 0);
+    if (sylls.length) {
+      const lo = Math.min(...sylls);
+      const hi = Math.max(...sylls);
+      culture.syllableRange = [
+        Math.min(culture.syllableRange[0], Math.max(2, lo)),
+        Math.max(culture.syllableRange[1], Math.min(5, hi))
+      ];
+    }
+  }
+  culture.summary = oneBreath(culture);
+  refreshSamples(culture);
+  return { accepted, rejected, segmented, added };
 }
 var MOOD_ADJ = {
   harsh: "clipped and forceful",
@@ -2697,17 +1746,12 @@ function oneBreath(culture) {
 function makeCultureCard(culture, shuffle = 0) {
   const rng = rngFrom(`${culture.seed}::card::${shuffle}`);
   const samples = [
-    ...generateBatch(culture, "personal", 2, "sound", rng),
-    ...generateBatch(culture, "house", 2, "sound", rng),
-    ...generateBatch(culture, "place", 2, "sound", rng)
+    ...generateBatch(culture, "personal", 2, void 0, rng),
+    ...generateBatch(culture, "house", 1, void 0, rng),
+    ...generateBatch(culture, "place", 1, void 0, rng)
   ];
   const glossaryPreview = culture.roots.filter((r) => r.weight >= 2).slice(0, 6).concat(culture.roots.slice(0, 6)).slice(0, 6).map((r) => ({ form: r.form, meaning: r.meaning, weight: weightLabel(r.weight) }));
   return { summary: culture.summary || oneBreath(culture), samples, packs: culture.appliedPacks, glossaryPreview };
-}
-function reshuffleElements(culture, salt) {
-  const rng = rngFrom(`${culture.seed}::reshuffle::${salt}`);
-  culture.elements = culture.familiarity === "alien" ? buildProceduralElements(rng, culture.mood) : samplePackElements(rng, culture.mood);
-  culture.summary = oneBreath(culture);
 }
 var DRIFT_PRESETS = {
   dialect: 0.15,
@@ -2778,7 +1822,7 @@ function driftRootForm(rng, root, packs, intensity, spellingMode) {
   return driftWordWithPacks(rng, root.form, packs, intensity);
 }
 function deriveCulture(parent, name, driftLevel, driftPackIds, overrides = {}, spellingMode = "phonetic") {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   const intensity = DRIFT_PRESETS[driftLevel];
   const packs = driftPackIds.map((id) => DRIFT_PACKS[id]).filter((p) => !!p);
   const seed = `${name}::from::${parent.id}::${Date.now().toString(36)}`;
@@ -2801,119 +1845,18 @@ function deriveCulture(parent, name, driftLevel, driftPackIds, overrides = {}, s
     appliedPacks: [...parent.appliedPacks],
     registry: [],
     summary: "",
+    defaultGeneration: (_b = parent.defaultGeneration) != null ? _b : "mixed",
     parentIds: [parent.id],
-    generation: ((_b = parent.generation) != null ? _b : 0) + 1,
+    generation: ((_c = parent.generation) != null ? _c : 0) + 1,
     driftLevel,
     driftPackIds,
     driftMode: "family"
   };
-  if ((_c = overrides.packs) == null ? void 0 : _c.length) {
-    applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
-  }
-  culture.summary = oneBreath(culture);
-  return culture;
-}
-function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}, spellingMode = "phonetic") {
-  var _a, _b, _c, _d;
-  if (parents.length < 2) throw new Error("mergeCultures requires at least two parents");
-  const packs = driftPackIds.map((id) => DRIFT_PACKS[id]).filter((p) => !!p);
-  const seed = `${name}::merge::${parents.map((p) => p.id).join("+")}::${Date.now().toString(36)}`;
-  const rng = rngFrom(seed + "::merge");
-  const mergeSlot = (slot, targetSize) => {
-    const per = Math.max(1, Math.round(targetSize / parents.length));
-    const pooled = parents.flatMap((p) => sample(rng, p.elements[slot], per));
-    const seen = /* @__PURE__ */ new Set();
-    const out = pooled.filter((el) => {
-      const k = el.toLowerCase();
-      if (seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
-    if (out.length < targetSize) {
-      const rest = parents.flatMap((p) => p.elements[slot]).filter((el) => !seen.has(el.toLowerCase()));
-      out.push(...sample(rng, rest, targetSize - out.length));
-    }
-    return out.slice(0, targetSize);
-  };
-  const elements = {
-    start: mergeSlot("start", 10),
-    middle: mergeSlot("middle", 8),
-    end: mergeSlot("end", 5)
-  };
-  const byMeaning = /* @__PURE__ */ new Map();
-  for (const p of parents) {
-    for (const r of p.roots) {
-      if (!byMeaning.has(r.meaning)) byMeaning.set(r.meaning, []);
-      byMeaning.get(r.meaning).push(r);
-    }
-  }
-  const roots = [];
-  for (const [meaning, variants] of byMeaning) {
-    if (variants.length === 1) {
-      roots.push({ ...variants[0] });
-      continue;
-    }
-    const [a, b] = sample(rng, variants, 2);
-    const sylA = syllabify(a.form), sylB = syllabify(b.form);
-    const cutA = Math.max(1, Math.floor(sylA.length / 2));
-    const cutB = Math.floor(sylB.length / 2);
-    let blended = sylA.slice(0, cutA).join("") + sylB.slice(cutB).join("");
-    blended = blended.replace(/[aeiou]{3,}/g, (m) => m.slice(0, 2));
-    if (blended.length < 3) blended = a.form;
-    roots.push({
-      form: blended[0].toUpperCase() + blended.slice(1).toLowerCase(),
-      meaning,
-      origin: `${a.origin}+${b.origin}`,
-      weight: Math.min(3, Math.max(a.weight, b.weight)),
-      tags: [.../* @__PURE__ */ new Set([...(_a = a.tags) != null ? _a : [], ...(_b = b.tags) != null ? _b : []])]
-      // ?? guards roots saved before tags existed
-    });
-  }
-  const modeOf = (values) => {
-    const counts = /* @__PURE__ */ new Map();
-    for (const v of values) {
-      const k = String(v);
-      const e = counts.get(k);
-      if (e) e.n++;
-      else counts.set(k, { v, n: 1 });
-    }
-    const max = Math.max(...[...counts.values()].map((e) => e.n));
-    const tied = [...counts.values()].filter((e) => e.n === max).map((e) => e.v);
-    return pick(rng, tied);
-  };
-  const syllLo = Math.min(...parents.map((p) => p.syllableRange[0]));
-  const syllHi = Math.max(...parents.map((p) => p.syllableRange[1]));
-  const culture = {
-    id: seed,
-    name,
-    seed,
-    mood: modeOf(parents.map((p) => p.mood)),
-    register: modeOf(parents.map((p) => p.register)),
-    familiarity: modeOf(parents.map((p) => p.familiarity)),
-    environment: (_c = overrides.environment) != null ? _c : parents[0].environment,
-    elements,
-    middleChance: parents.reduce((t, p) => t + p.middleChance, 0) / parents.length,
-    syllableRange: [syllLo, Math.max(syllLo, syllHi)],
-    stress: modeOf(parents.map((p) => p.stress)),
-    roots,
-    appliedPacks: [...new Set(parents.flatMap((p) => p.appliedPacks))],
-    registry: [],
-    summary: "",
-    parentIds: parents.map((p) => p.id),
-    generation: Math.max(...parents.map((p) => {
-      var _a2;
-      return (_a2 = p.generation) != null ? _a2 : 0;
-    })) + 1,
-    driftLevel,
-    driftPackIds,
-    driftMode: "family-contact"
-  };
-  const intensity = DRIFT_PRESETS[driftLevel] * 0.5;
-  culture.elements = driftElementSet(rng, culture.elements, packs, intensity);
-  culture.roots = culture.roots.map((r) => ({ ...r, form: driftRootForm(rng, r, packs, intensity, spellingMode) }));
   if ((_d = overrides.packs) == null ? void 0 : _d.length) {
     applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
   }
+  seedGenderClasses(culture);
+  refreshSamples(culture);
   culture.summary = oneBreath(culture);
   return culture;
 }
@@ -3018,28 +1961,71 @@ function acceptLoanedRoots(borrower, loanedRoots) {
       existingForms.add(r.form.toLowerCase());
     }
   }
+  refreshSamples(borrower);
 }
-function cultureNote(culture, allCultures = []) {
-  var _a, _b, _c, _d, _e, _f, _g, _h;
-  const card = makeCultureCard(culture);
+var MANAGED_START = "<!-- lf:managed:start -->";
+var MANAGED_END = "<!-- lf:managed:end -->";
+function placeholderName(culture) {
+  const rng = rngFrom(`${culture.seed}::placeholder`);
+  const start = pick(rng, culture.elements.start);
+  const endRaw = pick(rng, culture.elements.end).replace(/^-/, "");
+  let form = (start + endRaw).toLowerCase().replace(/[aeiou]{3,}/g, (m) => m.slice(0, 2));
+  if (form.length < 3) form = start.toLowerCase() + "a" + endRaw.toLowerCase();
+  return form[0].toUpperCase() + form.slice(1);
+}
+function refreshSamples(culture) {
+  const salt = `${culture.roots.length}:${culture.elements.start.join(",")}:${culture.elements.end.join(",")}`;
+  const card = makeCultureCard(culture, salt.length);
+  culture.sampleNames = card.samples.map((s) => ({
+    name: s.name,
+    pronunciation: s.pronunciation,
+    category: s.category,
+    gloss: s.gloss,
+    className: s.className
+  }));
+}
+function renameCulture(culture, newName, translatedName) {
+  culture.name = newName.trim();
+  if (translatedName !== void 0) {
+    const t = translatedName.trim();
+    culture.translatedName = t || void 0;
+  }
+  culture.summary = oneBreath(culture);
+}
+function renderFrontmatter(culture, kind = "language") {
+  const lines = [
+    "---",
+    `lf-id: ${JSON.stringify(culture.id)}`,
+    `lf-kind: ${kind}`,
+    `languageforge-culture: ${culture.name}`,
+    ...culture.translatedName ? [`translated-name: ${JSON.stringify(culture.translatedName)}`] : [],
+    `seed: ${JSON.stringify(culture.seed)}`,
+    `mood: ${culture.mood}`,
+    `register: ${culture.register}`,
+    `packs: [${culture.appliedPacks.join(", ")}]`,
+    "---"
+  ];
+  return lines.join("\n");
+}
+function glossaryNoteTitle(culture) {
+  return `${culture.name} Glossary`;
+}
+function renderManagedInner(culture, allCultures) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
   const lines = [];
-  lines.push("---");
-  lines.push(`languageforge-culture: ${culture.name}`);
-  lines.push(`seed: "${culture.seed}"`);
-  lines.push(`mood: ${culture.mood}`);
-  lines.push(`register: ${culture.register}`);
-  lines.push(`packs: [${culture.appliedPacks.join(", ")}]`);
-  lines.push("---");
-  lines.push("");
   lines.push(`# ${culture.name}`);
   lines.push("");
-  lines.push(`> ${card.summary}`);
+  if ((_a = culture.translatedName) == null ? void 0 : _a.trim()) {
+    lines.push(`*${culture.translatedName.trim()}*`);
+    lines.push("");
+  }
+  lines.push(`> ${culture.summary || oneBreath(culture)}`);
   lines.push("");
-  if ((_a = culture.fromNames) == null ? void 0 : _a.length) {
+  if ((_b = culture.fromNames) == null ? void 0 : _b.length) {
     lines.push(`Seeded from your own names: ${culture.fromNames.join(", ")}.`);
     lines.push("");
   }
-  const parents = ((_b = culture.parentIds) != null ? _b : []).map((id) => allCultures.find((c) => c.id === id)).filter((c) => !!c);
+  const parents = ((_c = culture.parentIds) != null ? _c : []).map((id) => allCultures.find((c) => c.id === id)).filter((c) => !!c);
   const descendants = allCultures.filter((c) => {
     var _a2;
     return (_a2 = c.parentIds) == null ? void 0 : _a2.includes(culture.id);
@@ -3047,13 +2033,14 @@ function cultureNote(culture, allCultures = []) {
   if (parents.length > 0 || descendants.length > 0) {
     lines.push("## Family");
     lines.push("");
-    const packLabel = ((_c = culture.driftPackIds) == null ? void 0 : _c.length) ? ` via ${culture.driftPackIds.join(" + ")}` : "";
+    const packLabel = ((_d = culture.driftPackIds) == null ? void 0 : _d.length) ? ` via ${culture.driftPackIds.join(" + ")}` : "";
+    const wiki = (c) => `[[${c.name}]]`;
     if (parents.length === 1) {
-      lines.push(`Descended from: **${parents[0].name}** (generation ${(_d = culture.generation) != null ? _d : 1}, drift: ${(_e = culture.driftLevel) != null ? _e : "unknown"}${packLabel})`);
+      lines.push(`Descended from: ${wiki(parents[0])} (generation ${(_e = culture.generation) != null ? _e : 1}, drift: ${(_f = culture.driftLevel) != null ? _f : "unknown"}${packLabel})`);
     } else if (parents.length >= 2) {
-      lines.push(`Merged from: ${parents.map((p) => `**${p.name}**`).join(" + ")} (generation ${(_f = culture.generation) != null ? _f : 1}, contact drift: ${(_g = culture.driftLevel) != null ? _g : "unknown"}${packLabel})`);
+      lines.push(`Merged from: ${parents.map(wiki).join(" + ")} (generation ${(_g = culture.generation) != null ? _g : 1}, contact drift: ${(_h = culture.driftLevel) != null ? _h : "unknown"}${packLabel})`);
     }
-    if ((_h = culture.driftPackIds) == null ? void 0 : _h.length) {
+    if ((_i = culture.driftPackIds) == null ? void 0 : _i.length) {
       const flavor = culture.driftPackIds.map((id) => {
         var _a2;
         return (_a2 = DRIFT_PACKS[id]) == null ? void 0 : _a2.plainDescription;
@@ -3061,10 +2048,72 @@ function cultureNote(culture, allCultures = []) {
       if (flavor) lines.push(`*${flavor}*`);
     }
     if (descendants.length > 0) {
-      lines.push(`Descendants: ${descendants.map((d) => d.name).join(", ")}`);
+      lines.push(`Descendants: ${descendants.map(wiki).join(", ")}`);
     }
     lines.push("");
   }
+  lines.push("## Sample names");
+  lines.push("");
+  const samples = ((_j = culture.sampleNames) == null ? void 0 : _j.length) ? culture.sampleNames : makeCultureCard(culture).samples.map((s) => ({
+    name: s.name,
+    pronunciation: s.pronunciation,
+    category: s.category,
+    gloss: s.gloss,
+    className: s.className
+  }));
+  for (const s of samples) {
+    let line = `- **${s.name}** (${s.category}) \u2014 say it: *${s.pronunciation}*`;
+    if (s.gloss) {
+      line += ` \u2014 "${s.gloss}"`;
+      if (s.className) line += ` (${s.className})`;
+    } else if (s.className) {
+      line += ` (${s.className})`;
+    }
+    lines.push(line);
+  }
+  lines.push("");
+  lines.push("## Accepted names");
+  lines.push("");
+  for (const n of culture.registry) lines.push(`- ${n[0].toUpperCase() + n.slice(1)}`);
+  lines.push("");
+  lines.push("## Import");
+  lines.push("");
+  lines.push("Paste romanised names (Latin letters) via **Import names\u2026** to bend this language's sounds. Raw non-Latin script is skipped.");
+  lines.push("");
+  if ((_k = culture.importedNames) == null ? void 0 : _k.length) {
+    lines.push("Imported into this language:");
+    lines.push("");
+    for (const n of culture.importedNames) lines.push(`- ${n}`);
+    lines.push("");
+  } else if ((_l = culture.fromNames) == null ? void 0 : _l.length) {
+    lines.push(`Seeded at creation from: ${culture.fromNames.join(", ")}.`);
+    lines.push("");
+  } else {
+    lines.push("_No names imported yet._");
+    lines.push("");
+  }
+  lines.push("## Name classes");
+  lines.push("");
+  ensureCultureClasses(culture);
+  if (culture.gendered === false) {
+    lines.push("_Gender marking off \u2014 feminine/masculine hidden; custom classes still apply._");
+    lines.push("");
+  }
+  lines.push("| Class | Endings | Roots | Meaning | Sample |");
+  lines.push("|---|---|---|---|---|");
+  for (const cls of visibleClasses(culture)) {
+    const ends = resolveClassEndings(culture, cls).join(", ") || "\u2014";
+    let roots = "\u2014";
+    if (cls.rootPolicy) {
+      const bits = [...cls.rootPolicy.include];
+      if ((_m = cls.rootPolicy.exclude) == null ? void 0 : _m.length) bits.push(`\u2212${cls.rootPolicy.exclude.join(",\u2212")}`);
+      roots = `${cls.rootPolicy.mode}: ${bits.join(", ")}`;
+    }
+    const meaning = (_n = cls.generation) != null ? _n : "inherit";
+    const classSamples = classSpecimens(culture, cls.id, 2).join(", ") || "\u2014";
+    lines.push(`| ${cls.label} | ${ends} | ${roots} | ${meaning} | ${classSamples} |`);
+  }
+  lines.push("");
   lines.push("## Sound elements");
   lines.push("");
   lines.push(`Starts: ${culture.elements.start.join(", ")}`);
@@ -3073,11 +2122,24 @@ function cultureNote(culture, allCultures = []) {
   lines.push("");
   lines.push(`Endings: ${culture.elements.end.join(", ")}`);
   lines.push("");
-  lines.push("## Sample names");
+  lines.push(`Glossary: [[${glossaryNoteTitle(culture)}]]`);
   lines.push("");
-  for (const s of card.samples) lines.push(`- **${s.name}** (${s.category}) \u2014 say it: *${s.pronunciation}*`);
+  return lines.join("\n");
+}
+function hasHeading(text, heading) {
+  return new RegExp(`(^|\\n)## ${heading}(\\s|$)`).test(text);
+}
+function extractDescriptionFromPage(body) {
+  if (!body) return "";
+  const m = body.match(/## Description\s*\n([\s\S]*?)(?=\n## |\n<!-- lf:managed:start -->|$)/);
+  if (!m) return "";
+  return m[1].replace(/\s+$/, "").replace(/^\s+/, "");
+}
+function renderGlossaryManagedInner(culture) {
+  const lines = [];
+  lines.push(`# ${glossaryNoteTitle(culture)}`);
   lines.push("");
-  lines.push("## Glossary");
+  lines.push(`Part of [[${culture.name}]].`);
   lines.push("");
   lines.push("| Form | Meaning | Frequency |");
   lines.push("|---|---|---|");
@@ -3085,20 +2147,516 @@ function cultureNote(culture, allCultures = []) {
     lines.push(`| ${r.form} | ${r.meaning} | ${weightLabel(r.weight)} |`);
   }
   lines.push("");
-  lines.push("## Accepted names");
-  lines.push("");
-  for (const n of culture.registry) lines.push(`- ${n[0].toUpperCase() + n.slice(1)}`);
-  lines.push("");
   return lines.join("\n");
+}
+function renderGlossaryPage(culture, existingBody) {
+  const fm = renderFrontmatter(culture, "glossary");
+  const managed = `${MANAGED_START}
+${renderGlossaryManagedInner(culture)}${MANAGED_END}`;
+  if (!existingBody) return `${fm}
+
+${managed}
+`;
+  let body = existingBody;
+  const fmMatch = body.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  if (fmMatch) body = body.slice(fmMatch[0].length);
+  const startIdx = body.indexOf(MANAGED_START);
+  const endIdx = body.indexOf(MANAGED_END);
+  if (startIdx >= 0 && endIdx > startIdx) {
+    const before = body.slice(0, startIdx);
+    const after = body.slice(endIdx + MANAGED_END.length);
+    return `${fm}
+
+${(before + managed + after).replace(/^\s+/, "")}`;
+  }
+  const user = body.trim();
+  return user ? `${fm}
+
+${managed}
+
+${user}
+` : `${fm}
+
+${managed}
+`;
+}
+function renderLanguagePage(culture, allCultures = [], existingBody) {
+  const fm = renderFrontmatter(culture, "language");
+  const managed = `${MANAGED_START}
+${renderManagedInner(culture, allCultures)}${MANAGED_END}`;
+  const descStub = "## Description\n\n";
+  const notesStub = "## Notes\n";
+  if (!existingBody) {
+    return `${fm}
+
+${descStub}${managed}
+
+${notesStub}`;
+  }
+  let body = existingBody;
+  const fmMatch = body.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  if (fmMatch) body = body.slice(fmMatch[0].length);
+  const startIdx = body.indexOf(MANAGED_START);
+  const endIdx = body.indexOf(MANAGED_END);
+  if (startIdx >= 0 && endIdx > startIdx) {
+    let before = body.slice(0, startIdx);
+    const after = body.slice(endIdx + MANAGED_END.length);
+    if (!hasHeading(before + after, "Description") && !hasHeading(before, "Description")) {
+      before = descStub + before;
+    }
+    let spliced = before + managed + after;
+    if (!hasHeading(spliced, "Notes")) spliced = spliced.replace(/\s*$/, "") + `
+
+${notesStub}`;
+    return `${fm}
+
+${spliced.replace(/^\s+/, "")}`;
+  }
+  const user = body.trim();
+  let migrated = `${fm}
+
+${descStub}${managed}
+
+`;
+  if (user) migrated += `${user}
+
+`;
+  if (!hasHeading(migrated, "Notes")) migrated += notesStub;
+  return migrated;
+}
+
+// src/familyTreeView.ts
+var NODE_W = 112;
+var NODE_H = 36;
+var H_GAP = 28;
+var V_GAP = 72;
+var PAD = 12;
+var UNION_R = 10;
+var FOREST_GAP = 48;
+function generationOf(c, byId, memo, stack) {
+  var _a;
+  if (memo.has(c.id)) return memo.get(c.id);
+  if (stack.has(c.id)) return 0;
+  if (c.generation !== void 0) {
+    memo.set(c.id, c.generation);
+    return c.generation;
+  }
+  const parents = ((_a = c.parentIds) != null ? _a : []).map((id) => byId.get(id)).filter((p) => !!p);
+  if (parents.length === 0) {
+    memo.set(c.id, 0);
+    return 0;
+  }
+  stack.add(c.id);
+  const g = Math.max(...parents.map((p) => generationOf(p, byId, memo, stack))) + 1;
+  stack.delete(c.id);
+  memo.set(c.id, g);
+  return g;
+}
+function unionKey(parentIds) {
+  return [...parentIds].sort().join("+");
+}
+function connectedComponents(cultures) {
+  var _a, _b;
+  const byId = new Map(cultures.map((c) => [c.id, c]));
+  const adj = /* @__PURE__ */ new Map();
+  for (const c of cultures) adj.set(c.id, /* @__PURE__ */ new Set());
+  for (const c of cultures) {
+    for (const pid of (_a = c.parentIds) != null ? _a : []) {
+      if (!byId.has(pid)) continue;
+      adj.get(c.id).add(pid);
+      adj.get(pid).add(c.id);
+    }
+  }
+  const seen = /* @__PURE__ */ new Set();
+  const comps = [];
+  for (const c of cultures) {
+    if (seen.has(c.id)) continue;
+    const ids = [];
+    const stack = [c.id];
+    seen.add(c.id);
+    while (stack.length) {
+      const id = stack.pop();
+      ids.push(id);
+      for (const n of (_b = adj.get(id)) != null ? _b : []) {
+        if (seen.has(n)) continue;
+        seen.add(n);
+        stack.push(n);
+      }
+    }
+    comps.push(ids.map((id) => byId.get(id)));
+  }
+  return comps;
+}
+function forestComplexity(members) {
+  var _a, _b;
+  if (members.length <= 1) return 0;
+  const ids = new Set(members.map((c) => c.id));
+  let edges = 0;
+  let merges = 0;
+  let maxGen = 0;
+  for (const c of members) {
+    const pids = ((_a = c.parentIds) != null ? _a : []).filter((id) => ids.has(id));
+    edges += pids.length;
+    if (pids.length >= 2) merges++;
+    maxGen = Math.max(maxGen, (_b = c.generation) != null ? _b : 0);
+  }
+  return members.length * 100 + maxGen * 20 + merges * 15 + edges;
+}
+function offsetLayout(layout, dx) {
+  return {
+    width: layout.width + dx,
+    height: layout.height,
+    nodes: layout.nodes.map((n) => ({ ...n, cx: n.cx + dx })),
+    unions: layout.unions.map((u) => ({ ...u, cx: u.cx + dx })),
+    edges: layout.edges.map((e) => ({
+      x1: e.x1 + dx,
+      y1: e.y1,
+      x2: e.x2 + dx,
+      y2: e.y2,
+      childIds: e.childIds
+    }))
+  };
+}
+function layoutConnectedForest(cultures) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  const byId = new Map(cultures.map((c) => [c.id, c]));
+  const genMemo = /* @__PURE__ */ new Map();
+  const gen = /* @__PURE__ */ new Map();
+  for (const c of cultures) {
+    gen.set(c.id, generationOf(c, byId, genMemo, /* @__PURE__ */ new Set()));
+  }
+  const unionsByKey = /* @__PURE__ */ new Map();
+  for (const c of cultures) {
+    const pids = ((_a = c.parentIds) != null ? _a : []).filter((id) => byId.has(id));
+    if (pids.length < 2) continue;
+    const key = unionKey(pids);
+    let u = unionsByKey.get(key);
+    if (!u) {
+      u = { parentIds: [...pids].sort(), childIds: [] };
+      unionsByKey.set(key, u);
+    }
+    u.childIds.push(c.id);
+  }
+  const soloChildren = /* @__PURE__ */ new Map();
+  for (const c of cultures) {
+    const pids = ((_b = c.parentIds) != null ? _b : []).filter((id) => byId.has(id));
+    if (pids.length !== 1) continue;
+    const list = (_c = soloChildren.get(pids[0])) != null ? _c : [];
+    list.push(c.id);
+    soloChildren.set(pids[0], list);
+  }
+  const byGen = /* @__PURE__ */ new Map();
+  for (const c of cultures) {
+    const g = gen.get(c.id);
+    const list = (_d = byGen.get(g)) != null ? _d : [];
+    list.push(c.id);
+    byGen.set(g, list);
+  }
+  const maxGen = cultures.length === 0 ? 0 : Math.max(0, ...[...byGen.keys()]);
+  const xIndex = /* @__PURE__ */ new Map();
+  for (let g = 0; g <= maxGen; g++) {
+    const ids = (_e = byGen.get(g)) != null ? _e : [];
+    ids.sort((a, b) => {
+      const ca = byId.get(a);
+      const cb = byId.get(b);
+      if (g > 0) {
+        const avg = (id) => {
+          var _a2, _b2;
+          const pids = (_b2 = (_a2 = byId.get(id)) == null ? void 0 : _a2.parentIds) != null ? _b2 : [];
+          const slots = pids.map((p) => xIndex.get(p)).filter((n) => n !== void 0);
+          if (slots.length === 0) return 0;
+          return slots.reduce((s, n) => s + n, 0) / slots.length;
+        };
+        const d = avg(a) - avg(b);
+        if (Math.abs(d) > 1e-6) return d;
+      }
+      return ca.name.localeCompare(cb.name);
+    });
+    ids.forEach((id, i) => xIndex.set(id, i));
+    byGen.set(g, ids);
+  }
+  const nodePos = /* @__PURE__ */ new Map();
+  const pitch = NODE_W + H_GAP;
+  for (let g = 0; g <= maxGen; g++) {
+    const ids = (_f = byGen.get(g)) != null ? _f : [];
+    const startX = PAD + NODE_W / 2;
+    ids.forEach((id, i) => {
+      nodePos.set(id, {
+        cx: startX + i * pitch,
+        cy: PAD + NODE_H / 2 + g * (NODE_H + V_GAP)
+      });
+    });
+  }
+  for (let iter = 0; iter < 4; iter++) {
+    for (let g = 1; g <= maxGen; g++) {
+      const ids = (_g = byGen.get(g)) != null ? _g : [];
+      const targets = ids.map((id) => {
+        var _a2, _b2;
+        const pids = (_b2 = (_a2 = byId.get(id)) == null ? void 0 : _a2.parentIds) != null ? _b2 : [];
+        const pxs = pids.map((p) => {
+          var _a3;
+          return (_a3 = nodePos.get(p)) == null ? void 0 : _a3.cx;
+        }).filter((n) => n !== void 0);
+        const cx = pxs.length ? pxs.reduce((s, n) => s + n, 0) / pxs.length : nodePos.get(id).cx;
+        return { id, cx };
+      });
+      targets.sort((a, b) => a.cx - b.cx || a.id.localeCompare(b.id));
+      let cursor = PAD + NODE_W / 2;
+      for (const t of targets) {
+        const cx = Math.max(cursor, t.cx);
+        const pos = nodePos.get(t.id);
+        pos.cx = cx;
+        cursor = cx + pitch;
+      }
+    }
+    for (let g = 0; g < maxGen; g++) {
+      for (const id of (_h = byGen.get(g)) != null ? _h : []) {
+        const kids = [...(_i = soloChildren.get(id)) != null ? _i : []];
+        for (const u of unionsByKey.values()) {
+          if (u.parentIds.includes(id)) kids.push(...u.childIds);
+        }
+        const kxs = kids.map((k) => {
+          var _a2;
+          return (_a2 = nodePos.get(k)) == null ? void 0 : _a2.cx;
+        }).filter((n) => n !== void 0);
+        if (kxs.length === 0) continue;
+        const mean = kxs.reduce((s, n) => s + n, 0) / kxs.length;
+        const pos = nodePos.get(id);
+        pos.cx = pos.cx * 0.6 + mean * 0.4;
+      }
+      const ids = [...(_j = byGen.get(g)) != null ? _j : []];
+      ids.sort((a, b) => nodePos.get(a).cx - nodePos.get(b).cx || a.localeCompare(b));
+      let cursor = PAD + NODE_W / 2;
+      for (const id of ids) {
+        const pos = nodePos.get(id);
+        pos.cx = Math.max(cursor, pos.cx);
+        cursor = pos.cx + pitch;
+      }
+    }
+  }
+  const placedUnions = [];
+  for (const [key, u] of unionsByKey) {
+    const pxs = u.parentIds.map((id) => {
+      var _a2;
+      return (_a2 = nodePos.get(id)) == null ? void 0 : _a2.cx;
+    }).filter((n) => n !== void 0);
+    const pys = u.parentIds.map((id) => {
+      var _a2;
+      return (_a2 = nodePos.get(id)) == null ? void 0 : _a2.cy;
+    }).filter((n) => n !== void 0);
+    const cys = u.childIds.map((id) => {
+      var _a2;
+      return (_a2 = nodePos.get(id)) == null ? void 0 : _a2.cy;
+    }).filter((n) => n !== void 0);
+    if (pxs.length < 2 || cys.length === 0) continue;
+    const cx = (Math.min(...pxs) + Math.max(...pxs)) / 2;
+    const parentBottom = Math.max(...pys) + NODE_H / 2;
+    const childTop = Math.min(...cys) - NODE_H / 2;
+    const cy = (parentBottom + childTop) / 2;
+    placedUnions.push({ key, parentIds: u.parentIds, childIds: u.childIds, cx, cy });
+  }
+  const edges = [];
+  for (const [pid, kids] of soloChildren) {
+    const p = nodePos.get(pid);
+    if (!p) continue;
+    for (const kid of kids) {
+      const c = nodePos.get(kid);
+      if (!c) continue;
+      const midY = (p.cy + NODE_H / 2 + c.cy - NODE_H / 2) / 2;
+      edges.push({ x1: p.cx, y1: p.cy + NODE_H / 2, x2: p.cx, y2: midY, childIds: [kid] });
+      edges.push({ x1: p.cx, y1: midY, x2: c.cx, y2: midY, childIds: [kid] });
+      edges.push({ x1: c.cx, y1: midY, x2: c.cx, y2: c.cy - NODE_H / 2, childIds: [kid] });
+    }
+  }
+  for (const u of placedUnions) {
+    const parents = u.parentIds.map((id) => nodePos.get(id)).filter((p) => !!p);
+    if (parents.length < 2) continue;
+    const minPx = Math.min(...parents.map((p) => p.cx));
+    const maxPx = Math.max(...parents.map((p) => p.cx));
+    const barY = u.cy;
+    edges.push({ x1: minPx, y1: barY, x2: maxPx, y2: barY, childIds: [...u.childIds] });
+    for (const p of parents) {
+      edges.push({ x1: p.cx, y1: p.cy + NODE_H / 2, x2: p.cx, y2: barY, childIds: [...u.childIds] });
+    }
+    for (const cid of u.childIds) {
+      const c = nodePos.get(cid);
+      if (!c) continue;
+      const midY = (barY + c.cy - NODE_H / 2) / 2;
+      edges.push({ x1: u.cx, y1: barY, x2: u.cx, y2: midY, childIds: [cid] });
+      edges.push({ x1: u.cx, y1: midY, x2: c.cx, y2: midY, childIds: [cid] });
+      edges.push({ x1: c.cx, y1: midY, x2: c.cx, y2: c.cy - NODE_H / 2, childIds: [cid] });
+    }
+  }
+  const nodes = cultures.map((c) => {
+    const p = nodePos.get(c.id);
+    return { id: c.id, name: c.name, cx: p.cx, cy: p.cy };
+  });
+  let minLeft = Infinity;
+  for (const n of nodes) minLeft = Math.min(minLeft, n.cx - NODE_W / 2);
+  for (const u of placedUnions) minLeft = Math.min(minLeft, u.cx - UNION_R);
+  for (const e of edges) minLeft = Math.min(minLeft, e.x1, e.x2);
+  const pull = Number.isFinite(minLeft) ? minLeft - PAD : 0;
+  if (pull > 0) {
+    for (const n of nodes) n.cx -= pull;
+    for (const u of placedUnions) u.cx -= pull;
+    for (const e of edges) {
+      e.x1 -= pull;
+      e.x2 -= pull;
+    }
+  }
+  let maxX = PAD + NODE_W;
+  let maxY = PAD + NODE_H;
+  for (const n of nodes) {
+    maxX = Math.max(maxX, n.cx + NODE_W / 2);
+    maxY = Math.max(maxY, n.cy + NODE_H / 2);
+  }
+  for (const u of placedUnions) {
+    maxX = Math.max(maxX, u.cx + UNION_R);
+    maxY = Math.max(maxY, u.cy + UNION_R);
+  }
+  return {
+    width: maxX + PAD,
+    height: maxY + PAD,
+    nodes,
+    unions: placedUnions,
+    edges
+  };
+}
+function layoutFamilyTree(cultures) {
+  if (cultures.length === 0) {
+    return { width: PAD * 2, height: PAD * 2, nodes: [], unions: [], edges: [] };
+  }
+  const comps = connectedComponents(cultures);
+  const trees = comps.filter((c) => c.length > 1);
+  const singles = comps.filter((c) => c.length === 1);
+  trees.sort((a, b) => {
+    var _a, _b, _c, _d;
+    const d = forestComplexity(b) - forestComplexity(a);
+    if (d !== 0) return d;
+    const na = (_b = (_a = a.slice().sort((x, y) => x.name.localeCompare(y.name))[0]) == null ? void 0 : _a.name) != null ? _b : "";
+    const nb = (_d = (_c = b.slice().sort((x, y) => x.name.localeCompare(y.name))[0]) == null ? void 0 : _c.name) != null ? _d : "";
+    return na.localeCompare(nb);
+  });
+  singles.sort((a, b) => a[0].name.localeCompare(b[0].name));
+  const ordered = [...trees, ...singles];
+  let cursorX = 0;
+  let height = PAD * 2;
+  const merged = { width: 0, height: 0, nodes: [], unions: [], edges: [] };
+  for (let i = 0; i < ordered.length; i++) {
+    const local = layoutConnectedForest(ordered[i]);
+    const localLeft = Math.min(
+      ...local.nodes.map((n) => n.cx - NODE_W / 2),
+      ...local.unions.length ? local.unions.map((u) => u.cx - UNION_R) : [Infinity],
+      PAD
+    );
+    const shift = i === 0 ? 0 : cursorX + FOREST_GAP - localLeft;
+    const placed = offsetLayout(local, shift);
+    merged.nodes.push(...placed.nodes);
+    merged.unions.push(...placed.unions);
+    merged.edges.push(...placed.edges);
+    height = Math.max(height, placed.height);
+    let right = 0;
+    for (const n of placed.nodes) right = Math.max(right, n.cx + NODE_W / 2);
+    for (const u of placed.unions) right = Math.max(right, u.cx + UNION_R);
+    cursorX = Math.max(cursorX, right);
+  }
+  return {
+    width: cursorX + PAD,
+    height,
+    nodes: merged.nodes,
+    unions: merged.unions,
+    edges: merged.edges
+  };
+}
+function renderFamilyTreeView(parent, cultures, onSelect) {
+  var _a, _b, _c;
+  if (cultures.length === 0) {
+    parent.createEl("p", {
+      text: "No cultures yet \u2014 create one on the New or Seeded tab first.",
+      cls: "lf-hint"
+    });
+    return;
+  }
+  const layout = layoutFamilyTree(cultures);
+  const viewport = parent.createDiv({ cls: "lf-tree-viewport" });
+  const canvas = viewport.createDiv({ cls: "lf-tree-canvas" });
+  canvas.style.width = `${layout.width}px`;
+  canvas.style.height = `${layout.height}px`;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "lf-tree-edges");
+  svg.setAttribute("width", String(layout.width));
+  svg.setAttribute("height", String(layout.height));
+  svg.setAttribute("viewBox", `0 0 ${layout.width} ${layout.height}`);
+  const edgesByChild = /* @__PURE__ */ new Map();
+  for (const e of layout.edges) {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", String(e.x1));
+    line.setAttribute("y1", String(e.y1));
+    line.setAttribute("x2", String(e.x2));
+    line.setAttribute("y2", String(e.y2));
+    line.setAttribute("class", "lf-tree-edge");
+    svg.appendChild(line);
+    for (const cid of (_a = e.childIds) != null ? _a : []) {
+      const list = (_b = edgesByChild.get(cid)) != null ? _b : [];
+      list.push(line);
+      edgesByChild.set(cid, list);
+    }
+  }
+  canvas.appendChild(svg);
+  for (const u of layout.unions) {
+    const mark = canvas.createDiv({ cls: "lf-tree-marriage", text: "\u26AD" });
+    mark.style.left = `${u.cx - UNION_R}px`;
+    mark.style.top = `${u.cy - UNION_R}px`;
+    mark.setAttr("title", "Merged languages");
+  }
+  for (const n of layout.nodes) {
+    const node = canvas.createDiv({ cls: "lf-tree-chip" });
+    node.style.left = `${n.cx - NODE_W / 2}px`;
+    node.style.top = `${n.cy - NODE_H / 2}px`;
+    node.style.width = `${NODE_W}px`;
+    node.style.height = `${NODE_H}px`;
+    node.setAttr("title", n.name);
+    const label = node.createSpan({ text: n.name, cls: "lf-tree-chip-label" });
+    fitChipLabel(label, node);
+    const parentLines = (_c = edgesByChild.get(n.id)) != null ? _c : [];
+    node.addEventListener("mouseenter", () => {
+      for (const line of parentLines) {
+        line.classList.add("is-highlighted");
+        svg.appendChild(line);
+      }
+    });
+    node.addEventListener("mouseleave", () => {
+      for (const line of parentLines) line.classList.remove("is-highlighted");
+    });
+    node.onclick = () => onSelect(n.id);
+  }
+}
+function fitChipLabel(label, chip, maxPx = 13, minPx = 7) {
+  let size = maxPx;
+  label.style.fontSize = `${size}px`;
+  while (size > minPx && label.scrollWidth > chip.clientWidth - 16) {
+    size -= 0.5;
+    label.style.fontSize = `${size}px`;
+  }
 }
 
 // src/main.ts
 var DEFAULT_SETTINGS = {
-  folder: "languageForge",
+  folder: "LanguageForge",
   batchSize: 12,
   showPronunciation: true,
   insertFormat: "list"
 };
+function sanitiseNoteName(name) {
+  return name.replace(/[\\/:*?"<>|#^[\]]/g, "").trim() || "Untitled";
+}
+function elevateStackedModal(modal) {
+  const open = document.querySelectorAll(
+    ".modal-container.lf-stacked-modal-nested, .modal-container.lf-stacked-modal-container"
+  );
+  const aboveNested = [...open].some((el) => el.classList.contains("lf-stacked-modal-nested"));
+  modal.containerEl.addClass(aboveNested ? "lf-stacked-modal-over" : "lf-stacked-modal-nested");
+}
 var LanguageForgePlugin = class extends import_obsidian.Plugin {
   constructor() {
     super(...arguments);
@@ -3112,27 +2670,25 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
       this.data.cultures = (_b = stored.cultures) != null ? _b : [];
       this.data.contactEdges = (_c = stored.contactEdges) != null ? _c : [];
     }
+    let migrated = false;
+    for (const c of this.data.cultures) {
+      if (ensureCultureClasses(c)) migrated = true;
+    }
+    if (migrated) await this.persist();
     this.addCommand({
       id: "create-culture",
       name: "Create a culture",
-      callback: () => new SeedWizardModal(this.app, this).open()
+      callback: () => new CreateLanguageModal(this.app, this).open()
     });
     this.addCommand({
       id: "create-culture-from-names",
       name: "Create a culture from names you already have",
-      callback: () => new PasteNamesModal(this.app, this).open()
+      callback: () => new CreateLanguageModal(this.app, this, "seeded").open()
     });
     this.addCommand({
       id: "generate-names",
       name: "Generate names",
-      callback: () => {
-        if (this.data.cultures.length === 0) {
-          new import_obsidian.Notice("No cultures yet \u2014 create one first.");
-          new SeedWizardModal(this.app, this).open();
-          return;
-        }
-        new GenerateModal(this.app, this).open();
-      }
+      callback: () => this.openGenerate()
     });
     this.addCommand({
       id: "derive-culture",
@@ -3140,10 +2696,10 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
       callback: () => {
         if (this.data.cultures.length === 0) {
           new import_obsidian.Notice("No cultures yet \u2014 create one first.");
-          new SeedWizardModal(this.app, this).open();
+          new CreateLanguageModal(this.app, this).open();
           return;
         }
-        new DeriveCultureModal(this.app, this).open();
+        new CreateLanguageModal(this.app, this, "child").open();
       }
     });
     this.addCommand({
@@ -3165,7 +2721,7 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
           new import_obsidian.Notice("Need at least two languages to connect.");
           return;
         }
-        new ContactEdgeModal(this.app, this).open();
+        new CreateLanguageModal(this.app, this, "child", void 0, "contact").open();
       }
     });
     this.addCommand({
@@ -3188,36 +2744,174 @@ var LanguageForgePlugin = class extends import_obsidian.Plugin {
           return;
         }
         new PickCultureModal(this.app, this, async (c) => {
-          const path = await this.writeCultureNote(c);
-          new import_obsidian.Notice(`Saved ${path}`);
-        }).open();
+          await this.openCulturePage(c);
+          new import_obsidian.Notice(`Saved language page for ${c.name}`);
+        }, "Open page").open();
       }
     });
-    this.addRibbonIcon("languages", "languageForge: Generate names", () => {
-      if (this.data.cultures.length === 0) {
-        new import_obsidian.Notice("No cultures yet \u2014 create one first.");
-        new SeedWizardModal(this.app, this).open();
-        return;
+    this.addCommand({
+      id: "import-names",
+      name: "Import names into a language",
+      callback: () => {
+        if (this.data.cultures.length === 0) {
+          new import_obsidian.Notice("No cultures yet \u2014 create one first.");
+          new CreateLanguageModal(this.app, this).open();
+          return;
+        }
+        new PickCultureModal(this.app, this, (c) => {
+          new ImportNamesModal(this.app, this, c).open();
+        }, "Import into\u2026").open();
       }
-      new GenerateModal(this.app, this).open();
+    });
+    this.addCommand({
+      id: "edit-languages",
+      name: "Edit languages",
+      callback: () => new CreateLanguageModal(this.app, this, "edit").open()
+    });
+    this.addCommand({
+      id: "languages-hub",
+      name: "Create a language",
+      callback: () => new CreateLanguageModal(this.app, this).open()
+    });
+    this.addRibbonIcon("tree-deciduous", "languageForge: Languages", () => {
+      new FamilyTreeModal(this.app, this).open();
+    });
+    this.addRibbonIcon("sparkles", "languageForge: Generate names", () => {
+      this.openGenerate();
     });
     this.addSettingTab(new LanguageForgeSettingTab(this.app, this));
+  }
+  openGenerate(opts) {
+    if (this.data.cultures.length === 0) {
+      new import_obsidian.Notice("No cultures yet \u2014 create one first.");
+      new FamilyTreeModal(this.app, this).open();
+      return;
+    }
+    new GenerateModal(this.app, this, opts).open();
   }
   async persist() {
     await this.saveData(this.data);
   }
-  async writeCultureNote(culture) {
-    const folder = (0, import_obsidian.normalizePath)(`${this.data.settings.folder}/Cultures`);
+  notePathFor(culture) {
+    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
+    return (0, import_obsidian.normalizePath)(`${folder}/${sanitiseNoteName(culture.name)}.md`);
+  }
+  glossaryPathFor(culture) {
+    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
+    return (0, import_obsidian.normalizePath)(`${folder}/${sanitiseNoteName(culture.name)} Glossary.md`);
+  }
+  findCultureNote(culture) {
+    var _a, _b;
+    const expected = this.notePathFor(culture);
+    const byPath = this.app.vault.getAbstractFileByPath(expected);
+    if (byPath instanceof import_obsidian.TFile) return byPath;
+    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
+    const prefix = folder + "/";
+    for (const f of this.app.vault.getMarkdownFiles()) {
+      if (!f.path.startsWith(prefix)) continue;
+      const cache = this.app.metadataCache.getFileCache(f);
+      const id = (_a = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a["lf-id"];
+      const kind = (_b = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b["lf-kind"];
+      if ((id === culture.id || String(id) === culture.id) && kind !== "glossary") return f;
+    }
+    return null;
+  }
+  findGlossaryNote(culture) {
+    var _a, _b;
+    const expected = this.glossaryPathFor(culture);
+    const byPath = this.app.vault.getAbstractFileByPath(expected);
+    if (byPath instanceof import_obsidian.TFile) return byPath;
+    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
+    const prefix = folder + "/";
+    for (const f of this.app.vault.getMarkdownFiles()) {
+      if (!f.path.startsWith(prefix)) continue;
+      const cache = this.app.metadataCache.getFileCache(f);
+      const id = (_a = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a["lf-id"];
+      const kind = (_b = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b["lf-kind"];
+      if ((id === culture.id || String(id) === culture.id) && kind === "glossary") return f;
+    }
+    return null;
+  }
+  hasCulturePage(culture) {
+    return !!this.findCultureNote(culture);
+  }
+  async readCultureDescription(culture) {
+    const file = this.findCultureNote(culture);
+    if (!file) return "";
+    return extractDescriptionFromPage(await this.app.vault.read(file));
+  }
+  async writeGlossaryNote(culture) {
+    var _a;
+    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
     try {
       await this.app.vault.createFolder(folder);
     } catch {
     }
-    const path = (0, import_obsidian.normalizePath)(`${folder}/${culture.name}.md`);
-    const content = cultureNote(culture, this.data.cultures);
-    const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian.TFile) await this.app.vault.modify(existing, content);
+    const existing = this.findGlossaryNote(culture);
+    const path = (_a = existing == null ? void 0 : existing.path) != null ? _a : this.glossaryPathFor(culture);
+    const prior = existing ? await this.app.vault.read(existing) : void 0;
+    const content = renderGlossaryPage(culture, prior);
+    if (existing) await this.app.vault.modify(existing, content);
     else await this.app.vault.create(path, content);
     return path;
+  }
+  async writeCultureNote(culture) {
+    var _a;
+    const folder = (0, import_obsidian.normalizePath)(this.data.settings.folder.replace(/\/+$/, ""));
+    try {
+      await this.app.vault.createFolder(folder);
+    } catch {
+    }
+    const existing = this.findCultureNote(culture);
+    const path = (_a = existing == null ? void 0 : existing.path) != null ? _a : this.notePathFor(culture);
+    const prior = existing ? await this.app.vault.read(existing) : void 0;
+    const content = renderLanguagePage(culture, this.data.cultures, prior);
+    if (existing) await this.app.vault.modify(existing, content);
+    else await this.app.vault.create(path, content);
+    await this.writeGlossaryNote(culture);
+    return path;
+  }
+  async openCulturePage(culture) {
+    const path = await this.writeCultureNote(culture);
+    const file = this.app.vault.getAbstractFileByPath(path);
+    if (file instanceof import_obsidian.TFile) await this.app.workspace.getLeaf(false).openFile(file);
+  }
+  async renameCultureAndNote(culture, newName, translatedName) {
+    const trimmed = newName.trim();
+    if (!trimmed) {
+      new import_obsidian.Notice("Name can't be empty.");
+      return;
+    }
+    if (this.data.cultures.some((c) => c.id !== culture.id && c.name.toLowerCase() === trimmed.toLowerCase())) {
+      new import_obsidian.Notice("A culture with that name already exists.");
+      return;
+    }
+    const file = this.findCultureNote(culture);
+    const glossFile = this.findGlossaryNote(culture);
+    renameCulture(culture, trimmed, translatedName);
+    this.upsertCulture(culture);
+    await this.persist();
+    if (file instanceof import_obsidian.TFile) {
+      const dest = this.notePathFor(culture);
+      if (file.path !== dest) {
+        try {
+          await this.app.fileManager.renameFile(file, dest);
+        } catch (e) {
+          new import_obsidian.Notice(`Renamed culture but file rename failed: ${e}`);
+        }
+      }
+    }
+    if (glossFile instanceof import_obsidian.TFile) {
+      const dest = this.glossaryPathFor(culture);
+      if (glossFile.path !== dest) {
+        try {
+          await this.app.fileManager.renameFile(glossFile, dest);
+        } catch (e) {
+          new import_obsidian.Notice(`Glossary rename failed: ${e}`);
+        }
+      }
+    }
+    if (file || glossFile) await this.writeCultureNote(culture);
   }
   upsertCulture(culture) {
     const i = this.data.cultures.findIndex((c) => c.id === culture.id);
@@ -3233,199 +2927,6 @@ var MOODS = [
   { value: "exotic", label: "Exotic \u2014 foreign but readable (Zaeneir)" }
 ];
 var ENVIRONMENTS = ["none", "coastal", "mountain", "forest", "desert", "urban"];
-var SeedWizardModal = class extends import_obsidian.Modal {
-  constructor(app, plugin) {
-    super(app);
-    this.traits = {
-      name: "",
-      mood: "soft",
-      register: "balanced",
-      familiarity: "familiar",
-      environment: "none",
-      packs: []
-    };
-    this.plugin = plugin;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.addClass("languageforge-modal");
-    contentEl.createEl("h2", { text: "Create a culture" });
-    contentEl.createEl("p", {
-      text: "Four choices. Everything else is derived, and you can nudge it on the card afterwards.",
-      cls: "lf-hint"
-    });
-    new import_obsidian.Setting(contentEl).setName("Culture name").addText((t) => t.setPlaceholder("Velari").onChange((v) => this.traits.name = v.trim()));
-    new import_obsidian.Setting(contentEl).setName("Sound").setDesc("The phonaesthetic mood of the language.").addDropdown((d) => {
-      for (const m of MOODS) d.addOption(m.value, m.label);
-      d.setValue(this.traits.mood).onChange((v) => this.traits.mood = v);
-    });
-    new import_obsidian.Setting(contentEl).setName("Register").setDesc("Ancient names run long with penult stress; modern names run short.").addDropdown((d) => {
-      d.addOption("balanced", "Balanced");
-      d.addOption("ancient", "Ancient");
-      d.addOption("modern", "Modern");
-      d.setValue(this.traits.register).onChange((v) => this.traits.register = v);
-    });
-    new import_obsidian.Setting(contentEl).setName("Familiarity").setDesc("Familiar samples the curated element packs; alien builds sounds procedurally.").addDropdown((d) => {
-      d.addOption("familiar", "Familiar (English-adjacent)");
-      d.addOption("alien", "Alien (procedural)");
-      d.setValue(this.traits.familiarity).onChange((v) => this.traits.familiarity = v);
-    });
-    new import_obsidian.Setting(contentEl).setName("Environment").setDesc("Coastal adds seafaring words, mountain adds highland words, and so on.").addDropdown((d) => {
-      for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
-      d.setValue(this.traits.environment).onChange((v) => this.traits.environment = v);
-    });
-    const details = contentEl.createEl("details", { cls: "lf-packs" });
-    details.createEl("summary", { text: "Word themes (optional)" });
-    details.createEl("p", {
-      text: "Core words \u2014 kinship, virtues, nature \u2014 are always on. Stack themes to tilt what names mean.",
-      cls: "lf-hint"
-    });
-    for (const packName of Object.keys(SEMANTIC_PACKS)) {
-      if (!SEMANTIC_PACKS[packName].additive) continue;
-      new import_obsidian.Setting(details).setName(packName[0].toUpperCase() + packName.slice(1)).addToggle((t) => t.setValue(false).onChange((on) => {
-        if (on) this.traits.packs.push(packName);
-        else this.traits.packs = this.traits.packs.filter((p) => p !== packName);
-      }));
-    }
-    const buttons = new import_obsidian.Setting(contentEl);
-    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
-    buttons.addButton((b) => b.setButtonText("Seed the culture").setCta().onClick(() => {
-      if (!this.traits.name) {
-        new import_obsidian.Notice("The culture needs a name.");
-        return;
-      }
-      if (this.plugin.data.cultures.some((c) => c.name.toLowerCase() === this.traits.name.toLowerCase())) {
-        new import_obsidian.Notice("A culture with that name already exists.");
-        return;
-      }
-      const env = this.traits.environment === "none" ? "\u2014" : this.traits.environment;
-      const culture = seedCulture({ ...this.traits, environment: env });
-      this.close();
-      new CultureCardModal(this.app, this.plugin, culture, true).open();
-    }));
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-var PasteNamesModal = class extends import_obsidian.Modal {
-  constructor(app, plugin) {
-    super(app);
-    this.cultureName = "";
-    this.pasted = "";
-    this.plugin = plugin;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.addClass("languageforge-modal");
-    contentEl.createEl("h2", { text: "Start from names you already have" });
-    contentEl.createEl("p", {
-      text: "Paste two or more names you've invented and love. The engine works out a phonology consistent with them and generates kin. Your names are protected \u2014 nothing too similar will ever be generated.",
-      cls: "lf-hint"
-    });
-    new import_obsidian.Setting(contentEl).setName("Culture name").addText((t) => t.setPlaceholder("Kaelthi").onChange((v) => this.cultureName = v.trim()));
-    new import_obsidian.Setting(contentEl).setName("Your names").setDesc("Separated by commas or new lines.").addTextArea((t) => {
-      t.setPlaceholder("Kaelith, Veyra, Kaeloth");
-      t.inputEl.rows = 4;
-      t.onChange((v) => this.pasted = v);
-    });
-    const buttons = new import_obsidian.Setting(contentEl);
-    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
-    buttons.addButton((b) => b.setButtonText("Work out the sound").setCta().onClick(() => {
-      const names = this.pasted.split(/[,\n;]+/).map((s) => s.trim()).filter((s) => s.length >= 3);
-      if (names.length < 2) {
-        new import_obsidian.Notice("Paste at least two names.");
-        return;
-      }
-      if (!this.cultureName) this.cultureName = names[0] + "-kin";
-      const culture = reverseSeedCulture(this.cultureName, names);
-      this.close();
-      new CultureCardModal(this.app, this.plugin, culture, true).open();
-    }));
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-var CultureCardModal = class extends import_obsidian.Modal {
-  constructor(app, plugin, culture, isNew) {
-    super(app);
-    this.shuffle = 0;
-    this.plugin = plugin;
-    this.culture = culture;
-    this.isNew = isNew;
-  }
-  render() {
-    var _a;
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("languageforge-modal");
-    const card = makeCultureCard(this.culture, this.shuffle);
-    contentEl.createEl("h2", { text: this.culture.name });
-    contentEl.createEl("p", { text: card.summary, cls: "lf-onebreath" });
-    if ((_a = this.culture.fromNames) == null ? void 0 : _a.length) {
-      contentEl.createEl("p", {
-        text: `Seeded from: ${this.culture.fromNames.join(", ")}`,
-        cls: "lf-hint"
-      });
-    }
-    const grid = contentEl.createDiv({ cls: "lf-specimens" });
-    for (const s of card.samples) {
-      const chip = grid.createDiv({ cls: "lf-specimen" });
-      chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
-      chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
-      chip.createDiv({ text: s.category, cls: "lf-specimen-cat" });
-    }
-    if (card.glossaryPreview.length > 0) {
-      const gl = contentEl.createDiv({ cls: "lf-glossary" });
-      gl.createEl("span", { text: "Words: ", cls: "lf-hint" });
-      gl.createEl("span", {
-        text: card.glossaryPreview.map((g) => `${g.form} = ${g.meaning}`).join("  \xB7  "),
-        cls: "lf-glossary-items"
-      });
-    }
-    contentEl.createEl("p", { text: `Word themes: ${card.packs.join(", ")}`, cls: "lf-hint" });
-    const row = new import_obsidian.Setting(contentEl);
-    row.addButton((b) => b.setButtonText("Reshuffle the sounds").onClick(() => {
-      this.shuffle++;
-      reshuffleElements(this.culture, String(this.shuffle));
-      this.render();
-    }));
-    row.addButton((b) => b.setButtonText("New samples").onClick(() => {
-      this.shuffle++;
-      this.render();
-    }));
-    if (!this.isNew) {
-      row.addButton((b) => b.setButtonText("Branch a new language\u2026").onClick(() => {
-        this.close();
-        new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
-      }));
-      row.addButton((b) => b.setButtonText("Age this language\u2026").onClick(() => {
-        this.close();
-        new AgeCultureModal(this.app, this.plugin, this.culture).open();
-      }));
-    }
-    if (this.isNew) {
-      row.addButton((b) => b.setButtonText("Cancel").onClick(() => {
-        this.close();
-        new import_obsidian.Notice("Culture discarded \u2014 nothing was saved.");
-      }));
-    }
-    row.addButton((b) => b.setButtonText(this.isNew ? "Accept culture" : "Save changes").setCta().onClick(async () => {
-      this.plugin.upsertCulture(this.culture);
-      await this.plugin.persist();
-      this.close();
-      new import_obsidian.Notice(`${this.culture.name} saved. Generate names any time.`);
-      new GenerateModal(this.app, this.plugin, this.culture.id).open();
-    }));
-  }
-  onOpen() {
-    this.render();
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
 var DRIFT_LEVELS = [
   { value: "dialect", label: "Dialect \u2014 light drift, clearly the same tongue" },
   { value: "sister", label: "Sister language \u2014 moderate drift, kin but distinct" },
@@ -3442,133 +2943,1075 @@ var DRIFT_PACK_LABELS = {
 function descentPackIds() {
   return Object.keys(DRIFT_PACKS).filter((id) => DRIFT_PACKS[id].appliesTo === "descent");
 }
-var DeriveCultureModal = class extends import_obsidian.Modal {
-  constructor(app, plugin, parentId) {
-    var _a, _b;
-    super(app);
-    this.mode = "branch";
-    this.mergeParentIds = /* @__PURE__ */ new Set();
-    this.name = "";
-    this.driftLevel = "sister";
-    this.driftPackTouched = false;
-    // once the user picks explicitly, stop overwriting on parent change
-    this.spellingMode = "phonetic";
-    this.environment = "none";
-    this.plugin = plugin;
-    this.branchParentId = (_b = parentId != null ? parentId : (_a = plugin.data.cultures[0]) == null ? void 0 : _a.id) != null ? _b : "";
-    this.driftPackId = this.defaultPackForCurrentParent();
+var CONTACT_TYPES = [
+  { value: "prestige", label: "Prestige \u2014 a ruling/administrative tongue lends downward" },
+  { value: "substrate", label: "Substrate \u2014 the conquered tongue survives underneath" },
+  { value: "adstrate", label: "Adstrate \u2014 neighbours trading as equals" }
+];
+var CONTACT_STRENGTHS = [
+  { value: 0.2, label: "Light" },
+  { value: 0.5, label: "Moderate" },
+  { value: 0.8, label: "Heavy" }
+];
+var CONTACT_DOMAINS = ["administration", "religion", "warfare", "trade", "place-features"];
+function culturesByGeneration(cultures) {
+  var _a, _b;
+  const map = /* @__PURE__ */ new Map();
+  for (const c of cultures) {
+    const g = (_a = c.generation) != null ? _a : 0;
+    const list = (_b = map.get(g)) != null ? _b : [];
+    list.push(c);
+    map.set(g, list);
   }
-  defaultPackForCurrentParent() {
-    var _a;
-    const firstParent = this.mode === "branch" ? this.plugin.data.cultures.find((c) => c.id === this.branchParentId) : this.plugin.data.cultures.find((c) => this.mergeParentIds.has(c.id));
+  return [...map.entries()].sort((a, b) => a[0] - b[0]).map(([gen, list]) => ({
+    gen,
+    cultures: list.slice().sort((a, b) => a.name.localeCompare(b.name))
+  }));
+}
+function resolveGenTab(preferred, cultures, fallback = "oldest") {
+  const groups = culturesByGeneration(cultures);
+  if (groups.length === 0) return 0;
+  if (preferred !== null && groups.some((g) => g.gen === preferred)) return preferred;
+  return fallback === "newest" ? groups[groups.length - 1].gen : groups[0].gen;
+}
+function mountGenSubTabs(parent, cultures, activeGen, onSelect, order = "asc") {
+  var _a;
+  const groups = culturesByGeneration(cultures);
+  const tabGroups = order === "desc" ? [...groups].reverse() : groups;
+  const resolved = activeGen;
+  const tabs = parent.createDiv({ cls: "lf-tabs lf-subtabs" });
+  for (const g of tabGroups) {
+    const btn = tabs.createEl("button", {
+      text: `Gen ${g.gen}`,
+      cls: "lf-tab" + (g.gen === resolved ? " is-active" : "")
+    });
+    btn.onclick = () => onSelect(g.gen);
+  }
+  const pane = parent.createDiv({ cls: "lf-subtab-pane" });
+  const active = groups.find((g) => g.gen === resolved);
+  return { activeGen: resolved, pane, cultures: (_a = active == null ? void 0 : active.cultures) != null ? _a : [] };
+}
+function mintChildDisplayName(source, existing) {
+  const taken = new Set(existing.map((c) => c.name.toLowerCase()));
+  for (const g of generateBatch(source, "personal", 12)) {
+    if (!taken.has(g.name.toLowerCase())) return g.name;
+  }
+  let fallback = placeholderName(source);
+  if (taken.has(fallback.toLowerCase())) {
+    fallback = `${fallback}${Math.floor(Math.random() * 90 + 10)}`;
+  }
+  return fallback;
+}
+var CreateLanguageModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, initialTab = "new", parentId, initialChildMode = "branch") {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    super(app);
+    this.traits = {
+      name: "",
+      mood: "soft",
+      register: "balanced",
+      familiarity: "familiar",
+      environment: "none",
+      packs: []
+    };
+    this.pasted = "";
+    this.editDescriptions = /* @__PURE__ */ new Map();
+    this.editGen = null;
+    // Child tab — branch (derive) or contact (directed borrowing)
+    this.childMode = "branch";
+    this.branchParentId = "";
+    this.childName = "";
+    this.childDriftLevel = "sister";
+    this.childDriftPackId = "";
+    this.childDriftPackTouched = false;
+    this.childSpellingMode = "phonetic";
+    this.childEnvironment = "none";
+    // Contact mode (Gap 3) — donor lends to borrower
+    this.contactDonorId = "";
+    this.contactBorrowerId = "";
+    this.contactType = "prestige";
+    this.contactStrength = 0.5;
+    this.contactDomains = /* @__PURE__ */ new Set();
+    this.contactPreview = null;
+    this.contactPendingEdge = null;
+    this.plugin = plugin;
+    this.tab = initialTab;
+    this.childMode = initialChildMode;
+    this.branchParentId = (_b = parentId != null ? parentId : (_a = plugin.data.cultures[0]) == null ? void 0 : _a.id) != null ? _b : "";
+    this.contactDonorId = (_d = (_c = plugin.data.cultures[0]) == null ? void 0 : _c.id) != null ? _d : "";
+    this.contactBorrowerId = (_h = (_g = (_e = plugin.data.cultures[1]) == null ? void 0 : _e.id) != null ? _g : (_f = plugin.data.cultures[0]) == null ? void 0 : _f.id) != null ? _h : "";
+    this.childDriftPackId = this.defaultChildPack();
+  }
+  defaultChildPack() {
+    var _a, _b;
+    const firstParent = this.plugin.data.cultures.find((c) => c.id === this.branchParentId);
     const mood = firstParent == null ? void 0 : firstParent.mood;
-    return (_a = mood && MOOD_DEFAULT_DRIFT_PACK[mood]) != null ? _a : descentPackIds()[0];
+    return (_b = (_a = mood && MOOD_DEFAULT_DRIFT_PACK[mood]) != null ? _a : descentPackIds()[0]) != null ? _b : "";
+  }
+  onOpen() {
+    this.modalEl.addClass("lf-languages-modal");
+    this.render();
   }
   render() {
     const { contentEl } = this;
-    if (!this.driftPackTouched) this.driftPackId = this.defaultPackForCurrentParent();
     contentEl.empty();
     contentEl.addClass("languageforge-modal");
-    contentEl.createEl("h2", { text: "Branch a new language" });
-    contentEl.createEl("p", {
-      text: "Branch drifts one parent's sounds and words into a descendant. Merge blends two or more languages together, as if they'd come into contact.",
+    contentEl.createEl("h2", { text: "Languages", cls: "lf-modal-title" });
+    const tabs = contentEl.createDiv({ cls: "lf-tabs" });
+    const panes = contentEl.createDiv({ cls: "lf-tab-panes" });
+    const footer = contentEl.createDiv({ cls: "lf-modal-footer" });
+    const defs = [
+      { id: "new", label: "New" },
+      { id: "seeded", label: "Seeded" },
+      { id: "child", label: "Child" },
+      { id: "edit", label: "Edit" }
+    ];
+    for (const d of defs) {
+      const btn = tabs.createEl("button", {
+        text: d.label,
+        cls: "lf-tab" + (this.tab === d.id ? " is-active" : "")
+      });
+      btn.onclick = () => {
+        this.tab = d.id;
+        this.render();
+      };
+    }
+    if (this.tab === "new") this.renderNewTab(panes, footer);
+    else if (this.tab === "seeded") this.renderSeededTab(panes, footer);
+    else if (this.tab === "child") this.renderChildTab(panes, footer);
+    else {
+      footer.remove();
+      void this.renderEditTab(panes);
+    }
+  }
+  renderNewTab(parent, footer) {
+    parent.createEl("p", {
+      text: "Choose the sound of a new tongue.",
       cls: "lf-hint"
     });
-    if (this.plugin.data.cultures.length === 0) {
-      contentEl.createEl("p", { text: "No cultures yet \u2014 create one first.", cls: "lf-hint" });
-      new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Close").onClick(() => this.close()));
-      return;
-    }
-    new import_obsidian.Setting(contentEl).setName("Mode").setDesc("Branch: one parent drifts into a descendant. Merge: two or more parents blend via contact.").addDropdown((d) => {
-      d.addOption("branch", "Branch from one parent");
-      d.addOption("merge", "Merge two or more parents");
-      d.setValue(this.mode).onChange((v) => {
-        this.mode = v;
-        this.render();
-      });
-    });
-    if (this.mode === "branch") {
-      new import_obsidian.Setting(contentEl).setName("Parent language").addDropdown((d) => {
-        for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
-        d.setValue(this.branchParentId).onChange((v) => this.branchParentId = v);
-      });
-    } else {
-      contentEl.createEl("p", { text: "Select two or more languages to merge.", cls: "lf-hint" });
-      for (const c of this.plugin.data.cultures) {
-        new import_obsidian.Setting(contentEl).setName(c.name).addToggle((t) => t.setValue(this.mergeParentIds.has(c.id)).onChange((on) => {
-          if (on) this.mergeParentIds.add(c.id);
-          else this.mergeParentIds.delete(c.id);
-        }));
-      }
-    }
-    new import_obsidian.Setting(contentEl).setName("New language name").addText((t) => t.setPlaceholder("Velari-dhen").onChange((v) => this.name = v.trim()));
-    new import_obsidian.Setting(contentEl).setName("Drift").setDesc(this.mode === "branch" ? "How far the branch has diverged from its parent." : "How far the blended language has settled since contact.").addDropdown((d) => {
-      for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
-      d.setValue(this.driftLevel).onChange((v) => this.driftLevel = v);
-    });
-    const packHint = contentEl.createEl("p", { cls: "lf-hint" });
-    const updatePackHint = () => {
-      const pack = DRIFT_PACKS[this.driftPackId];
-      packHint.setText(pack ? `${pack.plainDescription} ${pack.why}` : "");
-    };
-    new import_obsidian.Setting(contentEl).setName("Sound-change pack").setDesc("The kind of sound change this branch/merge undergoes.").addDropdown((d) => {
-      var _a;
-      for (const id of descentPackIds()) d.addOption(id, (_a = DRIFT_PACK_LABELS[id]) != null ? _a : id);
-      d.setValue(this.driftPackId).onChange((v) => {
-        this.driftPackId = v;
-        this.driftPackTouched = true;
-        updatePackHint();
-      });
-    });
-    updatePackHint();
-    new import_obsidian.Setting(contentEl).setName("Spelling").setDesc("Etymological keeps blended-compound spellings visible for cognate-spotting (mainly affects merge); phonetic respells everything to the worn sound.").addDropdown((d) => {
-      d.addOption("phonetic", "Phonetic (respell to the worn sound)");
-      d.addOption("etymological", "Etymological (keep compound roots visible)");
-      d.setValue(this.spellingMode).onChange((v) => this.spellingMode = v);
-    });
-    new import_obsidian.Setting(contentEl).setName("Environment").setDesc("Optional \u2014 adds regional word themes on top of the parents' vocabulary.").addDropdown((d) => {
-      for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
-      d.setValue(this.environment).onChange((v) => this.environment = v);
-    });
-    const buttons = new import_obsidian.Setting(contentEl);
+    this.mountSeedTraits(parent);
+    const buttons = new import_obsidian.Setting(footer);
     buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
-    buttons.addButton((b) => b.setButtonText(this.mode === "branch" ? "Derive language" : "Merge languages").setCta().onClick(() => {
-      if (!this.name) {
-        new import_obsidian.Notice("The new language needs a name.");
-        return;
-      }
-      if (this.plugin.data.cultures.some((c) => c.name.toLowerCase() === this.name.toLowerCase())) {
+    buttons.addButton((b) => b.setButtonText("Seed the language").setCta().onClick(() => {
+      var _a;
+      const given = ((_a = this.traits.name) == null ? void 0 : _a.trim()) || "";
+      if (given && this.plugin.data.cultures.some((c) => c.name.toLowerCase() === given.toLowerCase())) {
         new import_obsidian.Notice("A culture with that name already exists.");
         return;
       }
-      const envPack = ENV_DEFAULT_PACK[this.environment];
-      const overrides = {};
-      if (this.environment !== "none") {
-        overrides.environment = this.environment;
-        if (envPack) overrides.packs = [envPack];
-      }
-      let culture;
-      if (this.mode === "branch") {
-        const parent = this.plugin.data.cultures.find((c) => c.id === this.branchParentId);
-        if (!parent) {
-          new import_obsidian.Notice("Pick a parent language first.");
-          return;
-        }
-        culture = deriveCulture(parent, this.name, this.driftLevel, [this.driftPackId], overrides, this.spellingMode);
-      } else {
-        const parents = this.plugin.data.cultures.filter((c) => this.mergeParentIds.has(c.id));
-        if (parents.length < 2) {
-          new import_obsidian.Notice("Select at least two languages to merge.");
-          return;
-        }
-        culture = mergeCultures(parents, this.name, this.driftLevel, [this.driftPackId], overrides, this.spellingMode);
-      }
+      const env = this.traits.environment === "none" ? "\u2014" : this.traits.environment;
+      const culture = seedCulture({ ...this.traits, name: given || void 0, environment: env });
       this.close();
       new CultureCardModal(this.app, this.plugin, culture, true).open();
     }));
   }
+  renderSeededTab(parent, footer) {
+    parent.createEl("p", {
+      text: "Paste romanised names or a short paragraph. Latin letters only \u2014 the language bends to match.",
+      cls: "lf-hint"
+    });
+    const area = parent.createEl("textarea", { cls: "lf-seeded-textarea" });
+    area.rows = 12;
+    area.placeholder = "Kaelith, Veyra, Kaeloth\n\u2014 or \u2014\nThe sisters were called Elowen and Maeriel.";
+    area.value = this.pasted;
+    area.addEventListener("input", () => {
+      this.pasted = area.value;
+    });
+    this.mountSeedTraits(parent);
+    const buttons = new import_obsidian.Setting(footer);
+    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton((b) => b.setButtonText("Seed from text").setCta().onClick(() => {
+      var _a;
+      const parsed = parseImportInput(this.pasted);
+      if (parsed.candidates.length < 2) {
+        new import_obsidian.Notice("Paste at least two romanised names (or a paragraph that contains them).");
+        return;
+      }
+      const given = ((_a = this.traits.name) == null ? void 0 : _a.trim()) || "";
+      if (given && this.plugin.data.cultures.some((c) => c.name.toLowerCase() === given.toLowerCase())) {
+        new import_obsidian.Notice("A culture with that name already exists.");
+        return;
+      }
+      const name = given || parsed.candidates[0] + "-kin";
+      const culture = reverseSeedCulture(name, parsed.candidates, {
+        mood: this.traits.mood,
+        register: this.traits.register,
+        familiarity: this.traits.familiarity,
+        environment: this.traits.environment,
+        packs: [...this.traits.packs]
+      });
+      this.close();
+      new CultureCardModal(this.app, this.plugin, culture, true).open();
+    }));
+  }
+  /** Shared New / Seeded trait controls — both tabs bind the same `this.traits`. */
+  mountSeedTraits(parent) {
+    new import_obsidian.Setting(parent).setName("Culture name").setDesc("Optional. Blank \u2192 a name minted from this culture's own sounds (New) or from the paste (Seeded).").addText((t) => {
+      var _a;
+      return t.setPlaceholder("Velari (or leave blank)").setValue((_a = this.traits.name) != null ? _a : "").onChange((v) => this.traits.name = v.trim());
+    });
+    new import_obsidian.Setting(parent).setName("Sound").setDesc("The phonaesthetic mood of the language.").addDropdown((d) => {
+      for (const m of MOODS) d.addOption(m.value, m.label);
+      d.setValue(this.traits.mood).onChange((v) => this.traits.mood = v);
+    });
+    new import_obsidian.Setting(parent).setName("Register").setDesc("Ancient names run long with penult stress; modern names run short.").addDropdown((d) => {
+      d.addOption("balanced", "Balanced");
+      d.addOption("ancient", "Ancient");
+      d.addOption("modern", "Modern");
+      d.setValue(this.traits.register).onChange((v) => this.traits.register = v);
+    });
+    new import_obsidian.Setting(parent).setName("Familiarity").setDesc("Familiar samples the curated element packs; alien builds sounds procedurally.").addDropdown((d) => {
+      d.addOption("familiar", "Familiar (English-adjacent)");
+      d.addOption("alien", "Alien (procedural)");
+      d.setValue(this.traits.familiarity).onChange((v) => this.traits.familiarity = v);
+    });
+    new import_obsidian.Setting(parent).setName("Environment").setDesc("Coastal adds seafaring words, mountain adds highland words, and so on.").addDropdown((d) => {
+      for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
+      d.setValue(this.traits.environment).onChange((v) => this.traits.environment = v);
+    });
+    new import_obsidian.Setting(parent).setName("Word themes (optional)").setDesc("Core words \u2014 kinship, virtues, nature \u2014 are always on. Stack themes to tilt what names mean.");
+    for (const packName of Object.keys(SEMANTIC_PACKS)) {
+      if (!SEMANTIC_PACKS[packName].additive) continue;
+      new import_obsidian.Setting(parent).setName(packName[0].toUpperCase() + packName.slice(1)).addToggle((t) => t.setValue(this.traits.packs.includes(packName)).onChange((on) => {
+        if (on) {
+          if (!this.traits.packs.includes(packName)) this.traits.packs.push(packName);
+        } else {
+          this.traits.packs = this.traits.packs.filter((p) => p !== packName);
+        }
+      }));
+    }
+  }
+  renderChildTab(parent, footer) {
+    if (!this.childDriftPackTouched) this.childDriftPackId = this.defaultChildPack();
+    parent.createEl("p", {
+      text: "Language aging drifts one parent's sounds into a descendant. Language intermixing connects two existing languages: a donor lends vocabulary, reshaped to fit the borrower's mouth.",
+      cls: "lf-hint"
+    });
+    const buttons = new import_obsidian.Setting(footer);
+    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
+    if (this.plugin.data.cultures.length === 0) {
+      parent.createEl("p", { text: "No cultures yet \u2014 create one on the New or Seeded tab first.", cls: "lf-hint" });
+      return;
+    }
+    const genGroups = culturesByGeneration(this.plugin.data.cultures);
+    new import_obsidian.Setting(parent).setName("Mode").setDesc("Language aging creates a new language. Language intermixing links two existing ones without minting a third.").addDropdown((d) => {
+      d.addOption("branch", "Language aging");
+      d.addOption("contact", "Language intermixing");
+      d.setValue(this.childMode).onChange((v) => {
+        this.childMode = v;
+        this.contactPreview = null;
+        this.contactPendingEdge = null;
+        this.render();
+      });
+    });
+    if (this.childMode === "contact") {
+      this.renderChildContact(parent, buttons);
+      return;
+    }
+    new import_obsidian.Setting(parent).setName("Parent language").setDesc("Grouped by generation \u2014 Gen 0 are roots, higher gens are descendants.").addDropdown((d) => {
+      var _a, _b, _c;
+      const sel = d.selectEl;
+      sel.empty();
+      for (const group of genGroups) {
+        const og = sel.createEl("optgroup");
+        og.label = `Gen ${group.gen}`;
+        for (const c of group.cultures) {
+          og.createEl("option", { text: c.name, value: c.id });
+        }
+      }
+      if (!this.branchParentId || !this.plugin.data.cultures.some((c) => c.id === this.branchParentId)) {
+        this.branchParentId = (_c = (_b = (_a = genGroups[0]) == null ? void 0 : _a.cultures[0]) == null ? void 0 : _b.id) != null ? _c : "";
+      }
+      d.setValue(this.branchParentId);
+      d.onChange((v) => this.branchParentId = v);
+    });
+    new import_obsidian.Setting(parent).setName("New language name").setDesc("Optional. Leave blank to mint a name from the parent tongue's generator.").addText((t) => t.setPlaceholder("Blank \u2192 auto from generator").setValue(this.childName).onChange((v) => this.childName = v.trim()));
+    new import_obsidian.Setting(parent).setName("Drift").setDesc("How far the branch has diverged from its parent.").addDropdown((d) => {
+      for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
+      d.setValue(this.childDriftLevel).onChange((v) => this.childDriftLevel = v);
+    });
+    const packHint = parent.createEl("p", { cls: "lf-hint" });
+    const updatePackHint = () => {
+      const pack = DRIFT_PACKS[this.childDriftPackId];
+      packHint.setText(pack ? `${pack.plainDescription} ${pack.why}` : "");
+    };
+    new import_obsidian.Setting(parent).setName("Sound-change pack").setDesc("The kind of sound change this branch undergoes.").addDropdown((d) => {
+      var _a;
+      for (const id of descentPackIds()) d.addOption(id, (_a = DRIFT_PACK_LABELS[id]) != null ? _a : id);
+      d.setValue(this.childDriftPackId).onChange((v) => {
+        this.childDriftPackId = v;
+        this.childDriftPackTouched = true;
+        updatePackHint();
+      });
+    });
+    updatePackHint();
+    new import_obsidian.Setting(parent).setName("Spelling").setDesc("Phonetic respells everything to the worn sound; etymological keeps compound roots more visible.").addDropdown((d) => {
+      d.addOption("phonetic", "Phonetic (respell to the worn sound)");
+      d.addOption("etymological", "Etymological (keep compound roots visible)");
+      d.setValue(this.childSpellingMode).onChange((v) => this.childSpellingMode = v);
+    });
+    new import_obsidian.Setting(parent).setName("Environment").setDesc("Optional \u2014 adds regional word themes on top of the parent's vocabulary.").addDropdown((d) => {
+      for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
+      d.setValue(this.childEnvironment).onChange((v) => this.childEnvironment = v);
+    });
+    buttons.addButton((b) => b.setButtonText("Derive language").setCta().onClick(() => {
+      const envPack = ENV_DEFAULT_PACK[this.childEnvironment];
+      const overrides = {};
+      if (this.childEnvironment !== "none") {
+        overrides.environment = this.childEnvironment;
+        if (envPack) overrides.packs = [envPack];
+      }
+      const parentCulture = this.plugin.data.cultures.find((c) => c.id === this.branchParentId);
+      if (!parentCulture) {
+        new import_obsidian.Notice("Pick a parent language first.");
+        return;
+      }
+      let name = this.childName.trim();
+      if (!name) name = mintChildDisplayName(parentCulture, this.plugin.data.cultures);
+      else if (this.plugin.data.cultures.some((c) => c.name.toLowerCase() === name.toLowerCase())) {
+        new import_obsidian.Notice("A culture with that name already exists.");
+        return;
+      }
+      const culture = deriveCulture(
+        parentCulture,
+        name,
+        this.childDriftLevel,
+        [this.childDriftPackId],
+        overrides,
+        this.childSpellingMode
+      );
+      this.close();
+      new CultureCardModal(this.app, this.plugin, culture, true).open();
+    }));
+  }
+  renderChildContact(parent, buttons) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    if (this.plugin.data.cultures.length < 2) {
+      parent.createEl("p", {
+        text: "Intermixing needs at least two languages. Create another on the New or Seeded tab first.",
+        cls: "lf-hint"
+      });
+      return;
+    }
+    const genGroups = culturesByGeneration(this.plugin.data.cultures);
+    if (!this.plugin.data.cultures.some((c) => c.id === this.contactDonorId)) {
+      this.contactDonorId = (_c = (_b = (_a = genGroups[0]) == null ? void 0 : _a.cultures[0]) == null ? void 0 : _b.id) != null ? _c : "";
+    }
+    const donor = this.plugin.data.cultures.find((c) => c.id === this.contactDonorId);
+    const donorGen = (_d = donor == null ? void 0 : donor.generation) != null ? _d : 0;
+    const peerCultures = ((_f = (_e = genGroups.find((g) => g.gen === donorGen)) == null ? void 0 : _e.cultures) != null ? _f : []).filter((c) => c.id !== this.contactDonorId);
+    if (!peerCultures.some((c) => c.id === this.contactBorrowerId)) {
+      this.contactBorrowerId = (_h = (_g = peerCultures[0]) == null ? void 0 : _g.id) != null ? _h : "";
+    }
+    const fillByGeneration = (d, cultures, groupLabel) => {
+      const sel = d.selectEl;
+      sel.empty();
+      if (groupLabel) {
+        const og = sel.createEl("optgroup");
+        og.label = groupLabel;
+        for (const c of cultures) og.createEl("option", { text: c.name, value: c.id });
+      } else {
+        for (const group of genGroups) {
+          const og = sel.createEl("optgroup");
+          og.label = `Gen ${group.gen}`;
+          for (const c of group.cultures) {
+            og.createEl("option", { text: c.name, value: c.id });
+          }
+        }
+      }
+    };
+    new import_obsidian.Setting(parent).setName("Donor").setDesc("The language that lends vocabulary (primary / prestige side when type is prestige).").addDropdown((d) => {
+      fillByGeneration(d, this.plugin.data.cultures);
+      d.setValue(this.contactDonorId).onChange((v) => {
+        this.contactDonorId = v;
+        this.contactPreview = null;
+        this.contactPendingEdge = null;
+        this.render();
+      });
+    });
+    new import_obsidian.Setting(parent).setName("Borrower").setDesc("Receives reshaped loanwords \u2014 only languages from the donor's generation.").addDropdown((d) => {
+      if (peerCultures.length === 0) {
+        d.addOption("", "(no other language in this generation)");
+        d.setDisabled(true);
+      } else {
+        fillByGeneration(d, peerCultures, `Gen ${donorGen}`);
+        d.setValue(this.contactBorrowerId).onChange((v) => {
+          this.contactBorrowerId = v;
+          this.contactPreview = null;
+          this.contactPendingEdge = null;
+        });
+      }
+    });
+    if (peerCultures.length === 0) {
+      parent.createEl("p", {
+        text: "Pick a donor that shares its generation with at least one other language.",
+        cls: "lf-hint"
+      });
+    }
+    new import_obsidian.Setting(parent).setName("Contact type").addDropdown((d) => {
+      for (const t of CONTACT_TYPES) d.addOption(t.value, t.label);
+      d.setValue(this.contactType).onChange((v) => {
+        this.contactType = v;
+        this.contactPreview = null;
+        this.contactPendingEdge = null;
+      });
+    });
+    new import_obsidian.Setting(parent).setName("Strength").setDesc("How much of the donor's vocabulary crosses \u2014 how heavily one side impacts the other.").addDropdown((d) => {
+      for (const s of CONTACT_STRENGTHS) d.addOption(String(s.value), s.label);
+      d.setValue(String(this.contactStrength)).onChange((v) => {
+        this.contactStrength = Number(v);
+        this.contactPreview = null;
+        this.contactPendingEdge = null;
+      });
+    });
+    parent.createEl("p", { text: "Which kinds of words cross:", cls: "lf-hint" });
+    for (const dom of CONTACT_DOMAINS) {
+      new import_obsidian.Setting(parent).setName(dom).addToggle((t) => t.setValue(this.contactDomains.has(dom)).onChange((on) => {
+        if (on) this.contactDomains.add(dom);
+        else this.contactDomains.delete(dom);
+        this.contactPreview = null;
+        this.contactPendingEdge = null;
+      }));
+    }
+    if (this.contactPreview) {
+      const borrower = this.plugin.data.cultures.find((c) => c.id === this.contactBorrowerId);
+      if (borrower) {
+        parent.createEl("h3", { text: `Loanwords ${borrower.name} would gain` });
+        const grid = parent.createDiv({ cls: "lf-specimens" });
+        for (const s of this.contactPreview.samples) {
+          const chip = grid.createDiv({ cls: "lf-specimen" });
+          chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
+          chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
+        }
+        parent.createEl("p", {
+          text: `Words: ${this.contactPreview.loanedRoots.map((r) => `${r.form} = ${r.meaning}`).join("  \xB7  ") || "(none survived the borrower's phonotactics)"}`,
+          cls: "lf-hint"
+        });
+      }
+    }
+    buttons.addButton((b) => {
+      b.setButtonText("Preview").setCta().onClick(() => {
+        const donorCulture = this.plugin.data.cultures.find((c) => c.id === this.contactDonorId);
+        const borrowerCulture = this.plugin.data.cultures.find((c) => c.id === this.contactBorrowerId);
+        if (!donorCulture || !borrowerCulture) {
+          new import_obsidian.Notice("Pick a donor and a borrower first.");
+          return;
+        }
+        if (donorCulture.id === borrowerCulture.id) {
+          new import_obsidian.Notice("Donor and borrower must be different languages.");
+          return;
+        }
+        const edge = {
+          id: `${donorCulture.id}->${borrowerCulture.id}::${Date.now().toString(36)}`,
+          donorId: donorCulture.id,
+          borrowerId: borrowerCulture.id,
+          contactType: this.contactType,
+          strength: this.contactStrength,
+          domains: [...this.contactDomains]
+        };
+        this.contactPreview = previewContactEdge(donorCulture, borrowerCulture, edge);
+        this.contactPendingEdge = edge;
+        this.render();
+      });
+      if (peerCultures.length === 0) b.setDisabled(true);
+    });
+    if (this.contactPreview) {
+      buttons.addButton((b) => b.setButtonText("Save contact edge").onClick(async () => {
+        const edge = this.contactPendingEdge;
+        if (!edge) return;
+        this.plugin.data.contactEdges.push(edge);
+        await this.plugin.persist();
+        new import_obsidian.Notice("Contact edge saved.");
+      }));
+      buttons.addButton((b) => b.setButtonText("Add loanwords").onClick(async () => {
+        const borrower = this.plugin.data.cultures.find((c) => c.id === this.contactBorrowerId);
+        if (!borrower || !this.contactPreview) return;
+        if (this.contactPreview.loanedRoots.length === 0) {
+          new import_obsidian.Notice("Nothing to add.");
+          return;
+        }
+        acceptLoanedRoots(borrower, this.contactPreview.loanedRoots);
+        this.plugin.upsertCulture(borrower);
+        await this.plugin.persist();
+        await this.plugin.writeCultureNote(borrower);
+        new import_obsidian.Notice(`${this.contactPreview.loanedRoots.length} loanword(s) added to ${borrower.name}.`);
+      }));
+    }
+  }
+  async renderEditTab(parent) {
+    var _a, _b;
+    if (this.plugin.data.cultures.length === 0) {
+      parent.createEl("p", {
+        text: "No languages yet. Create one on the New or Seeded tab.",
+        cls: "lf-hint"
+      });
+      return;
+    }
+    parent.createEl("p", { text: "Loading\u2026", cls: "lf-hint lf-edit-loading" });
+    for (const c of this.plugin.data.cultures) {
+      if (!this.editDescriptions.has(c.id)) {
+        this.editDescriptions.set(c.id, await this.plugin.readCultureDescription(c));
+      }
+    }
+    if (this.tab !== "edit") return;
+    parent.empty();
+    this.editGen = resolveGenTab(this.editGen, this.plugin.data.cultures, "oldest");
+    const { pane, cultures } = mountGenSubTabs(
+      parent,
+      this.plugin.data.cultures,
+      this.editGen,
+      (gen) => {
+        this.editGen = gen;
+        this.render();
+      },
+      "asc"
+    );
+    if (cultures.length === 0) {
+      pane.createEl("p", { text: "No languages in this generation.", cls: "lf-hint" });
+      return;
+    }
+    for (const c of cultures) {
+      const block = pane.createDiv({ cls: "lf-gen-row" });
+      block.createEl("h3", { text: c.name, cls: "lf-gen-name" });
+      block.createEl("p", {
+        text: ((_a = c.summary) == null ? void 0 : _a.trim()) || "\u2014",
+        cls: "lf-gen-summary"
+      });
+      const desc = (_b = this.editDescriptions.get(c.id)) == null ? void 0 : _b.trim();
+      block.createEl("p", {
+        text: desc || "No description yet \u2014 add one under ## Description on the language page.",
+        cls: "lf-gen-notes"
+      });
+      const row = block.createDiv({ cls: "lf-gen-actions" });
+      const classBtn = row.createEl("button", { text: "Classes" });
+      classBtn.onclick = () => {
+        this.close();
+        new NameClassesModal(this.app, this.plugin, c).open();
+      };
+      const renameBtn = row.createEl("button", { text: "Rename" });
+      renameBtn.onclick = () => {
+        new RenameCultureModal(this.app, this.plugin, c, async (name, translated) => {
+          await this.plugin.renameCultureAndNote(c, name, translated);
+          this.editDescriptions.delete(c.id);
+          this.render();
+        }).open();
+      };
+      row.createDiv({ cls: "lf-gen-spacer" });
+      const hasPage = this.plugin.hasCulturePage(c);
+      const pageBtn = row.createEl("button", { text: hasPage ? "Page exists" : "Create page" });
+      if (hasPage) {
+        pageBtn.disabled = true;
+        pageBtn.setAttr("title", "A language page already exists for this culture.");
+      } else {
+        pageBtn.onclick = async () => {
+          await this.plugin.openCulturePage(c);
+          this.editDescriptions.set(c.id, await this.plugin.readCultureDescription(c));
+          this.render();
+        };
+      }
+    }
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+var SeedWizardModal = CreateLanguageModal;
+var CultureCardModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, culture, isNew, opts) {
+    super(app);
+    this.plugin = plugin;
+    this.culture = culture;
+    this.isNew = isNew;
+    this.hostModal = opts == null ? void 0 : opts.hostModal;
+    this.onDismiss = opts == null ? void 0 : opts.onDismiss;
+  }
+  render() {
+    var _a, _b;
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    const card = makeCultureCard(this.culture);
+    const titleRow = contentEl.createDiv({ cls: "lf-card-title-row" });
+    titleRow.createEl("h2", { text: this.culture.name });
+    if ((_a = this.culture.translatedName) == null ? void 0 : _a.trim()) {
+      contentEl.createEl("p", {
+        text: this.culture.translatedName.trim(),
+        cls: "lf-translated-name"
+      });
+    }
+    contentEl.createEl("p", { text: card.summary, cls: "lf-onebreath" });
+    if ((_b = this.culture.fromNames) == null ? void 0 : _b.length) {
+      contentEl.createEl("p", {
+        text: `Seeded from: ${this.culture.fromNames.join(", ")}`,
+        cls: "lf-hint"
+      });
+    }
+    const grid = contentEl.createDiv({ cls: "lf-specimens lf-specimens-card" });
+    const main = grid.createDiv({ cls: "lf-specimens-main" });
+    for (const s of card.samples.slice(0, 4)) {
+      const chip = main.createDiv({ cls: "lf-specimen" });
+      chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
+      chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
+      if (s.gloss) chip.createDiv({ text: s.gloss, cls: "lf-chip-gloss" });
+      chip.createDiv({ text: s.category, cls: "lf-specimen-cat" });
+    }
+    const side = grid.createDiv({ cls: "lf-specimens-side" + (this.isNew ? " is-new" : "") });
+    const themes = side.createDiv({ cls: "lf-specimen lf-specimen-themes" });
+    themes.createDiv({ text: "Word Themes", cls: "lf-themes-heading" });
+    const themeList = card.packs.length ? card.packs.map((p) => p[0].toUpperCase() + p.slice(1)).join(" \xB7 ") : "Core only";
+    themes.createDiv({ text: themeList, cls: "lf-themes-body" });
+    if (!this.isNew) {
+      const hasPage = this.plugin.hasCulturePage(this.culture);
+      const pageCard = side.createDiv({
+        cls: "lf-specimen lf-specimen-page",
+        attr: { role: "button", tabindex: "0", title: hasPage ? "Open language page" : "Create language page" }
+      });
+      pageCard.createDiv({
+        text: hasPage ? "Page" : "Create page",
+        cls: "lf-page-card-label"
+      });
+      const openPage = async () => {
+        if (hasPage) {
+          const host = this.hostModal;
+          this.onDismiss = void 0;
+          this.close();
+          host == null ? void 0 : host.close();
+          await this.plugin.openCulturePage(this.culture);
+        } else {
+          await this.plugin.openCulturePage(this.culture);
+          this.render();
+        }
+      };
+      pageCard.onclick = () => {
+        void openPage();
+      };
+      pageCard.onkeydown = (ev) => {
+        if (ev.key === "Enter" || ev.key === " ") {
+          ev.preventDefault();
+          void openPage();
+        }
+      };
+    }
+    if (card.glossaryPreview.length > 0) {
+      const gl = contentEl.createDiv({ cls: "lf-glossary" });
+      gl.createEl("span", { text: "Words: ", cls: "lf-hint" });
+      gl.createEl("span", {
+        text: card.glossaryPreview.map((g) => `${g.form} = ${g.meaning}`).join("  \xB7  "),
+        cls: "lf-glossary-items"
+      });
+    }
+    if (this.isNew) {
+      const actions = contentEl.createDiv({ cls: "lf-card-actions" });
+      const addBtn = (label, onClick, cta = false) => {
+        const btn = actions.createEl("button", { text: label });
+        if (cta) btn.addClass("mod-cta");
+        btn.onclick = () => {
+          void onClick();
+        };
+        return btn;
+      };
+      addBtn("Cancel", () => {
+        this.close();
+        new import_obsidian.Notice("Culture discarded \u2014 nothing was saved.");
+      });
+      addBtn("Accept culture", async () => {
+        this.plugin.upsertCulture(this.culture);
+        await this.plugin.persist();
+        this.close();
+        new import_obsidian.Notice(`${this.culture.name} saved.`);
+        new CreatePagePromptModal(this.app, this.plugin, this.culture).open();
+      }, true);
+    }
+  }
+  onOpen() {
+    var _a, _b;
+    if (((_a = this.hostModal) == null ? void 0 : _a.containerEl.hasClass("lf-stacked-modal-container")) || ((_b = this.hostModal) == null ? void 0 : _b.containerEl.hasClass("lf-stacked-modal-nested"))) {
+      this.containerEl.addClass("lf-stacked-modal-nested");
+    } else {
+      this.containerEl.addClass("lf-stacked-modal-container");
+    }
+    this.render();
+  }
+  onClose() {
+    var _a;
+    this.contentEl.empty();
+    (_a = this.onDismiss) == null ? void 0 : _a.call(this);
+  }
+};
+var CreatePagePromptModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, culture) {
+    super(app);
+    this.plugin = plugin;
+    this.culture = culture;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: "Create a language page?" });
+    contentEl.createEl("p", {
+      text: `Save ${this.culture.name} as a note in your vault (with a linked glossary). You can always create it later from Edit languages or Generate.`,
+      cls: "lf-hint"
+    });
+    const buttons = new import_obsidian.Setting(contentEl);
+    buttons.addButton((b) => b.setButtonText("Not now").onClick(() => this.close()));
+    buttons.addButton((b) => b.setButtonText("Create language page").setCta().onClick(async () => {
+      this.close();
+      await this.plugin.openCulturePage(this.culture);
+    }));
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+var RenameCultureModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, culture, onDone) {
+    var _a;
+    super(app);
+    this.translated = "";
+    this.nameInput = null;
+    this.translatedInput = null;
+    this.plugin = plugin;
+    this.culture = culture;
+    this.onDone = onDone;
+    this.value = culture.name;
+    this.translated = (_a = culture.translatedName) != null ? _a : "";
+  }
+  setName(name) {
+    this.value = name;
+    if (this.nameInput) this.nameInput.value = name;
+  }
+  setTranslated(text) {
+    this.translated = text;
+    if (this.translatedInput) this.translatedInput.value = text;
+  }
+  pickDisplayForm(form) {
+    const t = form.trim();
+    if (!t) return t;
+    return t[0].toUpperCase() + t.slice(1);
+  }
+  onOpen() {
+    elevateStackedModal(this);
+    this.modalEl.addClass("lf-rename-modal");
+    const { contentEl } = this;
+    contentEl.addClass("languageforge-modal");
+    contentEl.addClass("lf-rename-body");
+    const columns = contentEl.createDiv({ cls: "lf-rename-columns" });
+    const left = columns.createDiv({ cls: "lf-rename-left" });
+    const right = columns.createDiv({ cls: "lf-rename-right" });
+    const nameBox = left.createEl("input", {
+      cls: "lf-rename-name-input",
+      type: "text",
+      value: this.value,
+      attr: { placeholder: "Language name" }
+    });
+    this.nameInput = nameBox;
+    nameBox.addEventListener("input", () => {
+      this.value = nameBox.value;
+    });
+    nameBox.focus();
+    left.createEl("h3", { text: "Name", cls: "lf-rename-field-label" });
+    new import_obsidian.Setting(left).setName("Translated name").setDesc("Optional English meaning of this culture's name.").addText((t) => {
+      this.translatedInput = t.inputEl;
+      t.setPlaceholder("e.g. People of the river").setValue(this.translated).onChange((v) => this.translated = v);
+    });
+    new import_obsidian.Setting(left).addButton((b) => b.setButtonText("Random word").onClick(() => {
+      var _a, _b, _c;
+      const roots2 = this.culture.roots;
+      let name = "";
+      if (roots2.length > 0) {
+        const r = roots2[Math.floor(Math.random() * roots2.length)];
+        name = this.pickDisplayForm(r.form);
+        if (r.meaning) this.setTranslated(r.meaning);
+      }
+      if (!name) {
+        const batch = generateBatch(this.culture, "personal", 1);
+        name = (_b = (_a = batch[0]) == null ? void 0 : _a.name) != null ? _b : placeholderName(this.culture);
+        if ((_c = batch[0]) == null ? void 0 : _c.gloss) this.setTranslated(batch[0].gloss);
+      }
+      this.setName(name);
+    }));
+    const buttons = new import_obsidian.Setting(left);
+    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton((b) => b.setButtonText("Rename").setCta().onClick(async () => {
+      const name = this.value.trim();
+      if (!name) {
+        new import_obsidian.Notice("Name can't be empty.");
+        return;
+      }
+      if (this.plugin.data.cultures.some((c) => c.id !== this.culture.id && c.name.toLowerCase() === name.toLowerCase())) {
+        new import_obsidian.Notice("A culture with that name already exists.");
+        return;
+      }
+      this.close();
+      await this.onDone(name, this.translated.trim());
+    }));
+    const scroll = right.createDiv({ cls: "lf-rename-glossary-scroll" });
+    const roots = this.culture.roots.slice().sort((a, b) => b.weight - a.weight || a.form.localeCompare(b.form));
+    if (roots.length === 0) {
+      scroll.createEl("p", { text: "No glossary words yet.", cls: "lf-hint" });
+    } else {
+      for (const r of roots) {
+        const row = scroll.createDiv({ cls: "lf-rename-glossary-row" });
+        row.createSpan({ text: r.form, cls: "lf-rename-glossary-form" });
+        row.createSpan({ text: r.meaning, cls: "lf-rename-glossary-meaning" });
+      }
+    }
+  }
+  onClose() {
+    this.nameInput = null;
+    this.translatedInput = null;
+    this.contentEl.empty();
+  }
+};
+var NameClassesModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, culture) {
+    super(app);
+    this.newLabel = "";
+    this.newLean = "soft";
+    this.plugin = plugin;
+    this.culture = culture;
+    ensureCultureClasses(this.culture);
+  }
+  async save() {
+    this.plugin.upsertCulture(this.culture);
+    await this.plugin.persist();
+    await this.plugin.writeCultureNote(this.culture);
+  }
+  render() {
+    var _a;
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: `Name classes \u2014 ${this.culture.name}` });
+    contentEl.createEl("p", {
+      text: "Each class is an ending signature. Gender ships by default; add warriors, leaders, and the rest yourself.",
+      cls: "lf-hint"
+    });
+    new import_obsidian.Setting(contentEl).setName("Gender marking").setDesc("Off hides feminine/masculine; neutral and custom classes remain.").addToggle((t) => t.setValue(this.culture.gendered !== false).onChange(async (v) => {
+      this.culture.gendered = v;
+      await this.save();
+      this.render();
+    }));
+    new import_obsidian.Setting(contentEl).setName("Default generation").setDesc("How unmarked names are built. Classes can override.").addDropdown((d) => {
+      var _a2;
+      d.addOption("mixed", "Mixed (mostly meaning)");
+      d.addOption("meaning", "Always meaning");
+      d.addOption("sound", "Always sound");
+      d.setValue((_a2 = this.culture.defaultGeneration) != null ? _a2 : "mixed").onChange(async (v) => {
+        this.culture.defaultGeneration = v;
+        await this.save();
+      });
+    });
+    for (const cls of (_a = this.culture.classes) != null ? _a : []) {
+      if (this.culture.gendered === false && cls.kind === "gender" && (cls.id === "feminine" || cls.id === "masculine")) {
+        continue;
+      }
+      const box = contentEl.createDiv({ cls: "lf-class-card" });
+      box.createEl("h3", { text: `${cls.label} (${cls.kind})` });
+      const ends = resolveClassEndings(this.culture, cls).join(", ");
+      box.createEl("p", { text: `Endings: ${ends}`, cls: "lf-hint" });
+      const samples = classSpecimens(this.culture, cls.id, 2);
+      if (samples.length) box.createEl("p", { text: `Samples: ${samples.join(", ")}`, cls: "lf-hint" });
+      new import_obsidian.Setting(box).setName("Ending source").addDropdown((d) => {
+        d.addOption("generate", "Generated");
+        d.addOption("inherit", "Inherit from\u2026");
+        d.addOption("manual", "Manual");
+        d.setValue(cls.endingSource).onChange(async (v) => {
+          var _a2;
+          editClass(this.culture, cls.id, { endingSource: v });
+          if (v === "generate" && !((_a2 = cls.endings) == null ? void 0 : _a2.length)) {
+            regenerateClassEndings(this.culture, cls.id, cls.id === "masculine" ? "hard" : "soft");
+          }
+          await this.save();
+          this.render();
+        });
+      });
+      if (cls.endingSource === "inherit") {
+        new import_obsidian.Setting(box).setName("Inherit from").addDropdown((d) => {
+          var _a2, _b;
+          d.addOption("", "\u2014");
+          for (const other of (_a2 = this.culture.classes) != null ? _a2 : []) {
+            if (other.id !== cls.id) d.addOption(other.id, other.label);
+          }
+          d.setValue((_b = cls.inheritFrom) != null ? _b : "").onChange(async (v) => {
+            editClass(this.culture, cls.id, { inheritFrom: v || void 0 });
+            await this.save();
+            this.render();
+          });
+        });
+      }
+      if (cls.endingSource === "manual") {
+        new import_obsidian.Setting(box).setName("Endings").setDesc("Comma-separated, with leading hyphens (e.g. -lia, -mira).").addText((t) => {
+          var _a2;
+          return t.setValue(((_a2 = cls.endings) != null ? _a2 : []).join(", ")).onChange(async (v) => {
+            const endings = v.split(",").map((s) => s.trim()).filter(Boolean).map((e) => e.startsWith("-") ? e : `-${e}`);
+            editClass(this.culture, cls.id, { endings });
+            await this.save();
+          });
+        });
+      }
+      new import_obsidian.Setting(box).setName("Generation").setDesc("Meaning-bearing names let root policy steer concepts.").addDropdown((d) => {
+        var _a2;
+        d.addOption("", "Inherit culture default");
+        d.addOption("sound", "Sound");
+        d.addOption("meaning", "Meaning");
+        d.addOption("mixed", "Mixed");
+        d.setValue((_a2 = cls.generation) != null ? _a2 : "").onChange(async (v) => {
+          editClass(this.culture, cls.id, {
+            generation: v || void 0
+          });
+          await this.save();
+        });
+      });
+      new import_obsidian.Setting(box).setName("Root policy mode").addDropdown((d) => {
+        var _a2, _b;
+        d.addOption("", "None");
+        d.addOption("favour", "Favour");
+        d.addOption("lock", "Lock");
+        d.setValue((_b = (_a2 = cls.rootPolicy) == null ? void 0 : _a2.mode) != null ? _b : "").onChange(async (v) => {
+          var _a3, _b2, _c;
+          if (!v) {
+            editClass(this.culture, cls.id, { rootPolicy: void 0 });
+          } else {
+            editClass(this.culture, cls.id, {
+              rootPolicy: {
+                mode: v,
+                include: ((_b2 = (_a3 = cls.rootPolicy) == null ? void 0 : _a3.include) == null ? void 0 : _b2.length) ? cls.rootPolicy.include : ["virtue"],
+                exclude: (_c = cls.rootPolicy) == null ? void 0 : _c.exclude
+              }
+            });
+          }
+          await this.save();
+          this.render();
+        });
+      });
+      if (cls.rootPolicy) {
+        new import_obsidian.Setting(box).setName("Include").setDesc("Packs, tags, or concepts \u2014 comma-separated.").addText((t) => t.setValue(cls.rootPolicy.include.join(", ")).onChange(async (v) => {
+          const include = v.split(",").map((s) => s.trim()).filter(Boolean);
+          editClass(this.culture, cls.id, {
+            rootPolicy: { ...cls.rootPolicy, include: include.length ? include : ["virtue"] }
+          });
+          await this.save();
+        }));
+        new import_obsidian.Setting(box).setName("Exclude").addText((t) => {
+          var _a2;
+          return t.setValue(((_a2 = cls.rootPolicy.exclude) != null ? _a2 : []).join(", ")).onChange(async (v) => {
+            const exclude = v.split(",").map((s) => s.trim()).filter(Boolean);
+            editClass(this.culture, cls.id, {
+              rootPolicy: { ...cls.rootPolicy, exclude: exclude.length ? exclude : void 0 }
+            });
+            await this.save();
+          });
+        });
+      }
+      const row = new import_obsidian.Setting(box);
+      row.addButton((b) => b.setButtonText("Reroll endings").onClick(async () => {
+        const lean = cls.id === "masculine" ? "hard" : cls.id === "feminine" ? "soft" : "soft";
+        regenerateClassEndings(this.culture, cls.id, lean);
+        await this.save();
+        this.render();
+      }));
+      if (cls.kind === "class" || cls.kind === "gender" && cls.id !== "neutral") {
+        if (cls.kind === "class") {
+          row.addButton((b) => b.setButtonText("Remove").setWarning().onClick(async () => {
+            removeClass(this.culture, cls.id);
+            await this.save();
+            this.render();
+          }));
+        }
+      }
+    }
+    contentEl.createEl("h3", { text: "Add a class" });
+    new import_obsidian.Setting(contentEl).setName("Label").addText((t) => t.setPlaceholder("warriors").onChange((v) => this.newLabel = v));
+    new import_obsidian.Setting(contentEl).setName("Lean").addDropdown((d) => {
+      for (const lean of ["soft", "hard", "long", "short", "exotic"]) {
+        d.addOption(lean, lean[0].toUpperCase() + lean.slice(1));
+      }
+      d.setValue(this.newLean).onChange((v) => this.newLean = v);
+    });
+    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Add class").setCta().onClick(async () => {
+      if (!this.newLabel.trim()) {
+        new import_obsidian.Notice("Give the class a name.");
+        return;
+      }
+      addClass(this.culture, this.newLabel.trim(), this.newLean);
+      this.newLabel = "";
+      await this.save();
+      this.render();
+    })).addButton((b) => b.setButtonText("Close").onClick(() => this.close()));
+  }
   onOpen() {
     this.render();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+var ImportNamesModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, culture) {
+    super(app);
+    this.pasted = "";
+    this.plugin = plugin;
+    this.culture = culture;
+  }
+  renderPreview(host) {
+    host.empty();
+    const { candidates, rejected } = parseImportInput(this.pasted);
+    if (!this.pasted.trim()) {
+      host.createEl("p", { text: "Nothing pasted yet.", cls: "lf-hint" });
+      return;
+    }
+    host.createEl("p", {
+      text: `Will import ${candidates.length} name${candidates.length === 1 ? "" : "s"}` + (rejected.length ? `; skip ${rejected.length} non-romanised` : "") + ".",
+      cls: "lf-hint"
+    });
+    if (candidates.length) {
+      host.createEl("p", { text: candidates.join(", "), cls: "lf-glossary-items" });
+    }
+    if (rejected.length) {
+      host.createEl("p", {
+        text: `Skipped (need Latin letters): ${rejected.join(", ")}`,
+        cls: "lf-hint"
+      });
+    }
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.addClass("languageforge-modal");
+    contentEl.createEl("h2", { text: `Import into ${this.culture.name}` });
+    contentEl.createEl("p", {
+      text: "Paste romanised names (or prose containing them). Their sounds bend this language; the names themselves are reserved. Non-Latin script is skipped.",
+      cls: "lf-hint"
+    });
+    new import_obsidian.Setting(contentEl).setName("Names or text").setDesc("Comma- or line-separated, or a short paragraph of romanised words.").addTextArea((t) => {
+      t.setPlaceholder("Kaelith, Veyra, Kaeloth\n\u2014 or \u2014\nThe sisters were called Elowen and Maeriel.");
+      t.inputEl.rows = 5;
+      t.onChange((v) => {
+        this.pasted = v;
+        this.renderPreview(preview);
+      });
+    });
+    const preview = contentEl.createDiv({ cls: "lf-import-preview" });
+    this.renderPreview(preview);
+    const buttons = new import_obsidian.Setting(contentEl);
+    buttons.addButton((b) => b.setButtonText("Cancel").onClick(() => this.close()));
+    buttons.addButton((b) => b.setButtonText("Bend the sounds").setCta().onClick(async () => {
+      const previewParse = parseImportInput(this.pasted);
+      if (previewParse.candidates.length === 0) {
+        new import_obsidian.Notice(previewParse.rejected.length ? "Only non-romanised text found \u2014 use Latin letters (or romaji)." : "Paste at least one romanised name.");
+        return;
+      }
+      const result = importNames(this.culture, this.pasted);
+      this.plugin.upsertCulture(this.culture);
+      await this.plugin.persist();
+      await this.plugin.writeCultureNote(this.culture);
+      this.close();
+      const skip = result.rejected.length ? ` (skipped ${result.rejected.length})` : "";
+      new import_obsidian.Notice(
+        `Imported ${result.accepted.length} into ${this.culture.name}` + (result.segmented ? ` \u2014 ${result.segmented} shaped the phonology` : "") + skip + "."
+      );
+      await this.plugin.openCulturePage(this.culture);
+    }));
   }
   onClose() {
     this.contentEl.empty();
@@ -3645,399 +4088,394 @@ var AgeCultureModal = class extends import_obsidian.Modal {
     this.contentEl.empty();
   }
 };
-var CONTACT_TYPES = [
-  { value: "prestige", label: "Prestige \u2014 a ruling/administrative tongue lends downward" },
-  { value: "substrate", label: "Substrate \u2014 the conquered tongue survives underneath" },
-  { value: "adstrate", label: "Adstrate \u2014 neighbours trading as equals" }
-];
-var CONTACT_STRENGTHS = [
-  { value: 0.2, label: "Light" },
-  { value: 0.5, label: "Moderate" },
-  { value: 0.8, label: "Heavy" }
-];
-var CONTACT_DOMAINS = ["administration", "religion", "warfare", "trade", "place-features"];
-var ContactEdgeModal = class extends import_obsidian.Modal {
-  constructor(app, plugin) {
-    var _a, _b, _c, _d, _e, _f;
-    super(app);
-    this.contactType = "prestige";
-    this.strength = 0.5;
-    this.domains = /* @__PURE__ */ new Set();
-    this.preview = null;
-    this.pendingEdge = null;
-    this.plugin = plugin;
-    this.donorId = (_b = (_a = plugin.data.cultures[0]) == null ? void 0 : _a.id) != null ? _b : "";
-    this.borrowerId = (_f = (_e = (_c = plugin.data.cultures[1]) == null ? void 0 : _c.id) != null ? _e : (_d = plugin.data.cultures[0]) == null ? void 0 : _d.id) != null ? _f : "";
-  }
-  render() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("languageforge-modal");
-    contentEl.createEl("h2", { text: "Connect two languages via contact" });
-    contentEl.createEl("p", {
-      text: "A directed relationship: the donor lends vocabulary, reshaped to fit the borrower's sounds, as it crosses.",
-      cls: "lf-hint"
-    });
-    new import_obsidian.Setting(contentEl).setName("Donor").addDropdown((d) => {
-      for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
-      d.setValue(this.donorId).onChange((v) => {
-        this.donorId = v;
-        this.preview = null;
-      });
-    });
-    new import_obsidian.Setting(contentEl).setName("Borrower").addDropdown((d) => {
-      for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
-      d.setValue(this.borrowerId).onChange((v) => {
-        this.borrowerId = v;
-        this.preview = null;
-      });
-    });
-    new import_obsidian.Setting(contentEl).setName("Contact type").addDropdown((d) => {
-      for (const t of CONTACT_TYPES) d.addOption(t.value, t.label);
-      d.setValue(this.contactType).onChange((v) => {
-        this.contactType = v;
-        this.preview = null;
-      });
-    });
-    new import_obsidian.Setting(contentEl).setName("Strength").setDesc("How much of the donor's vocabulary crosses.").addDropdown((d) => {
-      for (const s of CONTACT_STRENGTHS) d.addOption(String(s.value), s.label);
-      d.setValue(String(this.strength)).onChange((v) => {
-        this.strength = Number(v);
-        this.preview = null;
-      });
-    });
-    contentEl.createEl("p", { text: "Which kinds of words cross:", cls: "lf-hint" });
-    for (const dom of CONTACT_DOMAINS) {
-      new import_obsidian.Setting(contentEl).setName(dom).addToggle((t) => t.setValue(this.domains.has(dom)).onChange((on) => {
-        if (on) this.domains.add(dom);
-        else this.domains.delete(dom);
-        this.preview = null;
-      }));
-    }
-    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Preview").setCta().onClick(() => {
-      const donor = this.plugin.data.cultures.find((c) => c.id === this.donorId);
-      const borrower = this.plugin.data.cultures.find((c) => c.id === this.borrowerId);
-      if (!donor || !borrower) {
-        new import_obsidian.Notice("Pick a donor and a borrower first.");
-        return;
-      }
-      if (donor.id === borrower.id) {
-        new import_obsidian.Notice("Donor and borrower must be different languages.");
-        return;
-      }
-      const edge = {
-        id: `${donor.id}->${borrower.id}::${Date.now().toString(36)}`,
-        donorId: donor.id,
-        borrowerId: borrower.id,
-        contactType: this.contactType,
-        strength: this.strength,
-        domains: [...this.domains]
-      };
-      this.preview = previewContactEdge(donor, borrower, edge);
-      this.pendingEdge = edge;
-      this.render();
-    }));
-    if (this.preview) {
-      const borrower = this.plugin.data.cultures.find((c) => c.id === this.borrowerId);
-      contentEl.createEl("h3", { text: `Loanwords ${borrower.name} would gain` });
-      const grid = contentEl.createDiv({ cls: "lf-specimens" });
-      for (const s of this.preview.samples) {
-        const chip = grid.createDiv({ cls: "lf-specimen" });
-        chip.createDiv({ text: s.name, cls: "lf-specimen-name" });
-        chip.createDiv({ text: s.pronunciation, cls: "lf-specimen-pron" });
-      }
-      contentEl.createEl("p", {
-        text: `Words: ${this.preview.loanedRoots.map((r) => `${r.form} = ${r.meaning}`).join("  \xB7  ") || "(none survived the borrower's phonotactics)"}`,
-        cls: "lf-hint"
-      });
-      const actions = new import_obsidian.Setting(contentEl);
-      actions.addButton((b) => b.setButtonText("Save contact edge").onClick(async () => {
-        const edge = this.pendingEdge;
-        if (!edge) return;
-        this.plugin.data.contactEdges.push(edge);
-        await this.plugin.persist();
-        new import_obsidian.Notice("Contact edge saved.");
-      }));
-      actions.addButton((b) => b.setButtonText(`Add loanwords to ${borrower.name}`).setCta().onClick(async () => {
-        if (!this.preview || this.preview.loanedRoots.length === 0) {
-          new import_obsidian.Notice("Nothing to add.");
-          return;
-        }
-        acceptLoanedRoots(borrower, this.preview.loanedRoots);
-        this.plugin.upsertCulture(borrower);
-        await this.plugin.persist();
-        new import_obsidian.Notice(`${this.preview.loanedRoots.length} loanword(s) added to ${borrower.name}.`);
-      }));
-    }
-    new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Close").onClick(() => this.close()));
-  }
-  onOpen() {
-    this.render();
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
 var FamilyTreeModal = class extends import_obsidian.Modal {
   constructor(app, plugin) {
     super(app);
     this.plugin = plugin;
   }
   onOpen() {
-    const { contentEl } = this;
-    contentEl.addClass("languageforge-modal");
-    contentEl.createEl("h2", { text: "Family tree" });
-    const all = this.plugin.data.cultures;
-    if (all.length === 0) {
-      contentEl.createEl("p", { text: "No cultures yet.", cls: "lf-hint" });
-      return;
-    }
-    const roots = all.filter((c) => !c.parentIds || c.parentIds.length === 0);
-    if (roots.length === 0) {
-      contentEl.createEl("p", { text: "No root languages found.", cls: "lf-hint" });
-      return;
-    }
-    for (const root of roots) {
-      const section = contentEl.createDiv({ cls: "lf-tree-section" });
-      this.renderNode(section, root, all, 0, /* @__PURE__ */ new Set());
-    }
-  }
-  renderNode(container, culture, all, depth, visited) {
-    var _a, _b, _c, _d, _e;
-    const row = container.createDiv({ cls: "lf-tree-node" });
-    row.style.marginLeft = `${depth * 18}px`;
-    const parents = ((_a = culture.parentIds) != null ? _a : []).map((id) => all.find((c) => c.id === id)).filter((c) => !!c);
-    const packLabel = ((_b = culture.driftPackIds) == null ? void 0 : _b.length) ? ` [${culture.driftPackIds.join("+")}]` : "";
-    const relLabel = parents.length === 0 ? "root" : parents.length === 1 ? `${(_c = culture.driftLevel) != null ? _c : "drift"} of ${parents[0].name}${packLabel}` : `merged: ${parents.map((p) => p.name).join(" + ")} (${(_d = culture.driftLevel) != null ? _d : "contact"})${packLabel}`;
-    const label = row.createEl("a", {
-      text: `${culture.name}  \xB7  gen ${(_e = culture.generation) != null ? _e : 0}  \xB7  ${relLabel}`,
-      cls: "lf-tree-link"
-    });
-    label.onClickEvent(() => {
-      this.close();
-      new CultureCardModal(this.app, this.plugin, culture, false).open();
-    });
-    if (visited.has(culture.id)) {
-      row.createSpan({ text: "  (see above)", cls: "lf-hint" });
-      return;
-    }
-    visited.add(culture.id);
-    if (depth > 50) return;
-    const children = all.filter((c) => {
-      var _a2;
-      return (_a2 = c.parentIds) == null ? void 0 : _a2.includes(culture.id);
-    });
-    for (const child of children) this.renderNode(container, child, all, depth + 1, visited);
+    this.modalEl.addClass("lf-languages-modal");
+    this.modalEl.addClass("lf-family-tree-modal");
+    this.render();
   }
   onClose() {
     this.contentEl.empty();
-  }
-};
-var GenerateModal = class extends import_obsidian.Modal {
-  constructor(app, plugin, cultureId) {
-    super(app);
-    this.category = "personal";
-    this.placeType = "settlement";
-    this.mode = "sound";
-    this.traditionId = null;
-    // null = "None — use culture's own patterns"
-    this.gender = "neutral";
-    this.batch = [];
-    this.starred = /* @__PURE__ */ new Set();
-    this.plugin = plugin;
-    this.cultureId = cultureId != null ? cultureId : plugin.data.cultures[0].id;
-  }
-  get culture() {
-    var _a;
-    return (_a = this.plugin.data.cultures.find((c) => c.id === this.cultureId)) != null ? _a : this.plugin.data.cultures[0];
-  }
-  // Gap 4: for places, generation (and its registry bookkeeping) runs against whichever
-  // ancestor the place type's drift depth resolves to — a "feature" may draw on a much
-  // older tongue than the culture the user actually selected.
-  getGenCulture() {
-    return this.category === "place" ? resolvePlaceSourceCulture(this.culture, this.plugin.data.cultures, this.placeType) : this.culture;
-  }
-  newBatch() {
-    const genCulture = this.getGenCulture();
-    if (this.traditionId && this.category !== "title") {
-      const tradition = NAMING_TRADITIONS[this.traditionId];
-      const added = ensureConceptsMinted(genCulture, traditionConceptUniverse(tradition));
-      if (added) void this.plugin.persist();
-      this.batch = generateTraditionBatch(
-        genCulture,
-        tradition,
-        this.category,
-        this.plugin.data.settings.batchSize,
-        this.gender,
-        this.placeType
-      );
-    } else {
-      this.batch = generateBatch(genCulture, this.category, this.plugin.data.settings.batchSize, this.mode);
-    }
-    this.starred.clear();
   }
   render() {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("languageforge-modal");
-    contentEl.createEl("h2", { text: "Generate names" });
-    const controls = new import_obsidian.Setting(contentEl);
-    controls.addDropdown((d) => {
-      for (const c of this.plugin.data.cultures) d.addOption(c.id, c.name);
-      d.setValue(this.cultureId).onChange((v) => {
-        this.cultureId = v;
-        this.newBatch();
-        this.render();
-      });
+    const titleRow = contentEl.createDiv({ cls: "lf-modal-title-row" });
+    titleRow.createEl("h2", { text: "Languages", cls: "lf-modal-title" });
+    const addBtn = titleRow.createEl("button", {
+      cls: "lf-modal-title-action",
+      attr: { type: "button", title: "Create language", "aria-label": "Create language" }
     });
-    controls.addDropdown((d) => {
-      d.addOption("personal", "People");
-      d.addOption("house", "Houses");
-      d.addOption("place", "Places");
-      d.addOption("title", "Titles");
-      d.setValue(this.category).onChange((v) => {
-        this.category = v;
-        this.newBatch();
-        this.render();
-      });
-    });
-    if (this.category === "place") {
-      controls.addDropdown((d) => {
-        d.addOption("settlement", "Settlement");
-        d.addOption("kingdom", "Kingdom");
-        d.addOption("continent", "Continent");
-        d.addOption("feature", "Feature (river, peak\u2026)");
-        d.setValue(this.placeType).onChange((v) => {
-          this.placeType = v;
-          this.newBatch();
-          this.render();
-        });
-      });
-    }
-    controls.addDropdown((d) => {
-      var _a;
-      d.addOption("", "None \u2014 use culture's own patterns");
-      for (const [id, tr] of Object.entries(NAMING_TRADITIONS)) d.addOption(id, tr.label);
-      d.setValue((_a = this.traditionId) != null ? _a : "").onChange((v) => {
-        this.traditionId = v || null;
-        this.newBatch();
-        this.render();
-      });
-    });
-    if (this.traditionId && this.category === "personal") {
-      controls.addDropdown((d) => {
-        d.addOption("masculine", "Masculine");
-        d.addOption("feminine", "Feminine");
-        d.addOption("neutral", "Neutral");
-        d.setValue(this.gender).onChange((v) => {
-          this.gender = v;
-          this.newBatch();
-          this.render();
-        });
-      });
-    }
-    if (!this.traditionId || this.category === "title") {
-      controls.addDropdown((d) => {
-        d.addOption("sound", "By sound");
-        d.addOption("meaning", "By meaning");
-        d.setValue(this.mode).onChange((v) => {
-          this.mode = v;
-          this.newBatch();
-          this.render();
-        });
-      });
-    }
-    controls.addButton((b) => b.setButtonText("New culture\u2026").onClick(() => {
-      this.close();
-      new SeedWizardModal(this.app, this.plugin).open();
-    }));
-    controls.addButton((b) => b.setButtonText("Branch a new language\u2026").onClick(() => {
-      this.close();
-      new DeriveCultureModal(this.app, this.plugin, this.culture.id).open();
-    }));
-    controls.addButton((b) => b.setButtonText("Family tree\u2026").onClick(() => {
-      this.close();
-      new FamilyTreeModal(this.app, this.plugin).open();
-    }));
-    contentEl.createEl("p", { text: this.culture.summary, cls: "lf-hint" });
-    const genCulture = this.getGenCulture();
-    if (genCulture.id !== this.culture.id) {
-      contentEl.createEl("p", {
-        text: `Drawing on ${genCulture.name}'s older tongue (${this.placeType} names run deep).`,
+    (0, import_obsidian.setIcon)(addBtn, "plus");
+    addBtn.onclick = () => {
+      const create = new CreateLanguageModal(this.app, this.plugin);
+      const prevOpen = create.onOpen.bind(create);
+      create.onOpen = () => {
+        prevOpen();
+        create.containerEl.addClass("lf-stacked-modal-container");
+      };
+      create.open();
+    };
+    const panes = contentEl.createDiv({ cls: "lf-tab-panes is-tree" });
+    if (this.plugin.data.cultures.length === 0) {
+      panes.createEl("p", {
+        text: "No languages yet. Use + to create one.",
         cls: "lf-hint"
       });
+      return;
     }
-    const grid = contentEl.createDiv({ cls: "lf-batch" });
-    this.batch.forEach((g, i) => {
-      const chip = grid.createDiv({ cls: "lf-name-chip" + (this.starred.has(i) ? " is-starred" : "") });
-      chip.createSpan({ text: (this.starred.has(i) ? "\u2605 " : "") + g.name, cls: "lf-chip-name" });
-      if (this.plugin.data.settings.showPronunciation) chip.createDiv({ text: g.pronunciation, cls: "lf-chip-pron" });
-      if (g.gloss) chip.createDiv({ text: g.gloss, cls: "lf-chip-gloss" });
-      chip.onClickEvent(() => {
-        if (this.starred.has(i)) this.starred.delete(i);
-        else this.starred.add(i);
-        this.render();
-      });
+    renderFamilyTreeView(panes, this.plugin.data.cultures, (cultureId) => {
+      const culture = this.plugin.data.cultures.find((c) => c.id === cultureId);
+      if (!culture) return;
+      this.plugin.openGenerate({ cultureId: culture.id });
     });
-    if (this.batch.length === 0) {
-      contentEl.createEl("p", { text: "Nothing passed the gates \u2014 try reshuffling the culture's sounds.", cls: "lf-hint" });
-    }
-    contentEl.createEl("p", {
-      text: "Tap names you like, then ask for more like them \u2014 the culture learns your taste.",
-      cls: "lf-hint"
-    });
-    const actions = new import_obsidian.Setting(contentEl);
-    actions.addButton((b) => b.setButtonText("New batch").onClick(() => {
-      this.newBatch();
-      this.render();
-    }));
-    actions.addButton((b) => {
-      b.setButtonText("More like starred").onClick(async () => {
-        const starredNames = [...this.starred].map((i) => this.batch[i]);
-        if (starredNames.length === 0) {
-          new import_obsidian.Notice("Star a name or two first.");
-          return;
-        }
-        reinforce(this.getGenCulture(), starredNames);
-        await this.plugin.persist();
-        this.newBatch();
-        this.render();
-      });
-      if (this.starred.size === 0) b.buttonEl.addClass("lf-disabled");
-    });
-    actions.addButton((b) => b.setButtonText("Insert into note").setCta().onClick(async () => {
-      const chosen = this.starred.size > 0 ? [...this.starred].map((i) => this.batch[i]) : this.batch;
-      const view = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView);
-      if (!view) {
-        new import_obsidian.Notice("Open a note to insert into.");
-        return;
-      }
-      this.insert(view.editor, chosen);
-      for (const g of chosen) {
-        if (!this.getGenCulture().registry.includes(g.name.toLowerCase())) this.getGenCulture().registry.push(g.name.toLowerCase());
-      }
-      await this.plugin.persist();
-      new import_obsidian.Notice(`${chosen.length} name${chosen.length === 1 ? "" : "s"} inserted and reserved.`);
-      this.close();
-    }));
   }
-  insert(editor, names) {
-    const { showPronunciation, insertFormat } = this.plugin.data.settings;
-    const fmt = (g) => {
-      let s = g.name;
-      if (showPronunciation) s += ` (*${g.pronunciation}*)`;
-      if (g.gloss) s += ` \u2014 ${g.gloss}`;
-      return s;
+};
+function hubSelectorsFor(culture) {
+  ensureCultureClasses(culture);
+  const out = [];
+  for (const cls of visibleClasses(culture)) {
+    out.push({ id: `class:${cls.id}`, label: cls.label, sel: { kind: "class", classId: cls.id } });
+  }
+  out.push({ id: "cat:house", label: "houses", sel: { kind: "category", category: "house" } });
+  out.push({ id: "cat:place", label: "places", sel: { kind: "category", category: "place", placeType: "settlement" } });
+  out.push({ id: "cat:title", label: "titles", sel: { kind: "category", category: "title" } });
+  return out;
+}
+function hubPackOptions(cultures) {
+  const out = [];
+  for (const c of cultures) {
+    for (const o of hubSelectorsFor(c)) {
+      out.push({
+        key: `${c.id}::${o.id}`,
+        cultureId: c.id,
+        selectorId: o.id,
+        label: `${c.name} - ${o.label}`,
+        sel: o.sel
+      });
+    }
+  }
+  return out;
+}
+function runHubBatch(plugin, culture, sel, count) {
+  var _a;
+  ensureCultureClasses(culture);
+  const n = count != null ? count : plugin.data.settings.batchSize;
+  if (sel.kind === "class") {
+    return generateBatch(culture, "personal", n, void 0, sel.classId);
+  }
+  if (sel.category === "place") {
+    const src = resolvePlaceSourceCulture(culture, plugin.data.cultures, (_a = sel.placeType) != null ? _a : "settlement");
+    return generateBatch(src, "place", n, void 0);
+  }
+  return generateBatch(culture, sel.category, n, void 0);
+}
+function formatGeneratedLine(g) {
+  var _a;
+  const gloss = (_a = g.gloss) == null ? void 0 : _a.trim();
+  if (gloss) return `${g.name} (${g.pronunciation}) (${gloss})`;
+  return `${g.name} (${g.pronunciation})`;
+}
+var HUB_BATCH_COUNTS = [10, 15, 25, 50, 100];
+var GenerateModal = class extends import_obsidian.Modal {
+  constructor(app, plugin, opts) {
+    var _a, _b, _c, _d;
+    super(app);
+    this.activeGen = null;
+    this.packKey = "";
+    this.batchCount = 25;
+    this.batch = [];
+    this.resultsEl = null;
+    this.clearResultsSelection = () => {
     };
-    const text = insertFormat === "inline" ? names.map((g) => g.name).join(", ") : names.map((g) => `- ${fmt(g)}`).join("\n") + "\n";
-    editor.replaceSelection(text);
+    this.plugin = plugin;
+    const cultures = plugin.data.cultures;
+    const pre = (opts == null ? void 0 : opts.cultureId) ? cultures.find((c) => c.id === opts.cultureId) : void 0;
+    this.activeGen = resolveGenTab(
+      pre ? (_a = pre.generation) != null ? _a : 0 : null,
+      cultures,
+      "newest"
+    );
+    const packs = this.packsForActiveGen();
+    if (opts == null ? void 0 : opts.cultureId) {
+      const want = opts.selectorId ? `${opts.cultureId}::${opts.selectorId}` : (_b = packs.find((p) => p.cultureId === opts.cultureId)) == null ? void 0 : _b.key;
+      if (want && packs.some((p) => p.key === want)) this.packKey = want;
+    }
+    if (!this.packKey) this.packKey = (_d = (_c = packs[0]) == null ? void 0 : _c.key) != null ? _d : "";
+  }
+  culturesForActiveGen() {
+    var _a;
+    this.activeGen = resolveGenTab(this.activeGen, this.plugin.data.cultures, "newest");
+    const group = culturesByGeneration(this.plugin.data.cultures).find((g) => g.gen === this.activeGen);
+    return (_a = group == null ? void 0 : group.cultures) != null ? _a : [];
+  }
+  packsForActiveGen() {
+    return hubPackOptions(this.culturesForActiveGen());
+  }
+  currentPack() {
+    var _a;
+    return (_a = this.packsForActiveGen().find((p) => p.key === this.packKey)) != null ? _a : hubPackOptions(this.plugin.data.cultures).find((p) => p.key === this.packKey);
+  }
+  currentCulture() {
+    const pack = this.currentPack();
+    if (!pack) return void 0;
+    return this.plugin.data.cultures.find((c) => c.id === pack.cultureId);
+  }
+  registryCulture() {
+    var _a;
+    const pack = this.currentPack();
+    const culture = this.currentCulture();
+    if (!pack || !culture) return void 0;
+    if (pack.sel.kind === "category" && pack.sel.category === "place") {
+      return resolvePlaceSourceCulture(
+        culture,
+        this.plugin.data.cultures,
+        (_a = pack.sel.placeType) != null ? _a : "settlement"
+      );
+    }
+    return culture;
   }
   onOpen() {
-    this.newBatch();
+    this.modalEl.addClass("lf-generate-modal");
+    this.containerEl.addClass("lf-stacked-modal-container");
     this.render();
   }
   onClose() {
     this.contentEl.empty();
+  }
+  render() {
+    var _a, _b;
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("languageforge-modal");
+    contentEl.addClass("lf-generate-body");
+    if (this.plugin.data.cultures.length === 0) {
+      contentEl.createEl("p", { text: "No languages yet.", cls: "lf-hint" });
+      return;
+    }
+    this.activeGen = resolveGenTab(this.activeGen, this.plugin.data.cultures, "newest");
+    const genGroups = culturesByGeneration(this.plugin.data.cultures);
+    const packs = this.packsForActiveGen();
+    if (!packs.some((p) => p.key === this.packKey)) this.packKey = (_b = (_a = packs[0]) == null ? void 0 : _a.key) != null ? _b : "";
+    const options = contentEl.createDiv({ cls: "lf-generate-options" });
+    const packRow = options.createDiv({ cls: "lf-generate-pack-row" });
+    const genSelect = packRow.createEl("select", {
+      cls: "dropdown lf-generate-gen-select",
+      attr: { "aria-label": "Generation" }
+    });
+    for (const g of genGroups) {
+      const opt = genSelect.createEl("option", { text: `Gen ${g.gen}`, value: String(g.gen) });
+      if (g.gen === this.activeGen) opt.selected = true;
+    }
+    genSelect.onchange = () => {
+      var _a2, _b2;
+      this.activeGen = Number(genSelect.value);
+      this.packKey = (_b2 = (_a2 = this.packsForActiveGen()[0]) == null ? void 0 : _a2.key) != null ? _b2 : "";
+      this.batch = [];
+      this.render();
+    };
+    const select = packRow.createEl("select", { cls: "dropdown lf-generate-pack-select" });
+    if (packs.length === 0) {
+      select.createEl("option", { text: "No languages in this generation", value: "" });
+      select.disabled = true;
+    } else {
+      for (const p of packs) {
+        const opt = select.createEl("option", { text: p.label, value: p.key });
+        if (p.key === this.packKey) opt.selected = true;
+      }
+      select.onchange = () => {
+        this.packKey = select.value;
+        this.batch = [];
+        this.renderResults(this.batch, "Generate names to see them here.");
+      };
+    }
+    const infoBtn = packRow.createEl("button", {
+      cls: "lf-generate-info-button",
+      attr: {
+        type: "button",
+        title: "Language info",
+        "aria-label": "Language info"
+      }
+    });
+    (0, import_obsidian.setIcon)(infoBtn, "info");
+    infoBtn.disabled = !this.currentCulture();
+    infoBtn.onclick = () => {
+      const culture = this.currentCulture();
+      if (!culture) return;
+      new CultureCardModal(this.app, this.plugin, culture, false, {
+        hostModal: this
+      }).open();
+    };
+    const quantity = options.createDiv({ cls: "lf-toggle-panel lf-quantity-toggle" });
+    for (const n of HUB_BATCH_COUNTS) {
+      const btn = quantity.createEl("button", {
+        text: String(n),
+        cls: "lf-toggle-button" + (n === this.batchCount ? " is-active" : ""),
+        attr: { type: "button", "aria-pressed": n === this.batchCount ? "true" : "false" }
+      });
+      btn.onclick = () => {
+        this.batchCount = n;
+        quantity.querySelectorAll(".lf-toggle-button").forEach((el) => {
+          const b = el;
+          const active = b.textContent === String(n);
+          b.toggleClass("is-active", active);
+          b.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      };
+    }
+    const genBtn = options.createEl("button", {
+      text: "Generate",
+      cls: "lf-generate-button",
+      attr: { type: "button" }
+    });
+    genBtn.disabled = packs.length === 0;
+    genBtn.onclick = () => this.runGenerate();
+    this.resultsEl = contentEl.createDiv({ cls: "lf-generate-results" });
+    this.renderResults(
+      this.batch,
+      this.batch.length === 0 ? "Generate names to see them here." : void 0
+    );
+  }
+  runGenerate() {
+    const pack = this.currentPack();
+    const culture = this.currentCulture();
+    if (!pack || !culture) {
+      new import_obsidian.Notice("Select a culture and pack first.");
+      return;
+    }
+    this.batch = runHubBatch(this.plugin, culture, pack.sel, this.batchCount);
+    this.renderResults(
+      this.batch,
+      this.batch.length === 0 ? "Nothing passed the gates \u2014 try another pack." : void 0
+    );
+  }
+  renderResults(names, placeholderMessage) {
+    if (!this.resultsEl) return;
+    this.resultsEl.empty();
+    const list = this.resultsEl.createEl("ul", { cls: "lf-results-list" });
+    const actions = this.resultsEl.createDiv({ cls: "lf-results-actions" });
+    const buttons = actions.createDiv({ cls: "lf-results-buttons" });
+    const insertBtn = buttons.createEl("button", {
+      text: "Insert",
+      cls: "lf-text-button",
+      attr: { type: "button", title: "Insert selected name" }
+    });
+    const checklistBtn = buttons.createEl("button", {
+      text: "Checklist",
+      cls: "lf-text-button",
+      attr: { type: "button", title: "Insert checklist" }
+    });
+    const listBtn = buttons.createEl("button", {
+      text: "List",
+      cls: "lf-text-button",
+      attr: { type: "button", title: "Insert bullet list" }
+    });
+    const selectedNames = () => {
+      const out = [];
+      list.querySelectorAll("li.is-selected").forEach((el) => {
+        const i = Number(el.dataset.index);
+        if (Number.isFinite(i) && names[i]) out.push(names[i]);
+      });
+      return out;
+    };
+    const updateButtons = () => {
+      const selected = selectedNames();
+      insertBtn.disabled = selected.length !== 1;
+      checklistBtn.disabled = selected.length === 0;
+      listBtn.disabled = selected.length === 0;
+    };
+    this.clearResultsSelection = () => {
+      list.querySelectorAll("li.is-selected").forEach((el) => el.removeClass("is-selected"));
+      updateButtons();
+    };
+    if (placeholderMessage) {
+      list.createEl("li", { text: placeholderMessage, cls: "lf-results-placeholder" });
+    } else {
+      names.forEach((g, i) => {
+        const item = list.createEl("li", { text: formatGeneratedLine(g) });
+        item.dataset.index = String(i);
+        item.onclick = () => {
+          item.toggleClass("is-selected", !item.hasClass("is-selected"));
+          updateButtons();
+        };
+      });
+    }
+    insertBtn.onclick = async () => {
+      var _a, _b, _c;
+      const [g] = selectedNames();
+      if (!g) return;
+      const editor = (_c = (_a = this.app.workspace.activeEditor) == null ? void 0 : _a.editor) != null ? _c : (_b = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView)) == null ? void 0 : _b.editor;
+      if (!editor) {
+        new import_obsidian.Notice("Open a note to insert into.");
+        return;
+      }
+      editor.replaceSelection(g.name);
+      editor.focus();
+      await this.reserveNames([g]);
+      this.close();
+    };
+    checklistBtn.onclick = async () => {
+      const selected = selectedNames();
+      if (selected.length === 0) return;
+      if (!this.insertNamesAsList(selected.map((g) => g.name), "checklist")) return;
+      await this.reserveNames(selected);
+      this.clearResultsSelection();
+    };
+    listBtn.onclick = async () => {
+      const selected = selectedNames();
+      if (selected.length === 0) return;
+      if (!this.insertNamesAsList(selected.map((g) => g.name), "bullet")) return;
+      await this.reserveNames(selected);
+      this.clearResultsSelection();
+    };
+    updateButtons();
+  }
+  async reserveNames(names) {
+    const target = this.registryCulture();
+    if (!target) return;
+    let changed = false;
+    for (const g of names) {
+      const key = g.name.toLowerCase();
+      if (!target.registry.includes(key)) {
+        target.registry.push(key);
+        changed = true;
+      }
+    }
+    if (changed) await this.plugin.persist();
+  }
+  insertNamesAsList(names, listType) {
+    var _a, _b, _c, _d, _e;
+    if (names.length === 0) return false;
+    const editor = (_c = (_a = this.app.workspace.activeEditor) == null ? void 0 : _a.editor) != null ? _c : (_b = this.app.workspace.getActiveViewOfType(import_obsidian.MarkdownView)) == null ? void 0 : _b.editor;
+    if (!editor) {
+      new import_obsidian.Notice("Open a note to insert into.");
+      return false;
+    }
+    const marker = listType === "checklist" ? "- [ ] " : "- ";
+    const emptyMarkerPattern = listType === "checklist" ? /^(\s*)[-*+]\s\[ \]\s$/ : /^(\s*)[-*+]\s$/;
+    const cursor = editor.getCursor();
+    const lineText = editor.getLine(cursor.line);
+    let from = cursor;
+    let insertion;
+    if (/^\s*$/.test(lineText)) {
+      insertion = names.map((name) => `${marker}${name}`).join("\n");
+    } else if (cursor.ch === lineText.length && emptyMarkerPattern.test(lineText)) {
+      const indent = (_e = (_d = lineText.match(emptyMarkerPattern)) == null ? void 0 : _d[1]) != null ? _e : "";
+      const [first, ...rest] = names;
+      insertion = first + rest.map((name) => `
+${indent}${marker}${name}`).join("");
+    } else {
+      from = { line: cursor.line, ch: lineText.length };
+      insertion = "\n" + names.map((name) => `${marker}${name}`).join("\n");
+    }
+    editor.replaceRange(insertion, from);
+    editor.focus();
+    return true;
   }
 };
 var PickCultureModal = class extends import_obsidian.Modal {
@@ -4074,14 +4512,14 @@ var LanguageForgeSettingTab = class extends import_obsidian.PluginSettingTab {
       new SeedWizardModal(this.app, this.plugin).open();
     }));
     if (this.plugin.data.cultures.length > 0) {
-      new import_obsidian.Setting(containerEl).setName("Branch or merge a language").setDesc("Derive a descendant from one parent, or merge two or more existing languages together via contact.").addButton((b) => b.setButtonText("Branch a language\u2026").onClick(() => {
-        new DeriveCultureModal(this.app, this.plugin).open();
+      new import_obsidian.Setting(containerEl).setName("Branch or contact").setDesc("Derive a descendant, or connect two languages via directed contact (donor \u2192 borrower).").addButton((b) => b.setButtonText("Open Child tab\u2026").onClick(() => {
+        new CreateLanguageModal(this.app, this.plugin, "child").open();
       }));
       new import_obsidian.Setting(containerEl).setName("Family tree").setDesc("Browse every language's ancestors and descendants.").addButton((b) => b.setButtonText("View family tree\u2026").onClick(() => {
         new FamilyTreeModal(this.app, this.plugin).open();
       }));
     }
-    new import_obsidian.Setting(containerEl).setName("Folder for culture cards").setDesc("Culture notes are saved under this folder.").addText((t) => t.setValue(this.plugin.data.settings.folder).onChange(async (v) => {
+    new import_obsidian.Setting(containerEl).setName("Folder for language pages").setDesc("Language notes are saved as LanguageForge/Name.md under this folder (default LanguageForge).").addText((t) => t.setValue(this.plugin.data.settings.folder).onChange(async (v) => {
       this.plugin.data.settings.folder = v.trim() || DEFAULT_SETTINGS.folder;
       await this.plugin.persist();
     }));

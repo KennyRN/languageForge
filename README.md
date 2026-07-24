@@ -1,37 +1,45 @@
 # languageForge — Obsidian plugin
 
-Seed naming cultures for your world. Three commands, one card, everything else behind it.
+Seed naming cultures for your world. Build a language family tree, generate names with pronunciation and meaning, and evolve languages across generations.
 
 ## Install
 
-1. Copy `main.js`, `manifest.json`, and `styles.css` into `<your vault>/.obsidian/plugins/languageforge/`
-2. In Obsidian: Settings → Community plugins → enable **languageForge**
+### From a release
 
-## The three commands (Ctrl/Cmd-P) — plus a ribbon shortcut
+1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest GitHub release](https://github.com/KennyRN/languageForge/releases)
+2. Copy them into `<your vault>/.obsidian/plugins/languageforge/`
+3. In Obsidian: Settings → Community plugins → enable **languageForge**
 
-A ribbon icon (the "languages" glyph) runs **Generate names** directly, so the
-most common action doesn't need the command palette — it falls back to
-**Create a culture** first if you don't have one yet.
-
-**Create a culture** — four choices (sound, register, familiarity, environment), optional word themes behind a disclosure. You get a *culture card*: a one-breath description of how the names work, six specimens with pronunciation, and a preview of the culture's own words. Reshuffle until it feels right, then accept.
-
-**Create a culture from names you already have** — paste two or more names you've invented (`Kaelith, Veyra`). The engine works out a phonology consistent with them, weights their sounds heavily, and generates kin. Your originals are reserved: nothing colliding with them will ever be generated.
-
-**Generate names** — batches of people, houses, or places, by sound or by meaning (meaning-mode names carry a gloss, e.g. *Tsaraenkae — rune + strong*). Tap the names you like and hit **More like starred**: the culture learns your taste (verified: one star measurably raises that ending's share of the next batch, 20/20 trials). **Insert into note** writes them at your cursor — with say-it-like pronunciation — and reserves them so nothing near-identical appears again.
-
-**Save a culture card as a note** writes a full card into your vault: frontmatter (including the reproducibility seed), the one-breath line, samples, and the culture's whole glossary with frequency labels.
-
-## What's under the hood (touch only if you want to)
-
-- All names pass the framework's Step 6 gates: joinery, echo/stutter filters, the throwaway-U check, connotation blocklist, and a per-culture registry.
-- Word forms are **minted once, stably** — "sword" sounds the same in this culture forever, seeded by the culture's own seed.
-- Concept weighting is capped multiplicity, shown only as rare/normal/common/dominant.
-- Element data is generated from `starter-packs-v2.json`, which is itself validated by `pack_validator.py`. Edit the JSON, re-validate, regenerate `src/data.ts` — never hand-edit the TS.
-
-## Build from source
+### From source
 
 ```
 npm install
-npx tsc                 # type-check
+npx tsc --noEmit
 npx esbuild src/main.ts --bundle --external:obsidian --format=cjs --platform=browser --target=es2019 --outfile=main.js
 ```
+
+Then copy `main.js`, `manifest.json`, and `styles.css` into the plugin folder as above.
+
+## Ribbon
+
+- **Generate** — open the name generator (falls back to Languages if you have no cultures yet)
+- **Languages** (tree icon) — family tree of your cultures; click a language to generate names for it, or use **+** to create / evolve languages
+
+## Commands (Ctrl/Cmd-P)
+
+**Create a culture** — sound, register, familiarity, environment, optional word themes. Accept a culture card when it feels right.
+
+**Create a culture from names you already have** — paste two or more names (`Kaelith, Veyra`). The engine reverse-seeds a phonology consistent with them and reserves your originals.
+
+**Generate names** — pick a generation and culture–pack, choose quantity, generate. Results show pronunciation and meaning. Multi-select, then Insert / Checklist / List into the active note.
+
+**Languages** — family tree view (same as the ribbon).
+
+Child languages support **Language aging** (branch from one parent) and **Language intermixing** (directional contact between two languages of the same generation).
+
+## What's under the hood
+
+- All names pass Step 6 readability gates (joinery, echo, throwaway-U, connotation, per-culture registry).
+- Word forms are minted once and stay stable for that culture.
+- Drift packs, place strata, naming traditions, titles, and etymological vs phonetic spelling are all wired into generation.
+- Data lives in `/data` JSON (validated by `/tools`). Edit JSON, validate, regenerate `src/data.ts` — never hand-edit the TS port.

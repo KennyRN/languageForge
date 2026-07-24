@@ -1,4 +1,4 @@
-import { seedCulture, reverseSeedCulture, generateBatch, reinforce, makeCultureCard, pronounce, cultureNote, weightLabel } from "./src/engine";
+import { seedCulture, reverseSeedCulture, generateBatch, makeCultureCard, pronounce, renderLanguagePage, weightLabel, placeholderName, refreshSamples } from "./src/engine";
 
 // 1. Seed a pack-path culture, deterministic seed
 const c = seedCulture({ name: "Velari", mood: "soft", register: "balanced", familiarity: "familiar", environment: "coastal", packs: ["arcane"], seed: "velari-test" });
@@ -25,13 +25,9 @@ for (const cat of ["personal", "house", "place"] as const) {
 const sem = generateBatch(c, "place", 4, "meaning");
 console.log("meaning-mode:", sem.map(g => `${g.name} (${g.gloss})`).join("  "));
 
-// 5. Pin-and-regenerate: star two names, reinforce, check endings tightened
+// 5. Batch generation (taste learning / reinforce removed)
 const batch = generateBatch(c, "personal", 8);
-const starred = batch.slice(0, 2);
-console.log("starred:", starred.map(s => s.name).join(", "));
-reinforce(c, starred);
-console.log("after reinforce, endings:", c.elements.end.join(" "));
-console.log("more-like-these:", generateBatch(c, "personal", 6).map(g => g.name).join("  "));
+console.log("batch:", batch.map(s => s.name).join(", "));
 
 // 6. Reverse-seed from pasted names
 const rc = reverseSeedCulture("Kaelthi", ["Kaelith", "Veyra", "Kaeloth"]);
@@ -45,10 +41,17 @@ const alien = seedCulture({ name: "Xhorvenai", mood: "exotic", register: "ancien
 console.log("ALIEN card:", alien.summary);
 console.log("ALIEN names:", generateBatch(alien, "personal", 5).map(g => `${g.name} [${g.pronunciation}]`).join("  "));
 
-// 8. Culture card + note render
+// 8. Culture card + language page render
 const card = makeCultureCard(c);
 console.log("card samples:", card.samples.map(s => `${s.name}/${s.category}`).join(", "));
-console.log("note preview:\n" + cultureNote(c).split("\n").slice(0, 14).join("\n"));
+refreshSamples(c);
+const page = renderLanguagePage(c);
+console.log("page preview:\n" + page.split("\n").slice(0, 18).join("\n"));
+console.log("managed + lf-id + Notes:", page.includes("lf:managed:start"), page.includes("lf-id:"), page.includes("## Notes"));
+const spliced = renderLanguagePage(c, [], page + "\nMy private lore.\n");
+console.log("preserves user notes:", spliced.includes("My private lore."));
+const blank = seedCulture({ mood: "soft", register: "balanced", familiarity: "familiar", environment: "—", packs: [], seed: "ph-test" });
+console.log("placeholder name:", blank.name, "(from elements:", placeholderName(blank), ")");
 
 // 9. pronounce spot checks
 for (const n of ["Vaelen", "Ithasel", "Kordrak", "Ordamor"]) console.log(n, "->", pronounce(n, "initial"), "/", pronounce(n, "penult"));

@@ -1,5 +1,129 @@
 /* languageForge — inherits the vault theme; the culture card is the one signature element. */
 
+/* Stacked modals: family/languages → generate → culture card → rename */
+.modal-container.lf-stacked-modal-container {
+  z-index: calc(var(--layer-modal, 30) + 20);
+}
+.modal-container.lf-stacked-modal-nested {
+  z-index: calc(var(--layer-modal, 30) + 40);
+}
+.modal-container.lf-stacked-modal-over {
+  z-index: calc(var(--layer-modal, 30) + 60);
+}
+
+.modal.lf-rename-modal {
+  width: min(640px, 94vw);
+  height: min(420px, 80vh);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.modal.lf-rename-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+.modal.lf-rename-modal .lf-rename-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+.languageforge-modal .lf-rename-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+.languageforge-modal .lf-rename-left,
+.languageforge-modal .lf-rename-right {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.languageforge-modal .lf-rename-name-input {
+  box-sizing: border-box;
+  width: 100%;
+  flex: 0 0 auto;
+  height: 3.25em;
+  min-height: 3.25em;
+  max-height: 3.25em;
+  margin: 0;
+  padding: 12px 14px;
+  font-family: var(--font-text);
+  font-size: 1.35em;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-normal);
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+}
+.languageforge-modal .lf-rename-field-label {
+  margin: 0.45em 0 0.65em;
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
+  color: var(--text-muted);
+  align-self: flex-start;
+  flex: 0 0 auto;
+}
+.languageforge-modal .lf-rename-left .setting-item {
+  flex: 0 0 auto;
+}
+.languageforge-modal .lf-rename-glossary-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background: var(--background-secondary);
+  padding: 4px 0;
+}
+.languageforge-modal .lf-rename-glossary-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: var(--font-ui-small);
+  line-height: 1.35;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+.languageforge-modal .lf-rename-glossary-row:last-child {
+  border-bottom: none;
+}
+.languageforge-modal .lf-translated-name {
+  margin: -0.15em 0 0.5em;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  font-style: italic;
+}
+.languageforge-modal .lf-rename-glossary-form {
+  font-weight: 600;
+  color: var(--text-normal);
+}
+.languageforge-modal .lf-rename-glossary-meaning {
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .languageforge-modal .lf-hint {
   color: var(--text-muted);
   font-size: var(--font-ui-small);
@@ -23,6 +147,77 @@
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 8px;
   margin-bottom: 0.75em;
+}
+/* Culture card: 2×2 name chips + side column (themes 1.75 + page 0.25) */
+.languageforge-modal .lf-specimens-card {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+  align-items: stretch;
+}
+.languageforge-modal .lf-specimens-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  min-height: 0;
+}
+.languageforge-modal .lf-specimens-side {
+  display: grid;
+  grid-template-rows: 1.75fr 0.25fr;
+  gap: 8px;
+  min-height: 0;
+}
+.languageforge-modal .lf-specimens-side.is-new {
+  grid-template-rows: 1fr;
+}
+.languageforge-modal .lf-specimens-card .lf-specimen-themes {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+.languageforge-modal .lf-specimen-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  min-height: 0;
+  cursor: pointer;
+  border-radius: var(--radius-m);
+  transition: border-color 120ms ease, color 120ms ease;
+}
+.languageforge-modal .lf-specimen-page:hover {
+  border-color: var(--text-accent);
+}
+.languageforge-modal .lf-page-card-label {
+  font-size: var(--font-ui-smaller);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-normal);
+  line-height: 1;
+}
+.languageforge-modal .lf-specimen-page:hover .lf-page-card-label {
+  color: var(--text-accent);
+}
+.languageforge-modal .lf-themes-heading {
+  font-family: var(--font-text);
+  font-size: 1.05em;
+  font-weight: 600;
+  color: var(--text-normal);
+}
+.languageforge-modal .lf-themes-body {
+  font-size: var(--font-ui-small);
+  line-height: 1.45;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+.languageforge-modal .lf-card-rename {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 .languageforge-modal .lf-specimen {
   border: 1px solid var(--background-modifier-border);
@@ -55,34 +250,11 @@
   color: var(--text-normal);
 }
 
-/* Generator batch chips */
-.languageforge-modal .lf-batch {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 6px;
-  margin: 0.5em 0;
-}
-.languageforge-modal .lf-name-chip {
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: border-color 120ms ease, background 120ms ease;
-}
-.languageforge-modal .lf-name-chip:hover { background: var(--background-modifier-hover); }
-.languageforge-modal .lf-name-chip.is-starred {
-  border-color: var(--text-accent);
-  background: var(--background-secondary);
-}
-.languageforge-modal .lf-chip-name { font-weight: 600; }
 .languageforge-modal .lf-chip-gloss {
   color: var(--text-faint);
   font-size: var(--font-ui-smaller);
   font-style: italic;
 }
-.languageforge-modal .lf-disabled { opacity: 0.5; }
-.languageforge-modal details.lf-packs { margin: 0.5em 0; }
-.languageforge-modal details.lf-packs summary { cursor: pointer; color: var(--text-muted); }
 
 /* Age-in-place preview: archaic vs modern side by side */
 .languageforge-modal .lf-age-columns {
@@ -95,4 +267,491 @@
   margin: 0 0 0.4em;
   font-size: var(--font-ui-medium);
   color: var(--text-accent);
+}
+
+/* Languages hub + card title */
+.languageforge-modal .lf-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.languageforge-modal .lf-card-title-row h2 { margin: 0; flex: 1 1 auto; }
+.languageforge-modal .lf-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 0.75em;
+}
+.languageforge-modal .lf-card-actions button {
+  margin: 0;
+}
+.languageforge-modal .lf-card-generate {
+  margin-top: 1em;
+  padding-top: 0.75em;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+/* Languages modal tabs */
+.modal.lf-languages-modal {
+  width: min(560px, 92vw);
+  height: min(640px, 85vh);
+  max-width: 92vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.modal.lf-languages-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  height: 100%;
+}
+.languageforge-modal .lf-modal-title {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+.languageforge-modal .lf-modal-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+.languageforge-modal .lf-modal-title-row .lf-modal-title {
+  margin: 0;
+  flex: 1 1 auto;
+}
+.languageforge-modal .lf-modal-title-action {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+.languageforge-modal .lf-modal-title-action:hover {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-hover);
+}
+.languageforge-modal .lf-modal-title-action svg {
+  width: 18px;
+  height: 18px;
+}
+.languageforge-modal .lf-tabs {
+  display: flex;
+  gap: 0;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  margin: 0.25em 0 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  position: relative;
+  z-index: 2;
+  background: var(--modal-background, var(--background-primary));
+}
+.languageforge-modal .lf-tab {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  margin-bottom: -1px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+.languageforge-modal .lf-tab:hover {
+  color: var(--text-normal);
+}
+.languageforge-modal .lf-tab.is-active {
+  color: var(--text-accent);
+  border-bottom-color: var(--text-accent);
+  font-weight: var(--font-semibold);
+}
+.languageforge-modal .lf-subtabs {
+  margin-top: 0.65em;
+  flex: 0 0 auto;
+}
+.languageforge-modal .lf-subtab-pane {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.languageforge-modal .lf-tab-panes {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.85em 0.15em 0.5em 0;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 0;
+}
+.languageforge-modal .lf-tab-panes.is-tree {
+  overflow: hidden;
+}
+.languageforge-modal .lf-modal-footer {
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding-top: 0.35em;
+  border-top: 1px solid var(--background-modifier-border);
+}
+.languageforge-modal .lf-modal-footer .setting-item {
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+.languageforge-modal .lf-seeded-textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 12em;
+  height: 14em;
+  margin: 0.5em 0 1em;
+  padding: 10px 12px;
+  resize: vertical;
+  font-family: var(--font-text);
+  font-size: var(--font-ui-medium);
+  line-height: 1.45;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  color: var(--text-normal);
+}
+
+.languageforge-modal .lf-gen-heading {
+  margin: 0.85em 0 0.25em;
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+.languageforge-modal .lf-gen-heading:first-of-type {
+  margin-top: 0.35em;
+}
+.languageforge-modal .lf-tree-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background: var(--background-secondary);
+}
+.languageforge-modal .lf-tree-canvas {
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
+}
+.languageforge-modal .lf-tree-edges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.languageforge-modal .lf-tree-edge {
+  stroke: var(--background-primary);
+  stroke-width: 1.5;
+  fill: none;
+}
+.languageforge-modal .lf-tree-edge.is-highlighted {
+  stroke: var(--text-accent);
+  stroke-width: 2;
+}
+.languageforge-modal .lf-tree-chip {
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary);
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.15;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+}
+.languageforge-modal .lf-tree-chip-label {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.languageforge-modal .lf-tree-chip:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+}
+.languageforge-modal .lf-tree-marriage {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--background-primary);
+  border: 1px solid var(--text-accent);
+  color: var(--text-accent);
+  font-size: 11px;
+  line-height: 1;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Generate modal — nameForge-style single screen */
+.modal.lf-generate-modal {
+  width: min(480px, 92vw);
+  max-width: 92vw;
+  box-sizing: border-box;
+}
+.modal.lf-generate-modal .modal-content {
+  padding-top: 12px;
+}
+.languageforge-modal.lf-generate-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.languageforge-modal .lf-generate-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.languageforge-modal .lf-generate-pack-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.languageforge-modal .lf-generate-gen-select {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 4.5em;
+  max-width: 6.5em;
+  box-sizing: border-box;
+}
+.languageforge-modal .lf-generate-pack-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.languageforge-modal .lf-generate-info-button {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+.languageforge-modal .lf-generate-info-button:hover:not(:disabled) {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-hover);
+}
+.languageforge-modal .lf-generate-info-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.languageforge-modal .lf-generate-info-button svg {
+  width: 18px;
+  height: 18px;
+}
+.languageforge-modal .lf-toggle-panel {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 4px auto 8px;
+  width: fit-content;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+}
+.languageforge-modal .lf-toggle-button {
+  appearance: none;
+  width: 44px;
+  padding: 8px 0;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+  text-align: center;
+  cursor: pointer;
+  box-shadow: none;
+}
+.languageforge-modal .lf-toggle-button:hover {
+  background-color: var(--background-modifier-hover);
+}
+.languageforge-modal .lf-toggle-button.is-active {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+.languageforge-modal .lf-generate-button {
+  width: 100%;
+  height: 48px;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+  font-size: var(--font-ui-medium);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  box-shadow: none;
+}
+.languageforge-modal .lf-generate-button:hover {
+  filter: brightness(1.1);
+}
+.languageforge-modal .lf-generate-results {
+  margin-top: 16px;
+}
+.languageforge-modal .lf-results-list {
+  height: 260px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 8px 10px;
+  list-style: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  background-color: var(--background-secondary);
+}
+.languageforge-modal .lf-results-list li {
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-normal);
+}
+.languageforge-modal .lf-results-list li:hover {
+  background-color: var(--background-modifier-hover);
+}
+.languageforge-modal .lf-results-list li.is-selected {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+.languageforge-modal .lf-results-list li.lf-results-placeholder {
+  cursor: default;
+  color: var(--text-muted);
+}
+.languageforge-modal .lf-results-list li.lf-results-placeholder:hover {
+  background-color: transparent;
+}
+.languageforge-modal .lf-results-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.languageforge-modal .lf-results-buttons {
+  display: flex;
+  gap: 8px;
+}
+.languageforge-modal .lf-text-button {
+  padding: 6px 12px;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+  cursor: pointer;
+  box-shadow: none;
+}
+.languageforge-modal .lf-text-button:hover:not(:disabled) {
+  background-color: var(--background-modifier-hover);
+}
+.languageforge-modal .lf-text-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Languages Edit tab — one row per language */
+.languageforge-modal .lf-gen-row {
+  padding: 12px 0;
+  border-top: 1px solid var(--background-modifier-border);
+}
+.languageforge-modal .lf-gen-row:first-child {
+  border-top: none;
+  padding-top: 4px;
+}
+.languageforge-modal .lf-gen-name {
+  margin: 0 0 0.25em;
+  font-size: var(--font-ui-medium);
+}
+.languageforge-modal .lf-gen-summary {
+  margin: 0 0 0.35em;
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  line-height: 1.4;
+}
+.languageforge-modal .lf-gen-notes {
+  margin: 0 0 0.65em;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  line-height: 1.4;
+  white-space: pre-wrap;
+  max-height: 4.2em;
+  overflow: hidden;
+}
+.languageforge-modal .lf-gen-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.languageforge-modal .lf-gen-spacer {
+  flex: 1 1 12px;
+  min-width: 12px;
+}
+
+.languageforge-modal .lf-class-card {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  padding: 10px 12px;
+  margin: 0.75em 0;
+  background: var(--background-secondary);
+}
+.languageforge-modal .lf-class-card h3 {
+  margin: 0 0 0.35em;
+  font-size: var(--font-ui-medium);
+}
+
+.languageforge-modal .lf-import-preview {
+  margin: 0.5em 0 1em;
+  padding: 8px 10px;
+  border-left: 3px solid var(--text-accent);
+  background: var(--background-secondary);
 }

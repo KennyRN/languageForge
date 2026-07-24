@@ -324,7 +324,11 @@ export const SEMANTIC_PACKS: Record<string, {additive: boolean; concepts: Tagged
       { "concept": "heather", "tags": ["flower", "flora", "herb"] },
       { "concept": "jasmine", "tags": ["flower", "flora"] },
       { "concept": "home", "tags": ["home", "hearth"] },
-      { "concept": "cradle", "tags": ["kin", "hearth", "home"] }
+      { "concept": "cradle", "tags": ["kin", "hearth", "home"] },
+      { "concept": "victory", "tags": ["war", "fortune"] },
+      { "concept": "tide", "tags": ["sea", "water"] },
+      { "concept": "ember", "tags": ["fire"] },
+      { "concept": "echo", "tags": ["sound"] }
     ]
   },
   "warrior": {

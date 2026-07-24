@@ -48,9 +48,22 @@ export interface Root {
   loanOrigin?: { donorCultureId: string; edgeId: string }; // set only for roots borrowed via a ContactEdge
 }
 
+/** Frozen specimen on a culture page — regenerated only on material change via refreshSamples. */
+export interface SampleName {
+  name: string;
+  pronunciation: string;
+  category: Category;
+  gloss?: string;
+  className?: string;
+}
+
+export type GenerationMode = "sound" | "meaning" | "mixed";
+
 export interface Culture {
   id: string;
   name: string;
+  /** Optional English gloss of the culture/language display name. */
+  translatedName?: string;
   seed: string;            // reproducibility anchor: subsets, mints and cards all derive from it
   mood: Mood;
   register: Register;
@@ -63,8 +76,13 @@ export interface Culture {
   roots: Root[];           // minted forms, stable across sessions
   appliedPacks: string[];
   registry: string[];      // accepted names — the project-level collision target
-  fromNames?: string[];    // if reverse-seeded, the names the user pasted
+  fromNames?: string[];    // if reverse-seeded, the names the user pasted at creation
+  importedNames?: string[]; // names later imported into an existing culture (QoL import)
   summary: string;
+  sampleNames?: SampleName[]; // page specimens; read verbatim by renderLanguagePage
+  classes?: NameClass[];   // personal-name lenses (gender + custom); seeded by seedGenderClasses
+  gendered?: boolean;      // when false, feminine/masculine are hidden; neutral remains
+  defaultGeneration?: GenerationMode; // default mixed — names carry meaning unless opted out
   parentIds?: string[];    // ids of the ancestor Culture(s): 1 = pure divergence, 2+ = contact/merge
   generation?: number;     // 0 for root cultures, max(parents' generation)+1 for derived ones
   driftLevel?: DriftLevel; // intensity preset used when deriving/merging from parentIds
@@ -77,8 +95,31 @@ export interface GeneratedName {
   pronunciation: string;
   parts: { slot: Slot; element: string }[];
   category: Category;
-  gloss?: string;          // for semantic-mode names: "strong + spear"
+  gloss?: string;          // etymology: "bright + wolf" or "wolf"
+  roots?: { form: string; meaning: string }[]; // etymology of record (survives surface drift)
+  className?: string;      // NameClass.id when generated under a class lens
 }
+
+/** Personal-name lens: ending signature + optional root policy + generation preference. */
+export interface NameClass {
+  id: string;
+  label: string;
+  kind: "gender" | "class";
+  endingSource: "generate" | "inherit" | "manual";
+  endings?: string[];
+  inheritFrom?: string;
+  rootPolicy?: {
+    mode: "favour" | "lock";
+    include: string[];
+    exclude?: string[];
+  };
+  generation?: "sound" | "meaning" | "mixed";
+  lengthLean?: number;
+  sourceLanguageId?: string; // reserved for adoption residue (unused)
+  note?: string;
+}
+
+export type ClassLean = "soft" | "hard" | "long" | "short" | "exotic";
 
 // ---------------------------------------------------------------- seeded RNG
 
@@ -328,7 +369,7 @@ function samplePackElements(rng: () => number, mood: Mood): ElementSet {
 // ---------------------------------------------------------------- culture seeding
 
 export interface SeedTraits {
-  name: string;
+  name?: string;           // optional — when omitted, seedCulture mints a native placeholderName
   mood: Mood;
   register: Register;
   familiarity: "familiar" | "alien";
@@ -343,7 +384,8 @@ export const ENV_DEFAULT_PACK: Record<string, string> = {
 };
 
 export function seedCulture(traits: SeedTraits): Culture {
-  const seed = traits.seed ?? `${traits.name}::${Date.now().toString(36)}`;
+  const givenName = traits.name?.trim() || "";
+  const seed = traits.seed ?? `${givenName || "culture"}::${Date.now().toString(36)}`;
   const rng = rngFrom(seed + "::elements");
   const elements = traits.familiarity === "alien"
     ? buildProceduralElements(rng, traits.mood)
@@ -354,7 +396,7 @@ export function seedCulture(traits: SeedTraits): Culture {
 
   const culture: Culture = {
     id: seed,
-    name: traits.name,
+    name: givenName || "Untitled",
     seed,
     mood: traits.mood,
     register: traits.register,
@@ -368,12 +410,16 @@ export function seedCulture(traits: SeedTraits): Culture {
     appliedPacks: [],
     registry: [],
     summary: "",
+    defaultGeneration: "mixed",
   };
 
   const packs = new Set(traits.packs);
   const envPack = ENV_DEFAULT_PACK[traits.environment];
   if (envPack) packs.add(envPack);
   applySemanticPacks(culture, [...packs]);
+  if (!givenName) culture.name = placeholderName(culture);
+  seedGenderClasses(culture);
+  refreshSamples(culture);
   culture.summary = oneBreath(culture);
   return culture;
 }
@@ -470,6 +516,248 @@ function policyPool(policy: ContentPolicy): Set<string> {
   if (policy.exclude?.length) { for (const c of resolveTokens(policy.exclude)) pool.delete(c); }
   return pool;
 }
+
+// ---------------------------------------------------------------- name classes (gender + custom)
+
+function endingLeanScore(end: string, lean: ClassLean): number {
+  const core = end.replace(/^-/, "").toLowerCase();
+  if (!core) return 0;
+  const last = core[core.length - 1];
+  const softFinal = "aeioulrnmy".includes(last);
+  const hardFinal = "ktdgbpr".includes(last);
+  switch (lean) {
+    case "soft": return softFinal ? 3 : 0;
+    case "hard": return hardFinal ? 3 : softFinal ? 0 : 1;
+    case "long": return core.length >= 4 ? 3 : core.length >= 3 ? 1 : 0;
+    case "short": return core.length <= 3 ? 3 : 0;
+    case "exotic": return /[zxqjw]/.test(core) ? 3 : /y/.test(core) ? 1 : 0;
+  }
+}
+
+/** Mint a distinctive ending signature under a phonaesthetic lean, from the culture's pool. */
+export function generateClassEndings(
+  culture: Culture,
+  lean: ClassLean,
+  count = 4,
+  salt = "",
+): string[] {
+  const rng = rngFrom(`${culture.seed}::class-ends::${lean}::${salt}`);
+  const pool = [...culture.elements.end];
+  for (const e of PHONETIC_PACKS[culture.mood]?.end ?? []) {
+    if (!pool.some(p => p.toLowerCase() === e.toLowerCase())) pool.push(e);
+  }
+  // When the culture's own ends don't distinguish the lean (e.g. soft mood + hard class),
+  // mint a few from the culture's consonants so genders still diverge audibly.
+  const cons = [...new Set(
+    [...culture.elements.start, ...culture.elements.middle].join("").toLowerCase().replace(/[^bcdfghjklmnpqrstvwxyz]/g, "").split(""),
+  )].filter(c => c.length === 1);
+  const softVowels = ["a", "ae", "ia", "ie", "e"];
+  const hardFinals = ["k", "r", "n", "d", "th", "g", "t"];
+  for (let i = 0; i < 6; i++) {
+    const c0 = pick(rng, cons.length ? cons : ["n", "l", "r"]);
+    if (lean === "soft" || lean === "long") {
+      pool.push(`-${c0}${pick(rng, softVowels)}`);
+    } else if (lean === "hard") {
+      pool.push(`-${c0}${pick(rng, softVowels).slice(0, 1)}${pick(rng, hardFinals)}`);
+    } else if (lean === "short") {
+      pool.push(`-${c0}${pick(rng, ["a", "e", "i"])}`);
+    } else {
+      pool.push(`-${pick(rng, ["z", "x", "j", "q"])}${pick(rng, softVowels)}`);
+    }
+  }
+  const scored = pool
+    .map(e => ({ e, s: endingLeanScore(e, lean) + rng() }))
+    .sort((a, b) => b.s - a.s);
+  const picked: string[] = [];
+  for (const { e } of scored) {
+    if (picked.length >= count) break;
+    const norm = e.startsWith("-") ? e : `-${e}`;
+    if (!picked.some(p => p.toLowerCase() === norm.toLowerCase())) picked.push(norm);
+  }
+  while (picked.length < Math.min(count, culture.elements.end.length)) {
+    const e = culture.elements.end[picked.length % culture.elements.end.length];
+    if (!picked.some(p => p.toLowerCase() === e.toLowerCase())) picked.push(e);
+  }
+  return picked;
+}
+
+/** Resolve endings for a class (generate/manual store on the class; inherit walks siblings). */
+export function resolveClassEndings(culture: Culture, cls: NameClass, seen = new Set<string>()): string[] {
+  if (seen.has(cls.id)) return culture.elements.end;
+  seen.add(cls.id);
+  if (cls.endingSource === "inherit" && cls.inheritFrom) {
+    const parent = culture.classes?.find(c => c.id === cls.inheritFrom);
+    if (parent) return resolveClassEndings(culture, parent, seen);
+  }
+  if (cls.endings?.length) return cls.endings;
+  return culture.elements.end;
+}
+
+/**
+ * Expand pack ids / tags / concepts, apply include−exclude.
+ * favour → weight-up those roots; lock → filter to them (falls back to favour if too few).
+ */
+export function resolveRootPool(
+  culture: Culture,
+  policy: NonNullable<NameClass["rootPolicy"]>,
+): { roots: Root[]; fellBack: boolean } {
+  const expand = (token: string): Set<string> => {
+    const concepts = new Set<string>();
+    const pack = SEMANTIC_PACKS[token];
+    if (pack) for (const { concept } of pack.concepts) concepts.add(concept);
+    const tagged = TAG_TO_CONCEPTS.get(token);
+    if (tagged) for (const c of tagged) concepts.add(c);
+    for (const r of culture.roots) {
+      if (r.tags?.includes(token) || r.meaning === token) concepts.add(r.meaning);
+    }
+    if (ALL_CONCEPTS.has(token)) concepts.add(token);
+    return concepts;
+  };
+
+  const included = new Set<string>();
+  for (const t of policy.include) for (const c of expand(t)) included.add(c);
+  for (const t of policy.exclude ?? []) for (const c of expand(t)) included.delete(c);
+
+  if (policy.mode === "lock") {
+    const locked = culture.roots.filter(r => included.has(r.meaning));
+    if (locked.length < 2) {
+      const favoured = culture.roots.map(r =>
+        included.has(r.meaning) ? { ...r, weight: Math.min(3, r.weight + 1) } : { ...r },
+      );
+      return { roots: favoured, fellBack: true };
+    }
+    return { roots: locked, fellBack: false };
+  }
+
+  const favoured = culture.roots.map(r =>
+    included.has(r.meaning) ? { ...r, weight: Math.min(3, r.weight + 1) } : { ...r },
+  );
+  return { roots: favoured, fellBack: false };
+}
+
+/** Populate feminine / masculine / neutral with default endings + root policies. */
+export function seedGenderClasses(culture: Culture): void {
+  if (culture.gendered === undefined) culture.gendered = true;
+  culture.classes = [
+    {
+      id: "feminine",
+      label: "feminine",
+      kind: "gender",
+      endingSource: "generate",
+      endings: generateClassEndings(culture, "soft", 4, "feminine"),
+      rootPolicy: { mode: "favour", include: ["flora", "hearth", "virtue"], exclude: ["tree"] },
+      generation: "mixed",
+    },
+    {
+      id: "masculine",
+      label: "masculine",
+      kind: "gender",
+      endingSource: "generate",
+      endings: generateClassEndings(culture, "hard", 4, "masculine"),
+      rootPolicy: { mode: "favour", include: ["forest", "sea", "strength"] },
+      generation: "mixed",
+    },
+    {
+      id: "neutral",
+      label: "neutral",
+      kind: "gender",
+      endingSource: "generate",
+      endings: culture.elements.end.slice(),
+    },
+  ];
+}
+
+/** Migration helper — run once for cultures saved before name classes. */
+export function ensureCultureClasses(culture: Culture): boolean {
+  let changed = false;
+  if (culture.defaultGeneration === undefined) {
+    culture.defaultGeneration = "mixed";
+    changed = true;
+  }
+  if (culture.classes?.length) {
+    if (culture.gendered === undefined) culture.gendered = true;
+    return changed;
+  }
+  seedGenderClasses(culture);
+  return true;
+}
+
+/** Classes offered in UI / generation (respects gendered toggle). */
+export function visibleClasses(culture: Culture): NameClass[] {
+  ensureCultureClasses(culture);
+  const all = culture.classes ?? [];
+  if (culture.gendered === false) {
+    return all.filter(c => !(c.kind === "gender" && (c.id === "feminine" || c.id === "masculine")));
+  }
+  return all;
+}
+
+function slugClassId(label: string, culture: Culture): string {
+  let base = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "class";
+  let id = base;
+  let n = 2;
+  while (culture.classes?.some(c => c.id === id)) {
+    id = `${base}-${n++}`;
+  }
+  return id;
+}
+
+export function addClass(culture: Culture, label: string, lean: ClassLean = "soft"): NameClass {
+  ensureCultureClasses(culture);
+  const id = slugClassId(label, culture);
+  const cls: NameClass = {
+    id,
+    label: label.trim() || id,
+    kind: "class",
+    endingSource: "generate",
+    endings: generateClassEndings(culture, lean, 4, id),
+    generation: "mixed",
+  };
+  culture.classes!.push(cls);
+  return cls;
+}
+
+export function editClass(culture: Culture, id: string, patch: Partial<NameClass>): NameClass | null {
+  ensureCultureClasses(culture);
+  const cls = culture.classes?.find(c => c.id === id);
+  if (!cls) return null;
+  const { id: _ignore, ...rest } = patch;
+  void _ignore;
+  Object.assign(cls, rest);
+  return cls;
+}
+
+export function removeClass(culture: Culture, id: string): boolean {
+  if (!culture.classes) return false;
+  const before = culture.classes.length;
+  culture.classes = culture.classes.filter(c => c.id !== id);
+  for (const c of culture.classes) {
+    if (c.inheritFrom === id) {
+      c.inheritFrom = undefined;
+      if (c.endingSource === "inherit") {
+        c.endingSource = "generate";
+        c.endings = generateClassEndings(culture, "soft", 4, c.id);
+      }
+    }
+  }
+  return culture.classes.length < before;
+}
+
+export function regenerateClassEndings(culture: Culture, id: string, lean: ClassLean): NameClass | null {
+  const cls = culture.classes?.find(c => c.id === id);
+  if (!cls) return null;
+  cls.endingSource = "generate";
+  cls.inheritFrom = undefined;
+  cls.endings = generateClassEndings(culture, lean, 4, `${id}::${Date.now().toString(36)}`);
+  return cls;
+}
+
+/** One or two live specimens for a class (for the language page table). */
+export function classSpecimens(culture: Culture, classId: string, n = 2): string[] {
+  return generateBatch(culture, "personal", n, undefined, classId, rngFrom(`${culture.seed}::class-sample::${classId}`))
+    .map(g => g.gloss ? `${g.name} (${g.gloss})` : g.name);
+}
+
 
 function pickFrom<T>(rng: () => number, set: Set<T>): T {
   return pick(rng, [...set].sort() as T[]);
@@ -756,21 +1044,29 @@ export function generateTraditionBatch(
 
 // ---------------------------------------------------------------- generation
 
-function assemble(rng: () => number, culture: Culture, category: Category): { name: string; parts: { slot: Slot; element: string }[] } {
-  const { start, middle, end } = culture.elements;
+function assemble(
+  rng: () => number,
+  culture: Culture,
+  category: Category,
+  opts: { ends?: string[]; lengthLean?: number } = {},
+): { name: string; parts: { slot: Slot; element: string }[] } {
+  const { start, middle } = culture.elements;
+  const endPool = opts.ends?.length ? opts.ends : culture.elements.end;
   const parts: { slot: Slot; element: string }[] = [];
   const s = pick(rng, start);
   parts.push({ slot: "start", element: s });
   let body = s;
+  let middleChance = culture.middleChance;
+  if (opts.lengthLean) middleChance = Math.max(0, Math.min(1, middleChance + opts.lengthLean * 0.25));
   const middles = category === "house" || category === "title" ? (rng() < 0.5 ? 2 : 1)
     : category === "place" ? 1
-    : rng() < culture.middleChance ? 1 : 0;
+    : rng() < middleChance ? 1 : 0;
   for (let i = 0; i < middles; i++) {
     const m = pick(rng, middle);
     parts.push({ slot: "middle", element: m });
     body += m;
   }
-  const e = pick(rng, end);
+  const e = pick(rng, endPool);
   parts.push({ slot: "end", element: e });
   body += e.replace(/^-/, "");
   const name = body[0].toUpperCase() + body.slice(1).toLowerCase();
@@ -787,76 +1083,191 @@ function weightedRoot(rng: () => number, roots: Root[], exclude?: Root): Root {
   return pool[pool.length - 1];
 }
 
-/** Semantic mode: compose two minted roots, repairing the seam per joinery. */
-function assembleSemantic(rng: () => number, culture: Culture): { name: string; gloss: string; parts: { slot: Slot; element: string }[] } {
-  const r1 = weightedRoot(rng, culture.roots);
-  const r2 = weightedRoot(rng, culture.roots, r1);
-  let a = r1.form, b = r2.form;
+/** Repair the seam between two forms per joinery (vowel link / consonant buffer). */
+function joinForms(rng: () => number, left: string, right: string): string {
+  let a = left, b = right;
   const aEndsVowel = isVowel(a[a.length - 1], 1);
   const bStartsVowel = isVowel(b[0], 0);
-  if (aEndsVowel && bStartsVowel) b = pick(rng, ["n", "r", "l"]) + b;          // link
-  if (!aEndsVowel && !bStartsVowel && !SONORANTS.has(a[a.length - 1])) a = a + pick(rng, ["a", "o", "e"]); // buffer
-  const body = a + b;
-  const name = body[0].toUpperCase() + body.slice(1);
-  return { name, gloss: `${r1.meaning} + ${r2.meaning}`, parts: [{ slot: "start", element: a }, { slot: "end", element: b }] };
+  if (aEndsVowel && bStartsVowel) b = pick(rng, ["n", "r", "l"]) + b;
+  if (!aEndsVowel && !bStartsVowel && !SONORANTS.has(a[a.length - 1])) a = a + pick(rng, ["a", "o", "e"]);
+  return a + b;
 }
 
+function pickRootCount(rng: () => number, register: Register): number {
+  const r = rng();
+  if (register === "modern") return r < 0.7 ? 1 : 2;
+  if (register === "ancient") return r < 0.25 ? 1 : r < 0.9 ? 2 : 3;
+  return r < 0.45 ? 1 : 2;
+}
+
+/** Soft category bias when no class rootPolicy is set — places/houses/titles lean meaningful. */
+function categoryRootBias(category: Category): NonNullable<NameClass["rootPolicy"]> | undefined {
+  if (category === "place") return { mode: "favour", include: ["place", "water", "earth", "forest", "river", "mountain", "sea", "stone"] };
+  if (category === "house") return { mode: "favour", include: ["kin", "rank", "virtue", "home", "hearth"] };
+  if (category === "title") return { mode: "favour", include: ["rank", "virtue", "war", "strength"] };
+  return undefined;
+}
+
+export interface AssembleMeaningOpts {
+  roots?: Root[];
+  ends?: string[];           // class or base endings; always applied as Gap C gender/class marker
+  lengthLean?: number;
+}
+
+/**
+ * Meaning-bearing assembly: 1–2 roots (rarely 3 for ancient), then a class/base ending.
+ * Gloss covers roots only — the ending is a grammatical marker, not part of the etymology.
+ */
+export function assembleMeaning(
+  rng: () => number,
+  culture: Culture,
+  opts: AssembleMeaningOpts = {},
+): {
+  name: string;
+  gloss: string;
+  parts: { slot: Slot; element: string }[];
+  roots: { form: string; meaning: string }[];
+} {
+  const pool = opts.roots?.length ? opts.roots : culture.roots;
+  const n = Math.min(pickRootCount(rng, culture.register), Math.max(1, pool.length));
+  const picked: Root[] = [];
+  for (let i = 0; i < n; i++) {
+    const r = weightedRoot(rng, pool, picked[picked.length - 1]);
+    picked.push(r);
+  }
+
+  let body = picked[0].form.toLowerCase();
+  const parts: { slot: Slot; element: string }[] = [{ slot: "start", element: picked[0].form }];
+  for (let i = 1; i < picked.length; i++) {
+    const next = picked[i].form.toLowerCase();
+    body = joinForms(rng, body, next);
+    parts.push({ slot: i === picked.length - 1 && !opts.ends?.length ? "end" : "middle", element: picked[i].form });
+  }
+
+  const endPool = opts.ends?.length ? opts.ends : culture.elements.end;
+  const endEl = pick(rng, endPool);
+  let endCore = endEl.replace(/^-/, "").toLowerCase();
+  // Seam between last root and class/base ending
+  const bodyEndsVowel = isVowel(body[body.length - 1], 1);
+  const endStartsVowel = isVowel(endCore[0], 0);
+  if (bodyEndsVowel && endStartsVowel) {
+    endCore = endCore.replace(/^[aeiouy]+/, "") || endCore;
+    if (isVowel(endCore[0], 0)) endCore = pick(rng, ["n", "r", "l"]) + endCore;
+  } else if (!bodyEndsVowel && !endStartsVowel && !SONORANTS.has(body[body.length - 1])) {
+    body = body + pick(rng, ["a", "o", "e"]);
+  }
+  // lengthLean: occasionally tuck a middle before the ending
+  if (opts.lengthLean && opts.lengthLean > 0 && rng() < opts.lengthLean * 0.4 && culture.elements.middle.length) {
+    const m = pick(rng, culture.elements.middle).toLowerCase();
+    body = joinForms(rng, body, m);
+    parts.push({ slot: "middle", element: m });
+  }
+  body = body + endCore;
+  parts.push({ slot: "end", element: endEl.startsWith("-") ? endEl : `-${endCore}` });
+
+  const name = body[0].toUpperCase() + body.slice(1);
+  const gloss = picked.map(r => r.meaning).join(" + ");
+  return {
+    name,
+    gloss,
+    parts,
+    roots: picked.map(r => ({ form: r.form, meaning: r.meaning })),
+  };
+}
+
+/** @deprecated Prefer assembleMeaning */
+function assembleSemantic(
+  rng: () => number,
+  culture: Culture,
+  roots?: Root[],
+): { name: string; gloss: string; parts: { slot: Slot; element: string }[]; roots: { form: string; meaning: string }[] } {
+  return assembleMeaning(rng, culture, { roots });
+}
+
+/**
+ * Generate a batch. mode optional — falls back to culture.defaultGeneration (mixed).
+ * Optional className (personal) swaps endings, applies root policy, and may override mode.
+ * 5th arg may be className or a seeded rng (legacy).
+ */
 export function generateBatch(
   culture: Culture,
   category: Category,
   count: number,
-  mode: "sound" | "meaning" = "sound",
-  rng: () => number = rngFrom(`${culture.seed}::batch::${Date.now()}::${Math.random()}`),
+  mode?: GenerationMode | null,
+  classNameOrRng?: string | null | (() => number),
+  rngArg?: () => number,
 ): GeneratedName[] {
+  let className: string | undefined;
+  let rng: () => number;
+  if (typeof classNameOrRng === "function") {
+    rng = classNameOrRng;
+  } else {
+    className = classNameOrRng ?? undefined;
+    rng = rngArg ?? rngFrom(`${culture.seed}::batch::${Date.now()}::${Math.random()}`);
+  }
+
+  const cls = category === "personal" && className
+    ? culture.classes?.find(c => c.id === className)
+    : undefined;
+  const ends = cls ? resolveClassEndings(culture, cls) : culture.elements.end;
+
+  // Mode resolution: class generation > explicit mode > culture default > mixed
+  let modePref: GenerationMode =
+    cls?.generation ?? mode ?? culture.defaultGeneration ?? "mixed";
+
+  let rootPool = culture.roots;
+  if (cls?.rootPolicy) {
+    rootPool = resolveRootPool(culture, cls.rootPolicy).roots;
+  } else {
+    const bias = categoryRootBias(category);
+    if (bias) rootPool = resolveRootPool(culture, bias).roots;
+  }
+
   const out: GeneratedName[] = [];
   const session = new Set<string>();
   let attempts = 0;
-  const useMeaning = mode === "meaning" && culture.roots.length >= 2;
   while (out.length < count && attempts++ < count * 40) {
-    const built = useMeaning ? assembleSemantic(rng, culture) : assemble(rng, culture, category);
-    const gate = gateName(built.name, culture, built.parts, session);
-    if (!gate.pass) continue;
-    session.add(built.name.toLowerCase());
-    out.push({
-      name: built.name,
-      pronunciation: pronounce(built.name, culture.stress),
-      parts: built.parts,
-      category,
-      gloss: (built as { gloss?: string }).gloss,
-    });
+    let nameMode: "sound" | "meaning" =
+      modePref === "mixed" ? (rng() < 0.7 ? "meaning" : "sound")
+      : modePref === "meaning" ? "meaning"
+      : "sound";
+    const useMeaning = nameMode === "meaning" && rootPool.length >= 1;
+    if (useMeaning) {
+      const built = assembleMeaning(rng, culture, {
+        roots: rootPool,
+        ends,
+        lengthLean: cls?.lengthLean,
+      });
+      const gate = gateName(built.name, culture, built.parts, session);
+      if (!gate.pass) continue;
+      session.add(built.name.toLowerCase());
+      out.push({
+        name: built.name,
+        pronunciation: pronounce(built.name, culture.stress),
+        parts: built.parts,
+        category,
+        gloss: built.gloss,
+        roots: built.roots,
+        className: cls?.id,
+      });
+    } else {
+      const built = assemble(rng, culture, category, { ends, lengthLean: cls?.lengthLean });
+      const gate = gateName(built.name, culture, built.parts, session);
+      if (!gate.pass) continue;
+      session.add(built.name.toLowerCase());
+      out.push({
+        name: built.name,
+        pronunciation: pronounce(built.name, culture.stress),
+        parts: built.parts,
+        category,
+        className: cls?.id,
+      });
+    }
   }
   return out;
 }
 
-// ---------------------------------------------------------------- pin-and-regenerate
-
-/** Star names -> their elements are duplicated into the culture's lists (capped x4)
- *  and the endings subset tightens around theirs. Multiplicity IS the learning loop. */
-export function reinforce(culture: Culture, starred: GeneratedName[]): void {
-  const capCount = (list: string[], el: string) => list.filter(x => x.toLowerCase() === el.toLowerCase()).length;
-  for (const g of starred) {
-    for (const p of g.parts) {
-      const list = culture.elements[p.slot];
-      if (capCount(list, p.element) < 4) list.push(p.element);
-    }
-  }
-  // tighten endings: starred endings first, then the current most-weighted, max 5
-  const starredEnds = [...new Set(starred.flatMap(g => g.parts.filter(p => p.slot === "end").map(p => p.element)))];
-  if (starredEnds.length > 0) {
-    const counts = new Map<string, number>();
-    for (const e of culture.elements.end) counts.set(e, (counts.get(e) ?? 0) + 1);
-    const rest = [...counts.keys()]
-      .filter(e => !starredEnds.some(s => s.toLowerCase() === e.toLowerCase()))
-      .sort((x, y) => (counts.get(y) ?? 0) - (counts.get(x) ?? 0));
-    const keep = [...starredEnds, ...rest].slice(0, 5);
-    culture.elements.end = culture.elements.end.filter(e => keep.some(k => k.toLowerCase() === e.toLowerCase()));
-    for (const s of starredEnds) {
-      if (capCount(culture.elements.end, s) < 4) culture.elements.end.push(s);
-      if (capCount(culture.elements.end, s) < 4) culture.elements.end.push(s);
-    }
-  }
-  culture.summary = oneBreath(culture);
-}
+// ---------------------------------------------------------------- pin-and-regenerate (removed — taste learning dropped)
 
 // ---------------------------------------------------------------- reverse-seeding from pasted names
 
@@ -912,12 +1323,19 @@ export function detectMood(names: string[]): Mood {
 }
 
 /** Reverse-seed: segment the user's names against the joinery model, weight their
- *  elements heavily (x3), backfill sparsely from the best-matching mood pack, and
- *  keep the endings subset tight around theirs. Same machinery as pin-and-regenerate,
- *  pointed at external input. */
-export function reverseSeedCulture(cultureName: string, pastedNames: string[], packs: string[] = []): Culture {
+ *  elements heavily (x3), backfill sparsely from the mood pack, and keep the endings
+ *  subset tight around theirs. Third arg is packs[] (legacy) or SeedTraits overrides
+ *  (mood defaults to auto-detect from the paste when omitted). */
+export function reverseSeedCulture(
+  cultureName: string,
+  pastedNames: string[],
+  packsOrTraits: string[] | Partial<SeedTraits> = [],
+): Culture {
+  const traits: Partial<SeedTraits> = Array.isArray(packsOrTraits)
+    ? { packs: packsOrTraits }
+    : packsOrTraits;
   const cleaned = pastedNames.map(n => n.trim()).filter(n => n.length >= 3);
-  const mood = detectMood(cleaned);
+  const mood = traits.mood ?? detectMood(cleaned);
   const segments = cleaned.map(segmentPastedName).filter((s): s is NonNullable<typeof s> => s !== null);
 
   const seed = `${cultureName}::from::${cleaned.join("+").toLowerCase()}`;
@@ -940,31 +1358,183 @@ export function reverseSeedCulture(cultureName: string, pastedNames: string[], p
   const syllCounts = cleaned.map(n => syllabify(n).length);
   const lo = Math.max(2, Math.min(...syllCounts) - 0);
   const hi = Math.min(5, Math.max(...syllCounts) + 1);
+  const register = traits.register ?? "balanced";
+  const syllableRange: [number, number] =
+    register === "ancient" ? [3, 5] : register === "modern" ? [2, 3] : [lo, Math.max(lo, hi)];
+  const env = !traits.environment || traits.environment === "none" ? "—" : traits.environment;
 
   const culture: Culture = {
     id: seed,
     name: cultureName,
     seed,
     mood,
-    register: "balanced",
-    familiarity: "familiar",
-    environment: "—",
+    register,
+    familiarity: traits.familiarity ?? "familiar",
+    environment: env,
     elements: { start: starts, middle: middles, end: ends },
     middleChance: syllCounts.some(c => c >= 3) ? 0.5 : 0.3,
-    syllableRange: [lo, Math.max(lo, hi)],
-    stress: mood === "grand" ? "penult" : "initial",
+    syllableRange,
+    stress: mood === "grand" || register === "ancient" ? "penult" : "initial",
     roots: [],
     appliedPacks: [],
     registry: cleaned.map(n => n.toLowerCase()),   // their names are already taken
     fromNames: cleaned,
     summary: "",
+    defaultGeneration: "mixed",
   };
-  applySemanticPacks(culture, packs);
+  const semanticPacks = new Set(traits.packs ?? []);
+  const envPack = ENV_DEFAULT_PACK[env];
+  if (envPack) semanticPacks.add(envPack);
+  applySemanticPacks(culture, [...semanticPacks]);
+  seedGenderClasses(culture);
+  refreshSamples(culture);
   culture.summary = oneBreath(culture);
   return culture;
 }
 
-// ---------------------------------------------------------------- the culture card
+/** True when a token is Latin letters only (apostrophes/hyphens allowed as separators). */
+export function isRomanisedName(raw: string): boolean {
+  const letters = raw.trim().replace(/[\s\-'.]/g, "");
+  return letters.length >= 3 && /^[A-Za-z]+$/.test(letters);
+}
+
+/**
+ * Pull candidate names from a paste: comma/newline lists, or free prose (romanised words ≥3).
+ * Non-Latin script tokens are reported as rejected — they cannot bend the phonology.
+ */
+export function parseImportInput(raw: string): { candidates: string[]; rejected: string[] } {
+  const rejected: string[] = [];
+  const seen = new Set<string>();
+  const candidates: string[] = [];
+  const STOP = new Set([
+    "the", "and", "or", "of", "a", "an", "to", "in", "on", "by", "for", "was", "were",
+    "are", "is", "be", "called", "named", "with", "from", "that", "this", "their", "his",
+    "her", "she", "he", "they", "who", "whom", "which", "into", "onto", "over", "under",
+  ]);
+
+  const push = (token: string) => {
+    const t = token.trim();
+    if (!t) return;
+    const key = t.toLowerCase();
+    if (seen.has(key)) return;
+    if (!isRomanisedName(t)) {
+      if (/[^\x00-\x7F]/.test(t) || t.replace(/[^A-Za-z]/g, "").length >= 3) {
+        seen.add(key);
+        rejected.push(t);
+      }
+      return;
+    }
+    seen.add(key);
+    candidates.push(t);
+  };
+
+  // Prefer explicit list separators when present; otherwise scrape names from prose.
+  if (/[,;\n|/]/.test(raw)) {
+    for (const part of raw.split(/[,;\n|/]+/)) push(part);
+  } else {
+    // Capitalized tokens look like proper names (Elowen, Maeriel); skip English stopwords.
+    const caps = raw.match(/\b[A-Z][A-Za-z'-]{2,}\b/g) ?? [];
+    const nameLike = caps.filter(w => !STOP.has(w.toLowerCase()));
+    if (nameLike.length >= 1) {
+      for (const w of nameLike) push(w);
+    } else {
+      const words = raw.match(/[A-Za-z][A-Za-z'-]{2,}/g) ?? [];
+      for (const w of words) {
+        if (!STOP.has(w.toLowerCase())) push(w);
+      }
+      if (candidates.length === 0 && raw.trim()) push(raw.trim());
+    }
+    const nonLatin = raw.match(/[^\s,;|/]+/g) ?? [];
+    for (const tok of nonLatin) {
+      if (/[^\x00-\x7F]/.test(tok)) push(tok);
+    }
+  }
+
+  return { candidates, rejected };
+}
+
+export interface ImportResult {
+  accepted: string[];
+  rejected: string[];
+  segmented: number;
+  added: { start: string[]; middle: string[]; end: string[] };
+}
+
+/**
+ * Bend an existing culture's sounds with pasted romanised names (QoL Import).
+ * Reuses reverse-seed segmentation + reinforce-style multiplicity; does not remint roots.
+ * Material change → refreshSamples.
+ */
+export function importNames(culture: Culture, raw: string): ImportResult {
+  const { candidates, rejected } = parseImportInput(raw);
+  const added = { start: [] as string[], middle: [] as string[], end: [] as string[] };
+  const accepted: string[] = [];
+  let segmented = 0;
+
+  const capCount = (list: string[], el: string) =>
+    list.filter(x => x.toLowerCase() === el.toLowerCase()).length;
+  const pushCapped = (list: string[], el: string, times = 3) => {
+    for (let i = 0; i < times; i++) {
+      if (capCount(list, el) < 4) list.push(el);
+    }
+  };
+
+  for (const name of candidates) {
+    const seg = segmentPastedName(name);
+    accepted.push(name);
+    const key = name.toLowerCase();
+    if (!culture.registry.includes(key)) culture.registry.push(key);
+    if (!culture.importedNames) culture.importedNames = [];
+    if (!culture.importedNames.some(n => n.toLowerCase() === key)) culture.importedNames.push(name);
+
+    if (!seg) continue;
+    segmented++;
+    pushCapped(culture.elements.start, seg.start);
+    pushCapped(added.start, seg.start, 1);
+    for (const m of seg.middles) {
+      pushCapped(culture.elements.middle, m);
+      pushCapped(added.middle, m, 1);
+    }
+    pushCapped(culture.elements.end, seg.end);
+    pushCapped(added.end, seg.end, 1);
+  }
+
+  // Tighten endings around imported material when we got usable segments (same spirit as reinforce).
+  const importedEnds = [...new Set(added.end)];
+  if (importedEnds.length > 0) {
+    const counts = new Map<string, number>();
+    for (const e of culture.elements.end) counts.set(e, (counts.get(e) ?? 0) + 1);
+    const rest = [...counts.keys()]
+      .filter(e => !importedEnds.some(s => s.toLowerCase() === e.toLowerCase()))
+      .sort((x, y) => (counts.get(y) ?? 0) - (counts.get(x) ?? 0));
+    const keep = [...importedEnds, ...rest].slice(0, 6);
+    culture.elements.end = culture.elements.end.filter(e =>
+      keep.some(k => k.toLowerCase() === e.toLowerCase()),
+    );
+    for (const s of importedEnds) {
+      if (capCount(culture.elements.end, s) < 2) culture.elements.end.push(s);
+      if (capCount(culture.elements.end, s) < 2) culture.elements.end.push(s);
+    }
+  }
+
+  // Mild syllable-range nudge toward the import batch without collapsing the culture.
+  if (accepted.length >= 2) {
+    const sylls = accepted.map(n => syllabify(n.replace(/[^a-zA-Z]/g, "")).length).filter(n => n > 0);
+    if (sylls.length) {
+      const lo = Math.min(...sylls);
+      const hi = Math.max(...sylls);
+      culture.syllableRange = [
+        Math.min(culture.syllableRange[0], Math.max(2, lo)),
+        Math.max(culture.syllableRange[1], Math.min(5, hi)),
+      ];
+    }
+  }
+
+  culture.summary = oneBreath(culture);
+  refreshSamples(culture);
+
+  return { accepted, rejected, segmented, added };
+}
 
 const MOOD_ADJ: Record<Mood, string> = {
   harsh: "clipped and forceful", soft: "smooth and flowing", bright: "sharp and keen",
@@ -1000,17 +1570,18 @@ export function oneBreath(culture: Culture): string {
 
 export interface CultureCard {
   summary: string;
-  samples: GeneratedName[];    // 2 personal, 2 house, 2 place
+  samples: GeneratedName[];    // 2 personal, 1 house, 1 place
   packs: string[];
   glossaryPreview: { form: string; meaning: string; weight: string }[];
 }
 
 export function makeCultureCard(culture: Culture, shuffle = 0): CultureCard {
   const rng = rngFrom(`${culture.seed}::card::${shuffle}`);
+  // Culture default (mixed) — specimens show meanings by default
   const samples = [
-    ...generateBatch(culture, "personal", 2, "sound", rng),
-    ...generateBatch(culture, "house", 2, "sound", rng),
-    ...generateBatch(culture, "place", 2, "sound", rng),
+    ...generateBatch(culture, "personal", 2, undefined, rng),
+    ...generateBatch(culture, "house", 1, undefined, rng),
+    ...generateBatch(culture, "place", 1, undefined, rng),
   ];
   const glossaryPreview = culture.roots
     .filter(r => r.weight >= 2).slice(0, 6)
@@ -1027,6 +1598,7 @@ export function reshuffleElements(culture: Culture, salt: string): void {
     : samplePackElements(rng, culture.mood);
   // re-mint is NOT allowed for existing roots (stability promise) — only elements move
   culture.summary = oneBreath(culture);
+  refreshSamples(culture);
 }
 
 // ---------------------------------------------------------------- language families & drift
@@ -1165,6 +1737,7 @@ export function deriveCulture(
     appliedPacks: [...parent.appliedPacks],
     registry: [],
     summary: "",
+    defaultGeneration: parent.defaultGeneration ?? "mixed",
     parentIds: [parent.id],
     generation: (parent.generation ?? 0) + 1,
     driftLevel,
@@ -1175,6 +1748,8 @@ export function deriveCulture(
   if (overrides.packs?.length) {
     applySemanticPacks(culture, [...new Set([...culture.appliedPacks, ...overrides.packs])]);
   }
+  seedGenderClasses(culture);
+  refreshSamples(culture);
   culture.summary = oneBreath(culture);
   return culture;
 }
@@ -1279,6 +1854,7 @@ export function mergeCultures(
     appliedPacks: [...new Set(parents.flatMap(p => p.appliedPacks))],
     registry: [],
     summary: "",
+    defaultGeneration: parents.find(p => p.defaultGeneration)?.defaultGeneration ?? "mixed",
     parentIds: parents.map(p => p.id),
     generation: Math.max(...parents.map(p => p.generation ?? 0)) + 1,
     driftLevel,
@@ -1293,6 +1869,8 @@ export function mergeCultures(
   if (overrides.packs?.length) {
     applySemanticPacks(culture, [...new Set([...culture.appliedPacks, ...overrides.packs])]);
   }
+  seedGenderClasses(culture);
+  refreshSamples(culture);
   culture.summary = oneBreath(culture);
   return culture;
 }
@@ -1471,24 +2049,76 @@ export function acceptLoanedRoots(borrower: Culture, loanedRoots: Root[]): void 
       existingForms.add(r.form.toLowerCase());
     }
   }
+  refreshSamples(borrower);
 }
 
-// ---------------------------------------------------------------- markdown export
+// ---------------------------------------------------------------- language page (living note)
 
-export function cultureNote(culture: Culture, allCultures: Culture[] = []): string {
-  const card = makeCultureCard(culture);
+const MANAGED_START = "<!-- lf:managed:start -->";
+const MANAGED_END = "<!-- lf:managed:end -->";
+
+/** Mint a native-sounding throwaway display name from the culture's own elements. */
+export function placeholderName(culture: Culture): string {
+  const rng = rngFrom(`${culture.seed}::placeholder`);
+  const start = pick(rng, culture.elements.start);
+  const endRaw = pick(rng, culture.elements.end).replace(/^-/, "");
+  let form = (start + endRaw).toLowerCase().replace(/[aeiou]{3,}/g, m => m.slice(0, 2));
+  if (form.length < 3) form = start.toLowerCase() + "a" + endRaw.toLowerCase();
+  return form[0].toUpperCase() + form.slice(1);
+}
+
+/** Regenerate stored page specimens. Call only on material change (elements/roots). */
+export function refreshSamples(culture: Culture): void {
+  const salt = `${culture.roots.length}:${culture.elements.start.join(",")}:${culture.elements.end.join(",")}`;
+  const card = makeCultureCard(culture, salt.length);
+  culture.sampleNames = card.samples.map(s => ({
+    name: s.name,
+    pronunciation: s.pronunciation,
+    category: s.category,
+    gloss: s.gloss,
+    className: s.className,
+  }));
+}
+
+/** Display-only rename. Identity (`id`) and lineage (`parentIds`) are untouched. */
+export function renameCulture(culture: Culture, newName: string, translatedName?: string): void {
+  culture.name = newName.trim();
+  if (translatedName !== undefined) {
+    const t = translatedName.trim();
+    culture.translatedName = t || undefined;
+  }
+  culture.summary = oneBreath(culture);
+}
+
+function renderFrontmatter(culture: Culture, kind: "language" | "glossary" = "language"): string {
+  const lines = [
+    "---",
+    `lf-id: ${JSON.stringify(culture.id)}`,
+    `lf-kind: ${kind}`,
+    `languageforge-culture: ${culture.name}`,
+    ...(culture.translatedName ? [`translated-name: ${JSON.stringify(culture.translatedName)}`] : []),
+    `seed: ${JSON.stringify(culture.seed)}`,
+    `mood: ${culture.mood}`,
+    `register: ${culture.register}`,
+    `packs: [${culture.appliedPacks.join(", ")}]`,
+    "---",
+  ];
+  return lines.join("\n");
+}
+
+function glossaryNoteTitle(culture: Culture): string {
+  return `${culture.name} Glossary`;
+}
+
+function renderManagedInner(culture: Culture, allCultures: Culture[]): string {
   const lines: string[] = [];
-  lines.push("---");
-  lines.push(`languageforge-culture: ${culture.name}`);
-  lines.push(`seed: "${culture.seed}"`);
-  lines.push(`mood: ${culture.mood}`);
-  lines.push(`register: ${culture.register}`);
-  lines.push(`packs: [${culture.appliedPacks.join(", ")}]`);
-  lines.push("---");
-  lines.push("");
   lines.push(`# ${culture.name}`);
   lines.push("");
-  lines.push(`> ${card.summary}`);
+  if (culture.translatedName?.trim()) {
+    lines.push(`*${culture.translatedName.trim()}*`);
+    lines.push("");
+  }
+  lines.push(`> ${culture.summary || oneBreath(culture)}`);
   lines.push("");
   if (culture.fromNames?.length) {
     lines.push(`Seeded from your own names: ${culture.fromNames.join(", ")}.`);
@@ -1503,10 +2133,11 @@ export function cultureNote(culture: Culture, allCultures: Culture[] = []): stri
     lines.push("## Family");
     lines.push("");
     const packLabel = culture.driftPackIds?.length ? ` via ${culture.driftPackIds.join(" + ")}` : "";
+    const wiki = (c: Culture) => `[[${c.name}]]`;
     if (parents.length === 1) {
-      lines.push(`Descended from: **${parents[0].name}** (generation ${culture.generation ?? 1}, drift: ${culture.driftLevel ?? "unknown"}${packLabel})`);
+      lines.push(`Descended from: ${wiki(parents[0])} (generation ${culture.generation ?? 1}, drift: ${culture.driftLevel ?? "unknown"}${packLabel})`);
     } else if (parents.length >= 2) {
-      lines.push(`Merged from: ${parents.map(p => `**${p.name}**`).join(" + ")} (generation ${culture.generation ?? 1}, contact drift: ${culture.driftLevel ?? "unknown"}${packLabel})`);
+      lines.push(`Merged from: ${parents.map(wiki).join(" + ")} (generation ${culture.generation ?? 1}, contact drift: ${culture.driftLevel ?? "unknown"}${packLabel})`);
     }
     if (culture.driftPackIds?.length) {
       const flavor = culture.driftPackIds
@@ -1516,10 +2147,75 @@ export function cultureNote(culture: Culture, allCultures: Culture[] = []): stri
       if (flavor) lines.push(`*${flavor}*`);
     }
     if (descendants.length > 0) {
-      lines.push(`Descendants: ${descendants.map(d => d.name).join(", ")}`);
+      lines.push(`Descendants: ${descendants.map(wiki).join(", ")}`);
     }
     lines.push("");
   }
+
+  lines.push("## Sample names");
+  lines.push("");
+  const samples = culture.sampleNames?.length
+    ? culture.sampleNames
+    : makeCultureCard(culture).samples.map(s => ({
+      name: s.name, pronunciation: s.pronunciation, category: s.category,
+      gloss: s.gloss, className: s.className,
+    }));
+  for (const s of samples) {
+    let line = `- **${s.name}** (${s.category}) — say it: *${s.pronunciation}*`;
+    if (s.gloss) {
+      line += ` — "${s.gloss}"`;
+      if (s.className) line += ` (${s.className})`;
+    } else if (s.className) {
+      line += ` (${s.className})`;
+    }
+    lines.push(line);
+  }
+  lines.push("");
+
+  lines.push("## Accepted names");
+  lines.push("");
+  for (const n of culture.registry) lines.push(`- ${n[0].toUpperCase() + n.slice(1)}`);
+  lines.push("");
+
+  lines.push("## Import");
+  lines.push("");
+  lines.push("Paste romanised names (Latin letters) via **Import names…** to bend this language's sounds. Raw non-Latin script is skipped.");
+  lines.push("");
+  if (culture.importedNames?.length) {
+    lines.push("Imported into this language:");
+    lines.push("");
+    for (const n of culture.importedNames) lines.push(`- ${n}`);
+    lines.push("");
+  } else if (culture.fromNames?.length) {
+    lines.push(`Seeded at creation from: ${culture.fromNames.join(", ")}.`);
+    lines.push("");
+  } else {
+    lines.push("_No names imported yet._");
+    lines.push("");
+  }
+
+  lines.push("## Name classes");
+  lines.push("");
+  ensureCultureClasses(culture);
+  if (culture.gendered === false) {
+    lines.push("_Gender marking off — feminine/masculine hidden; custom classes still apply._");
+    lines.push("");
+  }
+  lines.push("| Class | Endings | Roots | Meaning | Sample |");
+  lines.push("|---|---|---|---|---|");
+  for (const cls of visibleClasses(culture)) {
+    const ends = resolveClassEndings(culture, cls).join(", ") || "—";
+    let roots = "—";
+    if (cls.rootPolicy) {
+      const bits = [...cls.rootPolicy.include];
+      if (cls.rootPolicy.exclude?.length) bits.push(`−${cls.rootPolicy.exclude.join(",−")}`);
+      roots = `${cls.rootPolicy.mode}: ${bits.join(", ")}`;
+    }
+    const meaning = cls.generation ?? "inherit";
+    const classSamples = classSpecimens(culture, cls.id, 2).join(", ") || "—";
+    lines.push(`| ${cls.label} | ${ends} | ${roots} | ${meaning} | ${classSamples} |`);
+  }
+  lines.push("");
 
   lines.push("## Sound elements");
   lines.push("");
@@ -1530,11 +2226,29 @@ export function cultureNote(culture: Culture, allCultures: Culture[] = []): stri
   lines.push(`Endings: ${culture.elements.end.join(", ")}`);
   lines.push("");
 
-  lines.push("## Sample names");
+  lines.push(`Glossary: [[${glossaryNoteTitle(culture)}]]`);
   lines.push("");
-  for (const s of card.samples) lines.push(`- **${s.name}** (${s.category}) — say it: *${s.pronunciation}*`);
+
+  return lines.join("\n");
+}
+
+function hasHeading(text: string, heading: string): boolean {
+  return new RegExp(`(^|\\n)## ${heading}(\\s|$)`).test(text);
+}
+
+/** Pull user Description prose from a language page body (between ## Description and the next heading / managed block). */
+export function extractDescriptionFromPage(body: string | undefined | null): string {
+  if (!body) return "";
+  const m = body.match(/## Description\s*\n([\s\S]*?)(?=\n## |\n<!-- lf:managed:start -->|$)/);
+  if (!m) return "";
+  return m[1].replace(/\s+$/, "").replace(/^\s+/, "");
+}
+
+function renderGlossaryManagedInner(culture: Culture): string {
+  const lines: string[] = [];
+  lines.push(`# ${glossaryNoteTitle(culture)}`);
   lines.push("");
-  lines.push("## Glossary");
+  lines.push(`Part of [[${culture.name}]].`);
   lines.push("");
   lines.push("| Form | Meaning | Frequency |");
   lines.push("|---|---|---|");
@@ -1542,9 +2256,74 @@ export function cultureNote(culture: Culture, allCultures: Culture[] = []): stri
     lines.push(`| ${r.form} | ${r.meaning} | ${weightLabel(r.weight)} |`);
   }
   lines.push("");
-  lines.push("## Accepted names");
-  lines.push("");
-  for (const n of culture.registry) lines.push(`- ${n[0].toUpperCase() + n.slice(1)}`);
-  lines.push("");
   return lines.join("\n");
+}
+
+/** Merge-aware glossary page companion to the language note. */
+export function renderGlossaryPage(culture: Culture, existingBody?: string): string {
+  const fm = renderFrontmatter(culture, "glossary");
+  const managed = `${MANAGED_START}\n${renderGlossaryManagedInner(culture)}${MANAGED_END}`;
+  if (!existingBody) return `${fm}\n\n${managed}\n`;
+
+  let body = existingBody;
+  const fmMatch = body.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  if (fmMatch) body = body.slice(fmMatch[0].length);
+
+  const startIdx = body.indexOf(MANAGED_START);
+  const endIdx = body.indexOf(MANAGED_END);
+  if (startIdx >= 0 && endIdx > startIdx) {
+    const before = body.slice(0, startIdx);
+    const after = body.slice(endIdx + MANAGED_END.length);
+    return `${fm}\n\n${(before + managed + after).replace(/^\s+/, "")}`;
+  }
+  const user = body.trim();
+  return user ? `${fm}\n\n${managed}\n\n${user}\n` : `${fm}\n\n${managed}\n`;
+}
+
+/** Merge-aware language page. Regenerates the managed block; preserves everything outside it.
+ *  Frontmatter sits at file start (Obsidian requirement) and is always rewritten from culture state.
+ *  User-owned ## Description (top) and ## Notes (bottom) are created once and never overwritten. */
+export function renderLanguagePage(
+  culture: Culture,
+  allCultures: Culture[] = [],
+  existingBody?: string,
+): string {
+  const fm = renderFrontmatter(culture, "language");
+  const managed = `${MANAGED_START}\n${renderManagedInner(culture, allCultures)}${MANAGED_END}`;
+  const descStub = "## Description\n\n";
+  const notesStub = "## Notes\n";
+
+  if (!existingBody) {
+    return `${fm}\n\n${descStub}${managed}\n\n${notesStub}`;
+  }
+
+  let body = existingBody;
+  const fmMatch = body.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  if (fmMatch) body = body.slice(fmMatch[0].length);
+
+  const startIdx = body.indexOf(MANAGED_START);
+  const endIdx = body.indexOf(MANAGED_END);
+
+  if (startIdx >= 0 && endIdx > startIdx) {
+    let before = body.slice(0, startIdx);
+    const after = body.slice(endIdx + MANAGED_END.length);
+    if (!hasHeading(before + after, "Description") && !hasHeading(before, "Description")) {
+      before = descStub + before;
+    }
+    let spliced = before + managed + after;
+    if (!hasHeading(spliced, "Notes")) spliced = spliced.replace(/\s*$/, "") + `\n\n${notesStub}`;
+    return `${fm}\n\n${spliced.replace(/^\s+/, "")}`;
+  }
+
+  // Migration: old note without delimiters — preserve as user content below managed.
+  const user = body.trim();
+  let migrated = `${fm}\n\n${descStub}${managed}\n\n`;
+  if (user) migrated += `${user}\n\n`;
+  if (!hasHeading(migrated, "Notes")) migrated += notesStub;
+  return migrated;
+}
+
+/** @deprecated Prefer renderLanguagePage — kept as a thin alias for older call sites. */
+export function cultureNote(culture: Culture, allCultures: Culture[] = []): string {
+  return renderLanguagePage(culture, allCultures);
 }
