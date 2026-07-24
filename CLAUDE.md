@@ -26,7 +26,8 @@ An Obsidian plugin (TypeScript, esbuild) that generates fantasy names and langua
   /tools validator. Run `npm run validate` to check all four.
 
 ## Current status (read before assuming a spec is implemented)
-- **Gaps 1–4 are done.**
+- **All 6 reconciliation.md gaps are done**, and `naming-traditions.json` is wired into real
+  generation — the naming system is feature-complete relative to the reconciliation doc.
   - Gap 1 (drift-pack library): `deriveCulture`/`mergeCultures` take `driftPackIds` and apply
     `DRIFT_PACKS` (ported from `drift-packs.json`) as ordered rule packs, not the old
     unordered `SOUND_CHANGE_RULES`.
@@ -49,17 +50,39 @@ An Obsidian plugin (TypeScript, esbuild) that generates fantasy names and langua
     dropdown; substrate loanwords accepted via Gap 3 become ordinary roots, so they're
     automatically eligible once an ancestor is resolved — the two gaps compose with no
     extra glue code.
-  - This required migrating `SEMANTIC_PACKS` (`data.ts`) from plain concept strings to the
-    tagged `{concept, tags}` shape `concept-packs.json` already had — `Root` now carries
-    `tags: string[]` and an optional `loanOrigin`. `contentPolicy`/root-policy resolution for
-    naming-traditions.json is still not wired into generation (a separate, larger gap).
-- **Gaps 5–6 remain open**: `title` as a `Category`, and the etymological/phonetic spelling
-  toggle. `naming-traditions.json`'s patterns are still not wired into name generation.
-- All data files validate clean via `npm run validate`. The drift-pack rule applier was
-  cross-checked word-for-word against `tools/drift_validator.py`'s demo output (exact match);
-  the Gap 3/4 engine functions were exercised via a standalone esbuild-compiled harness
-  (3-generation ancestor walk, domain-biased borrowing, loanword-accept idempotency) — all
-  passed.
+  - Gap 5 (titles): `Category` gained `"title"`, treated like `"house"` in `assemble`'s
+    middle-slot logic (formal/institutional per the framework). `naming-traditions.json`
+    defines no title patterns, so titles never route through tradition generation regardless
+    of tradition selection — always the plain phonetic path.
+  - Gap 6 (spelling mode): `SpellingMode` (`"etymological"|"phonetic"`, default phonetic) is
+    consumed by a shared `driftRootForm` helper wherever a `Root`'s form gets drifted
+    (`deriveCulture`, `mergeCultures`, `ageCulture`) — `"etymological"` skips drifting any
+    root whose `origin` is machine-marked as a blend (`"a+b"`, from `mergeCultures`), so the
+    compound stays legible; `"phonetic"` drifts everything. Exposed as a "Spelling" dropdown
+    on `DeriveCultureModal`/`AgeCultureModal`.
+  - **`naming-traditions.json` is now wired into real generation.** `SEMANTIC_PACKS`
+    (`data.ts`) was migrated from plain concept strings to the tagged `{concept, tags}` shape
+    `concept-packs.json` already had — `Root` carries `tags: string[]` and an optional
+    `loanOrigin`. `policyPool`/`resolveTokens` (faithful ports of
+    `naming_traditions_validator.py`'s `resolve`/`policy_pool`) resolve a tradition's
+    `contentPolicy` against real culture concepts; `ensureConceptsMinted` mints any concept a
+    tradition references that a culture hasn't minted yet (additive, respects stable-minting).
+    `buildTraditionPersonal`/`Place`/`House` + `generateTraditionBatch` build real names using
+    a tradition's patterns (dithematic/theophoric/single/epithet, patronymic/clan/occupational/
+    locative house forms, toponymic generics) — `formOf` replaces the validator's placeholder
+    `W(concept)` with real minted forms. Wired into `GenerateModal` via a "Naming tradition"
+    dropdown (+ conditional gender dropdown for personal names); selecting a tradition hides
+    the sound/meaning mode dropdown, since tradition generation has its own internal
+    pattern-type selection. `gateName` is applied only to the single fused head-word of a
+    tradition-built name (its syllable/echo checks are tuned for one word); surname/epithet
+    additions are still built from real minted forms but not independently re-gated.
+- All data files validate clean via `npm run validate`. The `NAMING_TRADITIONS` port was
+  structurally diffed against `naming-traditions.json` (exact match, same technique as
+  `DRIFT_PACKS`/`SEMANTIC_PACKS`). A standalone esbuild-compiled harness exercised
+  `generateTraditionBatch` for all 9 traditions × personal(both genders)/place(settlement+
+  feature)/house — every batch produced full, well-formed output (patronymic/clan/theophoric/
+  occupational particles all rendering correctly); the title category's plain-assemble path
+  was confirmed working independently.
 - Not yet manually smoke-tested inside Obsidian itself (would require driving the user's
   real desktop install via Electron automation with no dedicated test vault — flagged rather
   than attempted unprompted). `npx tsc --noEmit` and the esbuild bundle both succeed.

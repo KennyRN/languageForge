@@ -8,10 +8,12 @@ import {
 import {
   AgedSnapshot, Category, ContactDomain, ContactEdge, ContactPreview, ContactType, Culture,
   DriftLevel, DRIFT_PACKS, ENV_DEFAULT_PACK, GeneratedName,
-  MOOD_DEFAULT_DRIFT_PACK, Mood, PlaceType, Register, SeedTraits,
-  acceptLoanedRoots, ageCulture, cultureNote, deriveCulture, generateBatch, makeCultureCard,
-  mergeCultures, previewContactEdge, reinforce, reshuffleElements, resolvePlaceSourceCulture,
-  reverseSeedCulture, seedCulture, weightLabel,
+  MOOD_DEFAULT_DRIFT_PACK, Mood, NAMING_TRADITIONS, NamingTradition, PlaceType, Register,
+  SeedTraits, SpellingMode,
+  acceptLoanedRoots, ageCulture, cultureNote, deriveCulture, ensureConceptsMinted, generateBatch,
+  generateTraditionBatch, makeCultureCard, mergeCultures, previewContactEdge, reinforce,
+  reshuffleElements, resolvePlaceSourceCulture, reverseSeedCulture, seedCulture,
+  traditionConceptUniverse, weightLabel,
 } from "./engine";
 import { PHONETIC_PACKS, SEMANTIC_PACKS } from "./data";
 
@@ -426,6 +428,7 @@ class DeriveCultureModal extends Modal {
   driftLevel: DriftLevel = "sister";
   driftPackId: string;
   driftPackTouched = false; // once the user picks explicitly, stop overwriting on parent change
+  spellingMode: SpellingMode = "phonetic";
   environment = "none";
 
   constructor(app: App, plugin: LanguageForgePlugin, parentId?: string) {
@@ -514,6 +517,14 @@ class DeriveCultureModal extends Modal {
       });
     updatePackHint();
 
+    new Setting(contentEl).setName("Spelling")
+      .setDesc("Etymological keeps blended-compound spellings visible for cognate-spotting (mainly affects merge); phonetic respells everything to the worn sound.")
+      .addDropdown(d => {
+        d.addOption("phonetic", "Phonetic (respell to the worn sound)");
+        d.addOption("etymological", "Etymological (keep compound roots visible)");
+        d.setValue(this.spellingMode).onChange(v => (this.spellingMode = v as SpellingMode));
+      });
+
     new Setting(contentEl).setName("Environment")
       .setDesc("Optional — adds regional word themes on top of the parents' vocabulary.")
       .addDropdown(d => {
@@ -539,11 +550,11 @@ class DeriveCultureModal extends Modal {
       if (this.mode === "branch") {
         const parent = this.plugin.data.cultures.find(c => c.id === this.branchParentId);
         if (!parent) { new Notice("Pick a parent language first."); return; }
-        culture = deriveCulture(parent, this.name, this.driftLevel, [this.driftPackId], overrides);
+        culture = deriveCulture(parent, this.name, this.driftLevel, [this.driftPackId], overrides, this.spellingMode);
       } else {
         const parents = this.plugin.data.cultures.filter(c => this.mergeParentIds.has(c.id));
         if (parents.length < 2) { new Notice("Select at least two languages to merge."); return; }
-        culture = mergeCultures(parents, this.name, this.driftLevel, [this.driftPackId], overrides);
+        culture = mergeCultures(parents, this.name, this.driftLevel, [this.driftPackId], overrides, this.spellingMode);
       }
       this.close();
       new CultureCardModal(this.app, this.plugin, culture, true).open();
@@ -564,6 +575,7 @@ class AgeCultureModal extends Modal {
   culture: Culture;
   packId: string;
   driftLevel: DriftLevel = "sister";
+  spellingMode: SpellingMode = "phonetic";
   snapshot: AgedSnapshot | null = null;
 
   constructor(app: App, plugin: LanguageForgePlugin, culture: Culture) {
@@ -602,8 +614,16 @@ class AgeCultureModal extends Modal {
         d.setValue(this.driftLevel).onChange(v => (this.driftLevel = v as DriftLevel));
       });
 
+    new Setting(contentEl).setName("Spelling")
+      .setDesc("Etymological keeps blended-compound spellings visible; phonetic respells everything to the worn sound.")
+      .addDropdown(d => {
+        d.addOption("phonetic", "Phonetic (respell to the worn sound)");
+        d.addOption("etymological", "Etymological (keep compound roots visible)");
+        d.setValue(this.spellingMode).onChange(v => (this.spellingMode = v as SpellingMode));
+      });
+
     new Setting(contentEl).addButton(b => b.setButtonText("Preview").setCta().onClick(() => {
-      this.snapshot = ageCulture(this.culture, this.packId, this.driftLevel);
+      this.snapshot = ageCulture(this.culture, this.packId, this.driftLevel, "personal", this.spellingMode);
       this.render();
     }));
 
@@ -832,6 +852,8 @@ class GenerateModal extends Modal {
   category: Category = "personal";
   placeType: PlaceType = "settlement";
   mode: "sound" | "meaning" = "sound";
+  traditionId: string | null = null; // null = "None — use culture's own patterns"
+  gender: "masculine" | "feminine" | "neutral" = "neutral";
   batch: GeneratedName[] = [];
   starred = new Set<number>();
 
@@ -855,7 +877,19 @@ class GenerateModal extends Modal {
   }
 
   newBatch() {
-    this.batch = generateBatch(this.getGenCulture(), this.category, this.plugin.data.settings.batchSize, this.mode);
+    const genCulture = this.getGenCulture();
+    // Titles have no tradition patterns (naming-traditions.json defines none) — always use
+    // the plain phonetic path regardless of tradition selection.
+    if (this.traditionId && this.category !== "title") {
+      const tradition = NAMING_TRADITIONS[this.traditionId];
+      const added = ensureConceptsMinted(genCulture, traditionConceptUniverse(tradition));
+      if (added) void this.plugin.persist();
+      this.batch = generateTraditionBatch(
+        genCulture, tradition, this.category, this.plugin.data.settings.batchSize, this.gender, this.placeType,
+      );
+    } else {
+      this.batch = generateBatch(genCulture, this.category, this.plugin.data.settings.batchSize, this.mode);
+    }
     this.starred.clear();
   }
 
@@ -874,6 +908,7 @@ class GenerateModal extends Modal {
       d.addOption("personal", "People");
       d.addOption("house", "Houses");
       d.addOption("place", "Places");
+      d.addOption("title", "Titles");
       d.setValue(this.category).onChange(v => { this.category = v as Category; this.newBatch(); this.render(); });
     });
     if (this.category === "place") {
@@ -886,10 +921,25 @@ class GenerateModal extends Modal {
       });
     }
     controls.addDropdown(d => {
-      d.addOption("sound", "By sound");
-      d.addOption("meaning", "By meaning");
-      d.setValue(this.mode).onChange(v => { this.mode = v as "sound" | "meaning"; this.newBatch(); this.render(); });
+      d.addOption("", "None — use culture's own patterns");
+      for (const [id, tr] of Object.entries(NAMING_TRADITIONS)) d.addOption(id, tr.label);
+      d.setValue(this.traditionId ?? "").onChange(v => { this.traditionId = v || null; this.newBatch(); this.render(); });
     });
+    if (this.traditionId && this.category === "personal") {
+      controls.addDropdown(d => {
+        d.addOption("masculine", "Masculine");
+        d.addOption("feminine", "Feminine");
+        d.addOption("neutral", "Neutral");
+        d.setValue(this.gender).onChange(v => { this.gender = v as "masculine" | "feminine" | "neutral"; this.newBatch(); this.render(); });
+      });
+    }
+    if (!this.traditionId || this.category === "title") {
+      controls.addDropdown(d => {
+        d.addOption("sound", "By sound");
+        d.addOption("meaning", "By meaning");
+        d.setValue(this.mode).onChange(v => { this.mode = v as "sound" | "meaning"; this.newBatch(); this.render(); });
+      });
+    }
     controls.addButton(b => b.setButtonText("New culture…").onClick(() => {
       this.close();
       new SeedWizardModal(this.app, this.plugin).open();

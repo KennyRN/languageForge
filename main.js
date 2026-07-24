@@ -710,6 +710,1170 @@ var DRIFT_PACKS = {
     ]
   }
 };
+var NAMING_TRADITIONS = {
+  "old_norse": {
+    "label": "Old Norse naming",
+    "subtitle": "Norse \xB7 Scandinavian",
+    "contentPolicy": {
+      "favour": [
+        "beast",
+        "war",
+        "strength",
+        "sacred",
+        "rank"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "beast",
+          "war",
+          "strength",
+          "weapon",
+          "rank"
+        ],
+        "patronymicAffix": "-son"
+      },
+      "feminine": {
+        "themes": [
+          "beauty",
+          "virtue",
+          "sacred",
+          "fortune",
+          "joy"
+        ],
+        "patronymicAffix": "-dottir"
+      },
+      "neutral": {
+        "themes": [
+          "beast",
+          "sacred",
+          "war"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "dithematic",
+          "weight": 0.7
+        },
+        {
+          "type": "single",
+          "weight": 0.3
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.6
+        },
+        {
+          "type": "feature-descriptive",
+          "weight": 0.4
+        }
+      ],
+      "house": [
+        {
+          "type": "founder-line",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "by",
+          "meaning": "village",
+          "position": "suffix"
+        },
+        {
+          "form": "thorpe",
+          "meaning": "outlying farm",
+          "position": "suffix"
+        },
+        {
+          "form": "gard",
+          "meaning": "enclosure",
+          "position": "suffix"
+        },
+        {
+          "form": "stad",
+          "meaning": "place",
+          "position": "suffix"
+        },
+        {
+          "form": "saetr",
+          "meaning": "shieling",
+          "position": "suffix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "fell",
+          "meaning": "hill",
+          "position": "suffix"
+        },
+        {
+          "form": "dalr",
+          "meaning": "valley",
+          "position": "suffix"
+        },
+        {
+          "form": "vik",
+          "meaning": "bay",
+          "position": "suffix"
+        },
+        {
+          "form": "foss",
+          "meaning": "waterfall",
+          "position": "suffix"
+        },
+        {
+          "form": "vatn",
+          "meaning": "lake",
+          "position": "suffix"
+        },
+        {
+          "form": "nes",
+          "meaning": "headland",
+          "position": "suffix"
+        }
+      ]
+    },
+    "particles": {
+      "patronymic": {
+        "genitive": "s",
+        "of": ""
+      },
+      "house": {
+        "kind": "founder-line",
+        "affix": "-ungar"
+      }
+    },
+    "surnameRate": 0.8,
+    "notes": "Dithematic given names plus a patronymic that changes each generation; features keep the deepest map-strata."
+  },
+  "anglo_saxon": {
+    "label": "Anglo-Saxon naming",
+    "subtitle": "Old English",
+    "contentPolicy": {
+      "favour": [
+        "virtue",
+        "rank",
+        "war",
+        "sacred",
+        "kin"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "rank",
+          "war",
+          "virtue",
+          "weapon"
+        ]
+      },
+      "feminine": {
+        "themes": [
+          "virtue",
+          "beauty",
+          "sacred",
+          "joy"
+        ]
+      },
+      "neutral": {
+        "themes": [
+          "virtue",
+          "rank"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "dithematic",
+          "weight": 0.8
+        },
+        {
+          "type": "single",
+          "weight": 0.2
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.5
+        },
+        {
+          "type": "possessive-settlement",
+          "weight": 0.3
+        },
+        {
+          "type": "feature-descriptive",
+          "weight": 0.2
+        }
+      ],
+      "house": [
+        {
+          "type": "founder-line",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "ton",
+          "meaning": "farmstead",
+          "position": "suffix"
+        },
+        {
+          "form": "ham",
+          "meaning": "homestead",
+          "position": "suffix"
+        },
+        {
+          "form": "wich",
+          "meaning": "dwelling",
+          "position": "suffix"
+        },
+        {
+          "form": "bury",
+          "meaning": "fortified place",
+          "position": "suffix"
+        },
+        {
+          "form": "worth",
+          "meaning": "enclosure",
+          "position": "suffix"
+        },
+        {
+          "form": "stead",
+          "meaning": "place",
+          "position": "suffix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "ford",
+          "meaning": "river crossing",
+          "position": "suffix"
+        },
+        {
+          "form": "mere",
+          "meaning": "lake",
+          "position": "suffix"
+        },
+        {
+          "form": "combe",
+          "meaning": "valley",
+          "position": "suffix"
+        },
+        {
+          "form": "don",
+          "meaning": "hill",
+          "position": "suffix"
+        },
+        {
+          "form": "ley",
+          "meaning": "clearing",
+          "position": "suffix"
+        },
+        {
+          "form": "hurst",
+          "meaning": "wooded hill",
+          "position": "suffix"
+        }
+      ]
+    },
+    "particles": {
+      "house": {
+        "kind": "founder-line",
+        "affix": "-ingas"
+      }
+    },
+    "surnameRate": 0.4,
+    "notes": "Dithematic names with family alliteration; -ingas marks 'the people of'."
+  },
+  "roman": {
+    "label": "Roman naming",
+    "subtitle": "Latin",
+    "contentPolicy": {
+      "favour": [
+        "virtue",
+        "beauty",
+        "light",
+        "beast",
+        "flora"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "virtue",
+          "rank",
+          "strength"
+        ]
+      },
+      "feminine": {
+        "themes": [
+          "beauty",
+          "virtue",
+          "flora"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "single",
+          "weight": 0.5
+        },
+        {
+          "type": "epithet",
+          "weight": 0.5
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.6
+        },
+        {
+          "type": "possessive-settlement",
+          "weight": 0.4
+        }
+      ],
+      "house": [
+        {
+          "type": "gens",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "Colonia",
+          "meaning": "colony",
+          "position": "prefix"
+        },
+        {
+          "form": "Castra",
+          "meaning": "fort",
+          "position": "prefix"
+        },
+        {
+          "form": "Portus",
+          "meaning": "port",
+          "position": "prefix"
+        },
+        {
+          "form": "Forum",
+          "meaning": "market",
+          "position": "prefix"
+        },
+        {
+          "form": "Villa",
+          "meaning": "estate",
+          "position": "prefix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "Mons",
+          "meaning": "mountain",
+          "position": "prefix"
+        },
+        {
+          "form": "Flumen",
+          "meaning": "river",
+          "position": "prefix"
+        },
+        {
+          "form": "Silva",
+          "meaning": "forest",
+          "position": "prefix"
+        },
+        {
+          "form": "Lacus",
+          "meaning": "lake",
+          "position": "prefix"
+        }
+      ]
+    },
+    "particles": {
+      "epithet": {
+        "article": "",
+        "position": "after"
+      },
+      "house": {
+        "kind": "gens",
+        "affix": "-ius"
+      }
+    },
+    "surnameRate": 0.9,
+    "notes": "Tria nomina \u2014 given + gens (family) + trait cognomen. The gens is the house name; feminine takes -ia."
+  },
+  "greek": {
+    "label": "Ancient Greek naming",
+    "subtitle": "Hellenic",
+    "contentPolicy": {
+      "favour": [
+        "sacred",
+        "virtue",
+        "war",
+        "celestial",
+        "rank"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "war",
+          "rank",
+          "virtue",
+          "celestial"
+        ]
+      },
+      "feminine": {
+        "themes": [
+          "beauty",
+          "virtue",
+          "sacred",
+          "joy"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "theophoric",
+          "weight": 0.4
+        },
+        {
+          "type": "dithematic",
+          "weight": 0.4
+        },
+        {
+          "type": "single",
+          "weight": 0.2
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.5
+        },
+        {
+          "type": "feature-descriptive",
+          "weight": 0.3
+        },
+        {
+          "type": "theonymic-place",
+          "weight": 0.2
+        }
+      ],
+      "house": [
+        {
+          "type": "founder-line",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "polis",
+          "meaning": "city",
+          "position": "suffix"
+        },
+        {
+          "form": "a",
+          "meaning": "place",
+          "position": "suffix"
+        },
+        {
+          "form": "ia",
+          "meaning": "region",
+          "position": "suffix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "Acro",
+          "meaning": "height",
+          "position": "prefix"
+        },
+        {
+          "form": "oros",
+          "meaning": "mountain",
+          "position": "suffix"
+        },
+        {
+          "form": "potamos",
+          "meaning": "river",
+          "position": "suffix"
+        },
+        {
+          "form": "nesos",
+          "meaning": "island",
+          "position": "suffix"
+        }
+      ]
+    },
+    "particles": {
+      "theophoric": {
+        "relations": {
+          "gift": "doros",
+          "glory": "kleos",
+          "ruler": "kratos",
+          "people": "laos"
+        },
+        "order": "element-first"
+      },
+      "house": {
+        "kind": "founder-line",
+        "affix": "-idai"
+      }
+    },
+    "surnameRate": 0.5,
+    "notes": "Theophoric and dithematic given names; -idai marks a descent line (Herakleidai)."
+  },
+  "gaelic": {
+    "label": "Gaelic naming",
+    "subtitle": "Irish \xB7 Scottish",
+    "contentPolicy": {
+      "favour": [
+        "virtue",
+        "beast",
+        "sacred",
+        "flora",
+        "wild"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "beast",
+          "war",
+          "virtue",
+          "rank"
+        ]
+      },
+      "feminine": {
+        "themes": [
+          "beauty",
+          "virtue",
+          "sacred",
+          "flora"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "single",
+          "weight": 0.7
+        },
+        {
+          "type": "epithet",
+          "weight": 0.3
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.6
+        },
+        {
+          "type": "feature-descriptive",
+          "weight": 0.4
+        }
+      ],
+      "house": [
+        {
+          "type": "clan-patronymic",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "Bally",
+          "meaning": "town",
+          "position": "prefix"
+        },
+        {
+          "form": "Kil",
+          "meaning": "church",
+          "position": "prefix"
+        },
+        {
+          "form": "Dun",
+          "meaning": "fort",
+          "position": "prefix"
+        },
+        {
+          "form": "Rath",
+          "meaning": "ringfort",
+          "position": "prefix"
+        },
+        {
+          "form": "Lis",
+          "meaning": "fort",
+          "position": "prefix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "Inver",
+          "meaning": "river mouth",
+          "position": "prefix"
+        },
+        {
+          "form": "Glen",
+          "meaning": "valley",
+          "position": "prefix"
+        },
+        {
+          "form": "Ben",
+          "meaning": "mountain",
+          "position": "prefix"
+        },
+        {
+          "form": "Loch",
+          "meaning": "lake",
+          "position": "prefix"
+        },
+        {
+          "form": "Ard",
+          "meaning": "height",
+          "position": "prefix"
+        },
+        {
+          "form": "Drum",
+          "meaning": "ridge",
+          "position": "prefix"
+        }
+      ]
+    },
+    "particles": {
+      "epithet": {
+        "article": "the",
+        "position": "after"
+      },
+      "house": {
+        "kind": "clan",
+        "prefix": "Mac",
+        "of": ""
+      }
+    },
+    "surnameRate": 0.7,
+    "notes": "Single given name plus a clan name (Mac 'son of', O 'grandson of') and a descriptive byname."
+  },
+  "welsh": {
+    "label": "Welsh naming",
+    "subtitle": "Brythonic",
+    "contentPolicy": {
+      "favour": [
+        "flora",
+        "water",
+        "mountain",
+        "virtue",
+        "rank"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "rank",
+          "virtue",
+          "beast"
+        ],
+        "patronymicAffix": "ap"
+      },
+      "feminine": {
+        "themes": [
+          "beauty",
+          "virtue",
+          "flora"
+        ],
+        "patronymicAffix": "ferch"
+      },
+      "neutral": {
+        "themes": [
+          "virtue",
+          "flora"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "single",
+          "weight": 0.7
+        },
+        {
+          "type": "epithet",
+          "weight": 0.3
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.7
+        },
+        {
+          "type": "feature-descriptive",
+          "weight": 0.3
+        }
+      ],
+      "house": [
+        {
+          "type": "clan-patronymic",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "Llan",
+          "meaning": "church",
+          "position": "prefix"
+        },
+        {
+          "form": "Caer",
+          "meaning": "fort",
+          "position": "prefix"
+        },
+        {
+          "form": "Tre",
+          "meaning": "town",
+          "position": "prefix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "Aber",
+          "meaning": "estuary",
+          "position": "prefix"
+        },
+        {
+          "form": "Pen",
+          "meaning": "head",
+          "position": "prefix"
+        },
+        {
+          "form": "Cwm",
+          "meaning": "valley",
+          "position": "prefix"
+        },
+        {
+          "form": "Nant",
+          "meaning": "stream",
+          "position": "prefix"
+        },
+        {
+          "form": "Bryn",
+          "meaning": "hill",
+          "position": "prefix"
+        }
+      ]
+    },
+    "particles": {
+      "epithet": {
+        "article": "",
+        "position": "after"
+      },
+      "patronymic": {
+        "of": "ap",
+        "genitive": ""
+      },
+      "house": {
+        "kind": "clan",
+        "prefix": "ap",
+        "of": ""
+      }
+    },
+    "surnameRate": 0.6,
+    "notes": "Patronymic with ap/ab ('son of') or ferch ('daughter of'); prefix-heavy place names."
+  },
+  "slavic": {
+    "label": "Slavic naming",
+    "subtitle": "Slavic",
+    "contentPolicy": {
+      "favour": [
+        "rank",
+        "sacred",
+        "war",
+        "virtue",
+        "joy"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "rank",
+          "war",
+          "virtue",
+          "sacred"
+        ],
+        "patronymicAffix": "-ovich"
+      },
+      "feminine": {
+        "themes": [
+          "beauty",
+          "virtue",
+          "sacred",
+          "joy"
+        ],
+        "patronymicAffix": "-ovna"
+      },
+      "neutral": {
+        "themes": [
+          "rank",
+          "sacred"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "dithematic",
+          "weight": 0.7
+        },
+        {
+          "type": "single",
+          "weight": 0.3
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.6
+        },
+        {
+          "type": "feature-descriptive",
+          "weight": 0.4
+        }
+      ],
+      "house": [
+        {
+          "type": "gens",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "grad",
+          "meaning": "city",
+          "position": "suffix"
+        },
+        {
+          "form": "sk",
+          "meaning": "town",
+          "position": "suffix"
+        },
+        {
+          "form": "ovo",
+          "meaning": "village",
+          "position": "suffix"
+        },
+        {
+          "form": "Nov",
+          "meaning": "new",
+          "position": "prefix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "gora",
+          "meaning": "mountain",
+          "position": "suffix"
+        },
+        {
+          "form": "reka",
+          "meaning": "river",
+          "position": "suffix"
+        },
+        {
+          "form": "les",
+          "meaning": "forest",
+          "position": "suffix"
+        },
+        {
+          "form": "ozero",
+          "meaning": "lake",
+          "position": "suffix"
+        },
+        {
+          "form": "Bel",
+          "meaning": "white",
+          "position": "prefix"
+        },
+        {
+          "form": "Chern",
+          "meaning": "black",
+          "position": "prefix"
+        }
+      ]
+    },
+    "particles": {
+      "patronymic": {
+        "of": "",
+        "genitive": ""
+      },
+      "house": {
+        "kind": "gens",
+        "affix": "-ov"
+      }
+    },
+    "surnameRate": 0.8,
+    "notes": "Dithematic given names, patronymic (-ovich/-ovna), family names in -ov/-ski (feminine -ova/-ska)."
+  },
+  "puritan_english": {
+    "label": "Puritan English naming",
+    "subtitle": "English \xB7 devotional",
+    "contentPolicy": {
+      "lock": [
+        "sacred",
+        "virtue"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "sacred",
+          "virtue"
+        ]
+      },
+      "feminine": {
+        "themes": [
+          "virtue",
+          "sacred"
+        ]
+      },
+      "neutral": {
+        "themes": [
+          "virtue",
+          "sacred"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "single",
+          "weight": 0.9
+        },
+        {
+          "type": "epithet",
+          "weight": 0.1
+        }
+      ],
+      "place": [
+        {
+          "type": "single",
+          "weight": 0.5
+        },
+        {
+          "type": "descriptive-generic",
+          "weight": 0.5
+        }
+      ],
+      "house": [
+        {
+          "type": "occupational",
+          "weight": 0.6
+        },
+        {
+          "type": "locative",
+          "weight": 0.4
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "New",
+          "meaning": "new",
+          "position": "prefix"
+        },
+        {
+          "form": "Mount",
+          "meaning": "mount",
+          "position": "prefix"
+        },
+        {
+          "form": "field",
+          "meaning": "field",
+          "position": "suffix"
+        },
+        {
+          "form": "haven",
+          "meaning": "haven",
+          "position": "suffix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "field",
+          "meaning": "field",
+          "position": "suffix"
+        },
+        {
+          "form": "brook",
+          "meaning": "brook",
+          "position": "suffix"
+        }
+      ]
+    },
+    "particles": {
+      "epithet": {
+        "article": "",
+        "position": "after"
+      },
+      "house": {
+        "kind": "occupational"
+      }
+    },
+    "surnameRate": 0.9,
+    "notes": "The given name IS a virtue (Faith, Prudence, Increase); surnames stay ordinary English (occupational/locative)."
+  },
+  "finnic": {
+    "label": "Finnic naming",
+    "subtitle": "Finnic",
+    "contentPolicy": {
+      "favour": [
+        "flora",
+        "forest",
+        "water",
+        "weather",
+        "beast",
+        "ice"
+      ]
+    },
+    "genders": {
+      "masculine": {
+        "themes": [
+          "beast",
+          "forest",
+          "strength",
+          "weather"
+        ],
+        "patronymicAffix": "-poika"
+      },
+      "feminine": {
+        "themes": [
+          "flora",
+          "water",
+          "light",
+          "beauty"
+        ],
+        "patronymicAffix": "-tytar"
+      },
+      "neutral": {
+        "themes": [
+          "forest",
+          "water"
+        ]
+      }
+    },
+    "patterns": {
+      "personal": [
+        {
+          "type": "single",
+          "weight": 0.8
+        },
+        {
+          "type": "dithematic",
+          "weight": 0.2
+        }
+      ],
+      "place": [
+        {
+          "type": "descriptive-generic",
+          "weight": 0.6
+        },
+        {
+          "type": "feature-descriptive",
+          "weight": 0.4
+        }
+      ],
+      "house": [
+        {
+          "type": "occupational",
+          "weight": 1
+        }
+      ]
+    },
+    "toponymicGenerics": {
+      "settlement": [
+        {
+          "form": "la",
+          "meaning": "place of",
+          "position": "suffix"
+        },
+        {
+          "form": "kyla",
+          "meaning": "village",
+          "position": "suffix"
+        }
+      ],
+      "feature": [
+        {
+          "form": "jarvi",
+          "meaning": "lake",
+          "position": "suffix"
+        },
+        {
+          "form": "joki",
+          "meaning": "river",
+          "position": "suffix"
+        },
+        {
+          "form": "maki",
+          "meaning": "hill",
+          "position": "suffix"
+        },
+        {
+          "form": "saari",
+          "meaning": "island",
+          "position": "suffix"
+        },
+        {
+          "form": "vaara",
+          "meaning": "forested hill",
+          "position": "suffix"
+        },
+        {
+          "form": "koski",
+          "meaning": "rapids",
+          "position": "suffix"
+        }
+      ]
+    },
+    "particles": {
+      "patronymic": {
+        "of": "",
+        "genitive": ""
+      },
+      "house": {
+        "kind": "occupational",
+        "affix": "-nen"
+      }
+    },
+    "surnameRate": 0.6,
+    "notes": "Nature single-roots, patronymic (-poika/-tytar), family names in -nen from nature/place."
+  }
+};
 
 // src/engine.ts
 var PLACE_TYPE_DRIFT_DEPTH = {
@@ -1068,13 +2232,264 @@ function applySemanticPacks(culture, packNames) {
 function weightLabel(w) {
   return w >= 3 ? "dominant" : w >= 2 ? "common" : w >= 1 ? "normal" : "rare";
 }
+var TAG_TO_CONCEPTS = /* @__PURE__ */ new Map();
+var CONCEPT_TAGS = /* @__PURE__ */ new Map();
+var CONCEPT_ORIGIN = /* @__PURE__ */ new Map();
+var ALL_CONCEPTS = /* @__PURE__ */ new Set();
+for (const [packName, pack] of Object.entries(SEMANTIC_PACKS)) {
+  for (const { concept, tags } of pack.concepts) {
+    ALL_CONCEPTS.add(concept);
+    if (!CONCEPT_TAGS.has(concept)) {
+      CONCEPT_TAGS.set(concept, tags);
+      CONCEPT_ORIGIN.set(concept, packName);
+    }
+    for (const t of tags) {
+      if (!TAG_TO_CONCEPTS.has(t)) TAG_TO_CONCEPTS.set(t, /* @__PURE__ */ new Set());
+      TAG_TO_CONCEPTS.get(t).add(concept);
+    }
+  }
+}
+function resolveTokens(tokens) {
+  const out = /* @__PURE__ */ new Set();
+  for (const t of tokens) {
+    if (SEMANTIC_PACKS[t]) {
+      for (const c of SEMANTIC_PACKS[t].concepts) out.add(c.concept);
+    } else if (TAG_TO_CONCEPTS.has(t)) {
+      for (const c of TAG_TO_CONCEPTS.get(t)) out.add(c);
+    } else if (ALL_CONCEPTS.has(t)) out.add(t);
+  }
+  return out;
+}
+function policyPool(policy) {
+  var _a, _b, _c;
+  const inc = [...(_a = policy.favour) != null ? _a : [], ...(_b = policy.lock) != null ? _b : []];
+  const pool = inc.length ? resolveTokens(inc) : /* @__PURE__ */ new Set();
+  if ((_c = policy.exclude) == null ? void 0 : _c.length) {
+    for (const c of resolveTokens(policy.exclude)) pool.delete(c);
+  }
+  return pool;
+}
+function pickFrom(rng, set) {
+  return pick(rng, [...set].sort());
+}
+function ensureConceptsMinted(culture, concepts) {
+  var _a, _b;
+  const existingByMeaning = new Map(culture.roots.map((r) => [r.meaning, r]));
+  const forms = culture.roots.map((r) => r.form);
+  let added = false;
+  for (const concept of concepts) {
+    if (existingByMeaning.has(concept)) continue;
+    const form = mintForm(culture, concept, forms);
+    forms.push(form);
+    const root = {
+      form,
+      meaning: concept,
+      origin: (_a = CONCEPT_ORIGIN.get(concept)) != null ? _a : "tradition",
+      weight: 1,
+      tags: (_b = CONCEPT_TAGS.get(concept)) != null ? _b : []
+    };
+    culture.roots.push(root);
+    existingByMeaning.set(concept, root);
+    added = true;
+  }
+  return added;
+}
+function formOf(culture, concept) {
+  const r = culture.roots.find((r2) => r2.meaning === concept);
+  return r ? r.form : mintForm(culture, concept, culture.roots.map((r2) => r2.form));
+}
+function intersectSets(a, b) {
+  const out = /* @__PURE__ */ new Set();
+  for (const x of a) if (b.has(x)) out.add(x);
+  return out;
+}
+function weightedPatternType(rng, patterns) {
+  const total = patterns.reduce((t, p) => t + p.weight, 0);
+  let x = rng() * total;
+  for (const p of patterns) {
+    x -= p.weight;
+    if (x <= 0) return p.type;
+  }
+  return patterns[patterns.length - 1].type;
+}
+function traditionGenderPool(tradition, gender, content) {
+  var _a, _b;
+  const themes = (_b = (_a = tradition.genders[gender]) == null ? void 0 : _a.themes) != null ? _b : [];
+  const resolved = themes.length ? resolveTokens(themes) : /* @__PURE__ */ new Set();
+  return resolved.size > 0 ? resolved : content;
+}
+function buildGiven(rng, culture, tradition, content, gender) {
+  var _a;
+  const type = weightedPatternType(rng, tradition.patterns.personal);
+  const gp = traditionGenderPool(tradition, gender, content);
+  if (type === "dithematic") {
+    const c1 = pickFrom(rng, content);
+    const c2 = pickFrom(rng, gp);
+    const f1 = formOf(culture, c1);
+    const f2raw = formOf(culture, c2).replace(/-/g, "").toLowerCase();
+    return {
+      headWord: cap(f1) + f2raw,
+      parts: [{ slot: "start", element: f1 }, { slot: "end", element: f2raw }],
+      gloss: `${c1}-${c2}`
+    };
+  }
+  if (type === "theophoric" && ((_a = tradition.particles) == null ? void 0 : _a.theophoric)) {
+    const sacBase = resolveTokens(["sacred", "celestial"]);
+    const sacIntersect = intersectSets(sacBase, content);
+    const sac = sacIntersect.size > 0 ? sacIntersect : resolveTokens(["sacred"]);
+    const s = pickFrom(rng, sac);
+    const relations = tradition.particles.theophoric.relations;
+    const rk = pick(rng, Object.keys(relations));
+    const f2 = formOf(culture, s);
+    return {
+      headWord: cap(f2) + relations[rk],
+      parts: [{ slot: "start", element: f2 }, { slot: "end", element: "-" + relations[rk] }],
+      gloss: `${s}-${rk}`
+    };
+  }
+  const c = pickFrom(rng, gp);
+  const f = formOf(culture, c);
+  return { headWord: cap(f), parts: [{ slot: "start", element: f }], gloss: c };
+}
+function buildHouseWord(rng, culture, content, type, hpart) {
+  var _a, _b, _c;
+  if (type === "clan" || type === "clan-patronymic") {
+    const c2 = pickFrom(rng, content);
+    const f2 = formOf(culture, c2);
+    const prefix = (_a = hpart.prefix) != null ? _a : "Mac";
+    const text2 = prefix + cap(f2);
+    return { text: text2, headWord: text2, parts: [{ slot: "start", element: prefix }, { slot: "end", element: "-" + f2 }] };
+  }
+  if (type === "occupational") {
+    const craft = resolveTokens(["craft", "trade"]);
+    const pool = craft.size > 0 ? craft : content;
+    const c2 = pickFrom(rng, pool);
+    const f2 = formOf(culture, c2);
+    const affix2 = ((_b = hpart.affix) != null ? _b : "").replace(/^-/, "");
+    const text2 = cap(f2) + affix2;
+    const parts2 = affix2 ? [{ slot: "start", element: f2 }, { slot: "end", element: "-" + affix2 }] : [{ slot: "start", element: f2 }];
+    return { text: text2, headWord: text2, parts: parts2 };
+  }
+  if (type === "locative") {
+    const c2 = pickFrom(rng, content);
+    const f2 = formOf(culture, c2);
+    const text2 = "of " + cap(f2);
+    return { text: text2, headWord: cap(f2), parts: [{ slot: "start", element: f2 }] };
+  }
+  const c = pickFrom(rng, content);
+  const f = formOf(culture, c);
+  const affix = ((_c = hpart.affix) != null ? _c : "").replace(/^-/, "");
+  const text = cap(f) + affix;
+  const parts = affix ? [{ slot: "start", element: f }, { slot: "end", element: "-" + affix }] : [{ slot: "start", element: f }];
+  return { text, headWord: text, parts };
+}
+function buildSurname(rng, culture, tradition, content, gender) {
+  var _a, _b, _c, _d;
+  const genderProfile = tradition.genders[gender];
+  const affix = genderProfile == null ? void 0 : genderProfile.patronymicAffix;
+  if (affix && ((_a = tradition.particles) == null ? void 0 : _a.patronymic)) {
+    const parentConcept = pickFrom(rng, content);
+    const parentForm = formOf(culture, parentConcept);
+    if (affix.startsWith("-")) {
+      const genitive = (_b = tradition.particles.patronymic.genitive) != null ? _b : "";
+      const text = cap(parentForm) + genitive + affix.slice(1);
+      return { text };
+    }
+    return { text: affix + " " + cap(parentForm) };
+  }
+  const housePatterns = tradition.patterns.house.length ? tradition.patterns.house : [{ type: "founder-line", weight: 1 }];
+  const type = housePatterns[0].type;
+  const hpart = (_d = (_c = tradition.particles) == null ? void 0 : _c.house) != null ? _d : {};
+  return buildHouseWord(rng, culture, content, type, hpart);
+}
+function buildTraditionPersonal(rng, culture, tradition, gender) {
+  var _a, _b, _c, _d;
+  const content = policyPool(tradition.contentPolicy);
+  const given = buildGiven(rng, culture, tradition, content, gender);
+  const words = [given.headWord];
+  if (rng() < ((_a = tradition.surnameRate) != null ? _a : 0)) {
+    words.push(buildSurname(rng, culture, tradition, content, gender).text);
+  }
+  if (tradition.patterns.personal.some((p) => p.type === "epithet") && rng() < 0.4) {
+    const article = (_d = (_c = (_b = tradition.particles) == null ? void 0 : _b.epithet) == null ? void 0 : _c.article) != null ? _d : "";
+    const traitBase = resolveTokens(["light", "beast", "virtue", "strength"]);
+    const traitIntersect = intersectSets(traitBase, content);
+    const traitPool = traitIntersect.size > 0 ? traitIntersect : content;
+    const c = pickFrom(rng, traitPool);
+    const traitCap = cap(formOf(culture, c));
+    words.push((article + " " + traitCap).trim());
+  }
+  return { name: words.join(" "), headWord: given.headWord, parts: given.parts, gloss: given.gloss };
+}
+function applyGeneric(baseForm, g) {
+  const s = g.position === "suffix" ? cap(baseForm) + g.form : cap(g.form) + baseForm.toLowerCase();
+  return s.length ? s[0].toUpperCase() + s.slice(1) : s;
+}
+function buildTraditionPlace(rng, culture, tradition, placeType) {
+  var _a;
+  const content = policyPool(tradition.contentPolicy);
+  const genericsKey = placeType === "feature" || placeType === "settlement" ? placeType : null;
+  const gens = genericsKey ? (_a = tradition.toponymicGenerics) == null ? void 0 : _a[genericsKey] : void 0;
+  if (gens && gens.length > 0) {
+    const g = pick(rng, gens);
+    const baseConcept2 = pickFrom(rng, content);
+    const baseForm2 = formOf(culture, baseConcept2);
+    const name2 = applyGeneric(baseForm2, g);
+    const parts = g.position === "suffix" ? [{ slot: "start", element: baseForm2 }, { slot: "end", element: "-" + g.form }] : [{ slot: "start", element: g.form }, { slot: "end", element: "-" + baseForm2 }];
+    return { name: name2, headWord: name2, parts, gloss: `${baseConcept2} + '${g.form}' (${g.meaning})` };
+  }
+  const baseConcept = pickFrom(rng, content);
+  const baseForm = formOf(culture, baseConcept);
+  const name = cap(baseForm);
+  return { name, headWord: name, parts: [{ slot: "start", element: baseForm }], gloss: baseConcept };
+}
+function buildTraditionHouse(rng, culture, tradition) {
+  var _a, _b;
+  const content = policyPool(tradition.contentPolicy);
+  const housePatterns = tradition.patterns.house.length ? tradition.patterns.house : [{ type: "founder-line", weight: 1 }];
+  const type = housePatterns[0].type;
+  const hpart = (_b = (_a = tradition.particles) == null ? void 0 : _a.house) != null ? _b : {};
+  const h = buildHouseWord(rng, culture, content, type, hpart);
+  return { name: h.text, headWord: h.headWord, parts: h.parts, gloss: type };
+}
+function traditionConceptUniverse(tradition) {
+  var _a;
+  const out = policyPool(tradition.contentPolicy);
+  for (const g of Object.values(tradition.genders)) {
+    if ((_a = g == null ? void 0 : g.themes) == null ? void 0 : _a.length) for (const c of resolveTokens(g.themes)) out.add(c);
+  }
+  for (const c of resolveTokens(["sacred", "celestial"])) out.add(c);
+  for (const c of resolveTokens(["light", "beast", "virtue", "strength"])) out.add(c);
+  return out;
+}
+function generateTraditionBatch(culture, tradition, category, count, gender = "neutral", placeType = "settlement", rng = rngFrom(`${culture.seed}::tradition-batch::${Date.now()}::${Math.random()}`)) {
+  ensureConceptsMinted(culture, traditionConceptUniverse(tradition));
+  const out = [];
+  const session = /* @__PURE__ */ new Set();
+  let attempts = 0;
+  while (out.length < count && attempts++ < count * 40) {
+    const built = category === "personal" ? buildTraditionPersonal(rng, culture, tradition, gender) : category === "place" ? buildTraditionPlace(rng, culture, tradition, placeType) : buildTraditionHouse(rng, culture, tradition);
+    if (session.has(built.name.toLowerCase())) continue;
+    const gate = gateName(built.headWord, culture, built.parts, session);
+    if (!gate.pass) continue;
+    session.add(built.name.toLowerCase());
+    out.push({
+      name: built.name,
+      pronunciation: pronounce(built.headWord, culture.stress),
+      parts: built.parts,
+      category,
+      gloss: built.gloss
+    });
+  }
+  return out;
+}
 function assemble(rng, culture, category) {
   const { start, middle, end } = culture.elements;
   const parts = [];
   const s = pick(rng, start);
   parts.push({ slot: "start", element: s });
   let body = s;
-  const middles = category === "house" ? rng() < 0.5 ? 2 : 1 : category === "place" ? 1 : rng() < culture.middleChance ? 1 : 0;
+  const middles = category === "house" || category === "title" ? rng() < 0.5 ? 2 : 1 : category === "place" ? 1 : rng() < culture.middleChance ? 1 : 0;
   for (let i = 0; i < middles; i++) {
     const m = pick(rng, middle);
     parts.push({ slot: "middle", element: m });
@@ -1358,14 +2773,18 @@ function driftElementSet(rng, elements, packs, intensity) {
     end: elements.end.map((el) => driftWordWithPacks(rng, el, packs, intensity))
   };
 }
-function deriveCulture(parent, name, driftLevel, driftPackIds, overrides = {}) {
+function driftRootForm(rng, root, packs, intensity, spellingMode) {
+  if (spellingMode === "etymological" && root.origin.includes("+")) return root.form;
+  return driftWordWithPacks(rng, root.form, packs, intensity);
+}
+function deriveCulture(parent, name, driftLevel, driftPackIds, overrides = {}, spellingMode = "phonetic") {
   var _a, _b, _c;
   const intensity = DRIFT_PRESETS[driftLevel];
   const packs = driftPackIds.map((id) => DRIFT_PACKS[id]).filter((p) => !!p);
   const seed = `${name}::from::${parent.id}::${Date.now().toString(36)}`;
   const rng = rngFrom(seed + "::drift");
   const elements = driftElementSet(rng, parent.elements, packs, intensity);
-  const roots = parent.roots.map((r) => ({ ...r, form: driftWordWithPacks(rng, r.form, packs, intensity) }));
+  const roots = parent.roots.map((r) => ({ ...r, form: driftRootForm(rng, r, packs, intensity, spellingMode) }));
   const culture = {
     id: seed,
     name,
@@ -1394,7 +2813,7 @@ function deriveCulture(parent, name, driftLevel, driftPackIds, overrides = {}) {
   culture.summary = oneBreath(culture);
   return culture;
 }
-function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}) {
+function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}, spellingMode = "phonetic") {
   var _a, _b, _c, _d;
   if (parents.length < 2) throw new Error("mergeCultures requires at least two parents");
   const packs = driftPackIds.map((id) => DRIFT_PACKS[id]).filter((p) => !!p);
@@ -1491,14 +2910,14 @@ function mergeCultures(parents, name, driftLevel, driftPackIds, overrides = {}) 
   };
   const intensity = DRIFT_PRESETS[driftLevel] * 0.5;
   culture.elements = driftElementSet(rng, culture.elements, packs, intensity);
-  culture.roots = culture.roots.map((r) => ({ ...r, form: driftWordWithPacks(rng, r.form, packs, intensity) }));
+  culture.roots = culture.roots.map((r) => ({ ...r, form: driftRootForm(rng, r, packs, intensity, spellingMode) }));
   if ((_d = overrides.packs) == null ? void 0 : _d.length) {
     applySemanticPacks(culture, [.../* @__PURE__ */ new Set([...culture.appliedPacks, ...overrides.packs])]);
   }
   culture.summary = oneBreath(culture);
   return culture;
 }
-function ageCulture(culture, packId, driftLevel, category = "personal") {
+function ageCulture(culture, packId, driftLevel, category = "personal", spellingMode = "phonetic") {
   const pack = DRIFT_PACKS[packId];
   if (!pack) throw new Error(`ageCulture: unknown drift pack '${packId}'`);
   const intensity = DRIFT_PRESETS[driftLevel];
@@ -1506,7 +2925,7 @@ function ageCulture(culture, packId, driftLevel, category = "personal") {
   const modernElements = driftElementSet(driftRng, culture.elements, [pack], intensity);
   const modernRoots = culture.roots.map((r) => ({
     ...r,
-    form: driftWordWithPacks(driftRng, r.form, [pack], intensity)
+    form: driftRootForm(driftRng, r, [pack], intensity, spellingMode)
   }));
   const modernView = { ...culture, elements: modernElements, roots: modernRoots };
   const archaicRng = rngFrom(`${culture.seed}::age::samples::archaic::${packId}::${driftLevel}`);
@@ -2033,6 +3452,7 @@ var DeriveCultureModal = class extends import_obsidian.Modal {
     this.driftLevel = "sister";
     this.driftPackTouched = false;
     // once the user picks explicitly, stop overwriting on parent change
+    this.spellingMode = "phonetic";
     this.environment = "none";
     this.plugin = plugin;
     this.branchParentId = (_b = parentId != null ? parentId : (_a = plugin.data.cultures[0]) == null ? void 0 : _a.id) != null ? _b : "";
@@ -2101,6 +3521,11 @@ var DeriveCultureModal = class extends import_obsidian.Modal {
       });
     });
     updatePackHint();
+    new import_obsidian.Setting(contentEl).setName("Spelling").setDesc("Etymological keeps blended-compound spellings visible for cognate-spotting (mainly affects merge); phonetic respells everything to the worn sound.").addDropdown((d) => {
+      d.addOption("phonetic", "Phonetic (respell to the worn sound)");
+      d.addOption("etymological", "Etymological (keep compound roots visible)");
+      d.setValue(this.spellingMode).onChange((v) => this.spellingMode = v);
+    });
     new import_obsidian.Setting(contentEl).setName("Environment").setDesc("Optional \u2014 adds regional word themes on top of the parents' vocabulary.").addDropdown((d) => {
       for (const e of ENVIRONMENTS) d.addOption(e, e === "none" ? "None in particular" : e[0].toUpperCase() + e.slice(1));
       d.setValue(this.environment).onChange((v) => this.environment = v);
@@ -2129,14 +3554,14 @@ var DeriveCultureModal = class extends import_obsidian.Modal {
           new import_obsidian.Notice("Pick a parent language first.");
           return;
         }
-        culture = deriveCulture(parent, this.name, this.driftLevel, [this.driftPackId], overrides);
+        culture = deriveCulture(parent, this.name, this.driftLevel, [this.driftPackId], overrides, this.spellingMode);
       } else {
         const parents = this.plugin.data.cultures.filter((c) => this.mergeParentIds.has(c.id));
         if (parents.length < 2) {
           new import_obsidian.Notice("Select at least two languages to merge.");
           return;
         }
-        culture = mergeCultures(parents, this.name, this.driftLevel, [this.driftPackId], overrides);
+        culture = mergeCultures(parents, this.name, this.driftLevel, [this.driftPackId], overrides, this.spellingMode);
       }
       this.close();
       new CultureCardModal(this.app, this.plugin, culture, true).open();
@@ -2154,6 +3579,7 @@ var AgeCultureModal = class extends import_obsidian.Modal {
     var _a;
     super(app);
     this.driftLevel = "sister";
+    this.spellingMode = "phonetic";
     this.snapshot = null;
     this.plugin = plugin;
     this.culture = culture;
@@ -2186,8 +3612,13 @@ var AgeCultureModal = class extends import_obsidian.Modal {
       for (const lvl of DRIFT_LEVELS) d.addOption(lvl.value, lvl.label);
       d.setValue(this.driftLevel).onChange((v) => this.driftLevel = v);
     });
+    new import_obsidian.Setting(contentEl).setName("Spelling").setDesc("Etymological keeps blended-compound spellings visible; phonetic respells everything to the worn sound.").addDropdown((d) => {
+      d.addOption("phonetic", "Phonetic (respell to the worn sound)");
+      d.addOption("etymological", "Etymological (keep compound roots visible)");
+      d.setValue(this.spellingMode).onChange((v) => this.spellingMode = v);
+    });
     new import_obsidian.Setting(contentEl).addButton((b) => b.setButtonText("Preview").setCta().onClick(() => {
-      this.snapshot = ageCulture(this.culture, this.packId, this.driftLevel);
+      this.snapshot = ageCulture(this.culture, this.packId, this.driftLevel, "personal", this.spellingMode);
       this.render();
     }));
     if (this.snapshot) {
@@ -2408,6 +3839,9 @@ var GenerateModal = class extends import_obsidian.Modal {
     this.category = "personal";
     this.placeType = "settlement";
     this.mode = "sound";
+    this.traditionId = null;
+    // null = "None — use culture's own patterns"
+    this.gender = "neutral";
     this.batch = [];
     this.starred = /* @__PURE__ */ new Set();
     this.plugin = plugin;
@@ -2424,7 +3858,22 @@ var GenerateModal = class extends import_obsidian.Modal {
     return this.category === "place" ? resolvePlaceSourceCulture(this.culture, this.plugin.data.cultures, this.placeType) : this.culture;
   }
   newBatch() {
-    this.batch = generateBatch(this.getGenCulture(), this.category, this.plugin.data.settings.batchSize, this.mode);
+    const genCulture = this.getGenCulture();
+    if (this.traditionId && this.category !== "title") {
+      const tradition = NAMING_TRADITIONS[this.traditionId];
+      const added = ensureConceptsMinted(genCulture, traditionConceptUniverse(tradition));
+      if (added) void this.plugin.persist();
+      this.batch = generateTraditionBatch(
+        genCulture,
+        tradition,
+        this.category,
+        this.plugin.data.settings.batchSize,
+        this.gender,
+        this.placeType
+      );
+    } else {
+      this.batch = generateBatch(genCulture, this.category, this.plugin.data.settings.batchSize, this.mode);
+    }
     this.starred.clear();
   }
   render() {
@@ -2445,6 +3894,7 @@ var GenerateModal = class extends import_obsidian.Modal {
       d.addOption("personal", "People");
       d.addOption("house", "Houses");
       d.addOption("place", "Places");
+      d.addOption("title", "Titles");
       d.setValue(this.category).onChange((v) => {
         this.category = v;
         this.newBatch();
@@ -2465,14 +3915,38 @@ var GenerateModal = class extends import_obsidian.Modal {
       });
     }
     controls.addDropdown((d) => {
-      d.addOption("sound", "By sound");
-      d.addOption("meaning", "By meaning");
-      d.setValue(this.mode).onChange((v) => {
-        this.mode = v;
+      var _a;
+      d.addOption("", "None \u2014 use culture's own patterns");
+      for (const [id, tr] of Object.entries(NAMING_TRADITIONS)) d.addOption(id, tr.label);
+      d.setValue((_a = this.traditionId) != null ? _a : "").onChange((v) => {
+        this.traditionId = v || null;
         this.newBatch();
         this.render();
       });
     });
+    if (this.traditionId && this.category === "personal") {
+      controls.addDropdown((d) => {
+        d.addOption("masculine", "Masculine");
+        d.addOption("feminine", "Feminine");
+        d.addOption("neutral", "Neutral");
+        d.setValue(this.gender).onChange((v) => {
+          this.gender = v;
+          this.newBatch();
+          this.render();
+        });
+      });
+    }
+    if (!this.traditionId || this.category === "title") {
+      controls.addDropdown((d) => {
+        d.addOption("sound", "By sound");
+        d.addOption("meaning", "By meaning");
+        d.setValue(this.mode).onChange((v) => {
+          this.mode = v;
+          this.newBatch();
+          this.render();
+        });
+      });
+    }
     controls.addButton((b) => b.setButtonText("New culture\u2026").onClick(() => {
       this.close();
       new SeedWizardModal(this.app, this.plugin).open();
