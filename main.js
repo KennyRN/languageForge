@@ -3604,8 +3604,8 @@ var CultureCardModal = class extends import_obsidian.Modal {
     }
     if (card.glossaryPreview.length > 0) {
       const gl = contentEl.createDiv({ cls: "lf-glossary" });
-      gl.createEl("span", { text: "Words: ", cls: "lf-hint" });
-      gl.createEl("span", {
+      gl.createSpan({ text: "Words: ", cls: "lf-hint" });
+      gl.createSpan({
         text: card.glossaryPreview.map((g) => `${g.form} = ${g.meaning}`).join("  \xB7  "),
         cls: "lf-glossary-items"
       });

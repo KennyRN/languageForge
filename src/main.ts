@@ -1117,8 +1117,8 @@ class CultureCardModal extends Modal {
 
     if (card.glossaryPreview.length > 0) {
       const gl = contentEl.createDiv({ cls: "lf-glossary" });
-      gl.createEl("span", { text: "Words: ", cls: "lf-hint" });
-      gl.createEl("span", {
+      gl.createSpan({ text: "Words: ", cls: "lf-hint" });
+      gl.createSpan({
         text: card.glossaryPreview.map(g => `${g.form} = ${g.meaning}`).join("  ·  "),
         cls: "lf-glossary-items",
       });
@@ -1310,22 +1310,6 @@ class RenameCultureModal extends Modal {
     this.nameInput = null;
     this.translatedInput = null;
     this.contentEl.empty();
-  }
-}
-
-// ---------------------------------------------------------------- edit languages (opens Languages modal on Edit tab)
-
-class EditLanguagesModal extends Modal {
-  plugin: LanguageForgePlugin;
-
-  constructor(app: App, plugin: LanguageForgePlugin) {
-    super(app);
-    this.plugin = plugin;
-  }
-
-  onOpen() {
-    this.close();
-    new CreateLanguageModal(this.app, this.plugin, "edit").open();
   }
 }
 
